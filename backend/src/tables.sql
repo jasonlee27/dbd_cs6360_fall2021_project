@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS Log(
     logid INT AUTO_INCREMENT not null,
     oldvalue FLOAT(8,3),
     newvalue FLOAT(8,3),
+    status VARCHAR(10),
     PRIMARY KEY(logid)
 );
 

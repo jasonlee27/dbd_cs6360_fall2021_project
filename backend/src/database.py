@@ -139,6 +139,26 @@ class Database:
         return account_info
                 
     @classmethod
-    def get_user_transaction_history(cls, cursor, mysql, hash_userid):
-        # TODO: select transaction histories given useris
+    def get_user_transaction_history(cls, cursor, mysql, userid):
+        # TODO: select transaction histories given userid
         pass
+
+    @classmethod
+    def set_bitcoin_request(cls, cursor, mysql, data):
+        cliendid, bitcoin_val, purchase_type = data[0], data[1], data[2]
+        # TODO: set bitcoin request to client's trader
+        pass
+
+    @classmethod
+    def get_bitcoin_requests(cls, cursor, mysql, data):
+        # TODO: get bitcoin requests from client to trader
+        userid, user_type = data[0], data[1]
+        pass
+
+    @classmethod
+    def buysell_bitcoin(cls, cursor, mysql, data):
+        # TODO: get bitcoin buy/sell in database
+        user_type, bitcoin_val, purchase_type = data[0], data[1], data[2]
+        pass
+
+    
