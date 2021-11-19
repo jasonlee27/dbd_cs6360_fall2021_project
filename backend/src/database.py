@@ -161,4 +161,11 @@ class Database:
         user_type, bitcoin_val, purchase_type = data[0], data[1], data[2]
         pass
 
+    @classmethod
+    def cancel_transaction(cls, cursor, mysql, transactionid):
+        # TODO: cancel transaction in database
+        # 1. delete transaction specified
+        # 2. update log and its status
+        pass
+
     

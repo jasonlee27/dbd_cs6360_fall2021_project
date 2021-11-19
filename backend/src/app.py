@@ -257,8 +257,18 @@ def transfer_money(userid):
         msg=msg
     )
 
-@app.route('/api/profile/<userid>/cancel', methods=['GET', 'POST'])
+@app.route('/api/<userid>/cancel', methods=['GET', 'POST'])
 def cancel_tansaction(userid):
+    # This method is for trader to cancel his/her transactions
+    msg = ''
+    if request.method == 'POST' and \
+       'transactionid' in request.form:
+        transactionid = request.form['transactionid']
+        Database.cancel_transaction(
+            cursor, mysql, transactionid
+        )
+        msg = "Transaction successfully canceled."
+    # end if
     pass
 
 @app.route('/api/update_level', methods=['GET', 'POST'])
