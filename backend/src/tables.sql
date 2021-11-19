@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS Address(
 CREATE TABLE IF NOT EXISTS Client(
     clientid VARCHAR(50) not null,
     client_password VARCHAR(50) not null,
+    register_date VARCHAR(50),
     firstname VARCHAR(15),
     lastname VARCHAR(15),
     address1 VARCHAR(30),

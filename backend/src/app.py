@@ -26,6 +26,7 @@ def status():
 @app.route('/api/login', methods=['GET', 'POST'])
 def login():
     msg = ''
+    account_info = None
     if request.method =='POST' and \
        'userid' in request.form and \
        'password' in request.form:
@@ -37,7 +38,7 @@ def login():
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         account = Database.user_exists_in_db(cursor, mysql, userid, hash_password=password)
-        if account:
+        if account_info:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['userid'] = account['userid']
@@ -46,10 +47,9 @@ def login():
             msg = 'Incorrect username/password!'
         # end if
     # end if
-    
     cursor.close()
     return jsonify(
-        msg=msg
+        msg=msg,
     )
 
 # http://localhost:5000/api/logout
@@ -91,6 +91,7 @@ def register():
                 "user_type": user_type,
                 "userid": hash_userid,
                 "password": hash_password,
+                "register_date": Utils.get_cur_time(),
                 "firstname": request.form['firstname'],
                 "lastname": request.form['lastname'],
                 "address1": request.form['address1'],
@@ -114,15 +115,20 @@ def register():
                 "bitcoin": 0.,
                 "flatcurrency" = 0.
             }
+        elif user_type=="manager":
+            # trader info
+            user_info = {
+                "user_type": user_type,
+                "userid": hash_userid,
+                "password": hash_password,
+            }
         else:
             msg = f"Invalid user type {user_type}"
             return jsonify(
                 msg=msg,
-                userid = hash_userid
             )
         # end if
 
-        # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         
         # If account exists show error and validation checks
@@ -152,11 +158,17 @@ def register():
         userid = hash_userid
     )
 
-@app.route('/api/profile/<userid>', methods=['GET', 'POST'])
+@app.route('/api/<userid>/history', methods=['GET', 'POST'])
 def profile(userid):
-    pass
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    transaction_histories = Database.get_user_transaction_history(cursor, mysql, userid)
+    cursor.close()
+    return jsonify(
+        msg=msg,
+        transaction_histories=transaction_histories
+    )
 
-@app.route('/api/profile/<userid>/transfer_to_bank', methods=['GET', 'POST'])
+@app.route('/api/profile/<userid>/transfer_from_bank', methods=['GET', 'POST'])
 def tansfer_from_bank(userid):
     pass
 

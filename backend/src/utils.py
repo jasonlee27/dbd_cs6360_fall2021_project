@@ -37,3 +37,8 @@ class Utils:
         return True if m else False
 
     
+    @classmethod
+    def get_cur_time(cls):
+        now = datetime.now()
+        dt_str = now.strftime("%d/%m/%Y_%H:%M:%S")
+        return dt_str
