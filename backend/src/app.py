@@ -45,11 +45,12 @@ def login():
         
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        account = Database.user_exists_in_db(cursor, mysql, userid, hash_password=password)
+        account_info = Database.user_exists_in_db(cursor, mysql, userid, hash_password=password)
         if account_info:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
-            session['userid'] = account['userid']
+            session['userid'] = account_info['userid']
+            session['user_type'] = account_info["user_type"]
             msg = "Successfully logged in!"
         else:
             msg = 'Incorrect username/password!'
@@ -58,6 +59,7 @@ def login():
     # end if
     return jsonify(
         msg=msg,
+        account_info=account_info
     )
 
 # http://localhost:5000/api/logout
@@ -166,15 +168,21 @@ def register():
         userid = hash_userid
     )
 
-@app.route('/api/<userid>/transaction-history', methods=['GET', 'POST'])
-def transaction_history(userid):
+@app.route('/api/profile', methods=['GET', 'POST'])
+def profile():
+    userid = session['userid']
+    user_type = session['user_type']
+    pass
+
+@app.route('/api/profile', methods=['GET', 'POST'])
+def transaction_history():
     # This method shows clients and trader their transaction histories
     # daily, weekly, or monthly
-    if request.method == 'POST' and \
-       'user_type' in request.form and \
-       'time_period' in request.form:
-        user_type = request.form['user_type']
+    if request.method == 'POST' and 'time_period' in request.form:
+        userid = session['userid']
+        user_type = session['user_type']
         time_period = request.form['time_period']
+        
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         transaction_histories = Database.get_user_transaction_history(
             cursor, mysql,
@@ -187,12 +195,12 @@ def transaction_history(userid):
         transaction_histories=transaction_histories
     )
 
-@app.route('/api/<userid>/request-history', methods=['GET', 'POST'])
+@app.route('/api/profile', methods=['GET', 'POST'])
 def request_history(userid):
     # This method shows trader their requests received from clients
-    if request.method == 'POST' and \
-       'user_type' in request.form:
-        user_type = request.form["user_type"]
+    if request.method == 'POST':
+        userid = session['userid']
+        user_type = session['user_type']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         request_histories = Database.get_bitcoin_requests(
             cursor, mysql,
@@ -205,90 +213,102 @@ def request_history(userid):
         request_histories=request_histories
     )
 
-@app.route('/api/profile/<userid>/transfer_from_bank', methods=['GET', 'POST'])
+@app.route('/api/profile/transfer_from_bank', methods=['GET', 'POST'])
 def tansfer_from_bank(userid):
     pass
 
-@app.route('/api/<userid>/request', methods=['GET', 'POST'])
+@app.route('/api/profile/request', methods=['GET', 'POST'])
 def request(userid):
     # This method is for clients to request buy/sell bitcoin to trader
     msg = ''
     if request.method == 'POST' and \
-       'clientid' in request.form and \
        'bitcoin_val' in request.form and \
        'purchase_type' in request.form:
         
         # Create variables for easy access
-        clientid = request.form['clientid']
-        bitcoin_val = request.form['bitcoin_val']
-        purchase_type = request.form['purchase_type']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        Database.set_bitcoin_request(
-            cursor, mysql,
-            [cliendid, bitcoin_val, purchase_type]
-        )
-        msg = "Successfully requested"
-        cursor.close()
+        clientid = session['userid']
+        user_type = session['user_type']
+        if user_type == 'client':
+            bitcoin_val = request.form['bitcoin_val']
+            purchase_type = request.form['purchase_type']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            Database.set_bitcoin_request(
+                cursor, mysql,
+                [cliendid, bitcoin_val, purchase_type]
+            )
+            msg = "Successfully requested"
+            cursor.close()
+        # end if
     # end if
     return jsonify(
         msg=msg
     )   
 
-@app.route('/api/<userid>/buysell', methods=['GET', 'POST'])
+@app.route('/api/profile/buysell', methods=['GET', 'POST'])
 def buysell_bitcoin(userid):
     # This method is for client/trader to buy/sell bitcoin
     msg = ''
     if request.method == 'POST' and \
-       'user_type' in request.form and \
        'bitcoin_val' in request.form and \
        'purchase_type' in request.form:
-        user_type = request.form["user_type"]
-        bitcoin_val = request.form['bitcoin_val']
-        purchase_type = request.form['purchase_type']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        Database.buysell_bitcoin(
-            cursor, mysql,
-            [user_type, bitcoin_val, purchase_type]
-        )
-        msg = "Successfully purchased."
-        curcor.close()
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type == 'client' or user_type=="trader":
+            bitcoin_val = request.form['bitcoin_val']
+            purchase_type = request.form['purchase_type']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            Database.buysell_bitcoin(
+                cursor, mysql,
+                [user_type, bitcoin_val, purchase_type]
+            )
+            msg = "Successfully purchased."
+            cursor.close()
+        # end if
     # end if
     return jsonify(
         msg=msg
     )
 
-@app.route('/api/<userid>/transfer', methods=['GET', 'POST'])
+@app.route('/api/profile/transfer', methods=['GET', 'POST'])
 def transfer_money(userid):
     # This method is for client to transfer money to trader
     msg = ''
     if request.method == 'POST' and \
        'usd_val' in request.form:
-        purchase_type = request.form['usd_val']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        Database.buysell_bitcoin(
-            cursor, mysql,
-            [userid usd_val]
-        )
-        msg = "Successfully purchased."
-        curcor.close()
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type == 'client':
+            purchase_type = request.form['usd_val']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            Database.buysell_bitcoin(
+                cursor, mysql,
+                [userid, usd_val]
+            )
+            msg = "Successfully purchased."
+            cursor.close()
+        # end if
     # end if
     return jsonify(
         msg=msg
     )
 
-@app.route('/api/<userid>/cancel', methods=['GET', 'POST'])
+@app.route('/api/profile/cancel', methods=['GET', 'POST'])
 def cancel_tansaction(userid):
     # This method is for trader to cancel his/her transactions
     msg = ''
     if request.method == 'POST' and \
        'transactionid' in request.form:
-        transactionid = request.form['transactionid']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        Database.cancel_transaction(
-            cursor, mysql, transactionid
-        )
-        msg = "Transaction successfully canceled."
-        curcor.close()
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type == 'trader':
+            transactionid = request.form['transactionid']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            Database.cancel_transaction(
+                cursor, mysql, transactionid
+            )
+            msg = "Transaction successfully canceled."
+            cursor.close()
+        # end if
     # end if
     return jsonify(
         msg=msg

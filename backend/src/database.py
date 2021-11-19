@@ -49,6 +49,7 @@ class Database:
         else:
             account_info = {
                 "type": 'trader',
+                "userid": hash_username,
                 "first_name": account[3],
                 "last_name": account[4],
                 "address1": account[5],
