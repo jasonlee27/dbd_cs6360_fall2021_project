@@ -7,6 +7,11 @@ from database import Database
 
 import MySQLdb.cursors
 
+# import package for scheduler
+# import time
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+
 app = Flask(__name__)
 app.secret_key = Macros.SECRETE_KEY
 
@@ -17,7 +22,10 @@ app.config['MYSQL_USER'] = Macros.MYSQL_USER
 app.config['MYSQL_DB'] = Macros.MYSQL_DB #str(Macros.DB_FILE)
 
 mysql = MySQL(app)
-Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
+# Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=update_level, 'cron', day='1st mon')
 
 @app.route("/api/status", methods=['GET'])
 def status():
@@ -46,8 +54,8 @@ def login():
         else:
             msg = 'Incorrect username/password!'
         # end if
+        cursor.close()
     # end if
-    cursor.close()
     return jsonify(
         msg=msg,
     )
@@ -148,11 +156,11 @@ def register():
             Database.insert_user_record(cursor, mysql, user_info)
             msg = 'Successfully registered'
         # end if
+        cursor.close()
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
     # end if
-    cursor.close()
     return jsonify(
         msg=msg,
         userid = hash_userid
@@ -172,8 +180,8 @@ def transaction_history(userid):
             cursor, mysql,
             [user_type, userid, time_period]
         )
+        cursor.close()
     # end if
-    cursor.close()
     return jsonify(
         msg=msg,
         transaction_histories=transaction_histories
@@ -190,8 +198,8 @@ def request_history(userid):
             cursor, mysql,
             [userid, user_type]
         )
+        cursor.close()
     # end if
-    cursor.close()
     return jsonify(
         msg=msg,
         request_histories=request_histories
@@ -214,13 +222,14 @@ def request(userid):
         clientid = request.form['clientid']
         bitcoin_val = request.form['bitcoin_val']
         purchase_type = request.form['purchase_type']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         Database.set_bitcoin_request(
             cursor, mysql,
             [cliendid, bitcoin_val, purchase_type]
         )
         msg = "Successfully requested"
+        cursor.close()
     # end if
-    cursor.close()
     return jsonify(
         msg=msg
     )   
@@ -236,13 +245,14 @@ def buysell_bitcoin(userid):
         user_type = request.form["user_type"]
         bitcoin_val = request.form['bitcoin_val']
         purchase_type = request.form['purchase_type']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         Database.buysell_bitcoin(
             cursor, mysql,
             [user_type, bitcoin_val, purchase_type]
         )
         msg = "Successfully purchased."
+        curcor.close()
     # end if
-    curcor.close()
     return jsonify(
         msg=msg
     )
@@ -254,13 +264,14 @@ def transfer_money(userid):
     if request.method == 'POST' and \
        'usd_val' in request.form:
         purchase_type = request.form['usd_val']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         Database.buysell_bitcoin(
             cursor, mysql,
             [userid usd_val]
         )
         msg = "Successfully purchased."
+        curcor.close()
     # end if
-    curcor.close()
     return jsonify(
         msg=msg
     )
@@ -272,18 +283,23 @@ def cancel_tansaction(userid):
     if request.method == 'POST' and \
        'transactionid' in request.form:
         transactionid = request.form['transactionid']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         Database.cancel_transaction(
             cursor, mysql, transactionid
         )
         msg = "Transaction successfully canceled."
+        curcor.close()
     # end if
     return jsonify(
         msg=msg
     )
 
-@app.route('/api/update-level', methods=['GET', 'POST'])
 def update_level():
-    pass
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    Database.update_level(cursor, mysql)
+    cursor.close()
+    msg = "User level successfully updated."
+    return
 
 
 if __name__ == '__main__':
