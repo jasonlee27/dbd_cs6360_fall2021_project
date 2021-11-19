@@ -160,10 +160,18 @@ def register():
 
 @app.route('/api/<userid>/transaction-history', methods=['GET', 'POST'])
 def transaction_history(userid):
-    # This method shows clients and trader their transaction histories 
-    if request.method == 'POST':
+    # This method shows clients and trader their transaction histories
+    # daily, weekly, or monthly
+    if request.method == 'POST' and \
+       'user_type' in request.form and \
+       'time_period' in request.form:
+        user_type = request.form['user_type']
+        time_period = request.form['time_period']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        transaction_histories = Database.get_user_transaction_history(cursor, mysql, userid)
+        transaction_histories = Database.get_user_transaction_history(
+            cursor, mysql,
+            [user_type, userid, time_period]
+        )
     # end if
     cursor.close()
     return jsonify(
@@ -269,9 +277,11 @@ def cancel_tansaction(userid):
         )
         msg = "Transaction successfully canceled."
     # end if
-    pass
+    return jsonify(
+        msg=msg
+    )
 
-@app.route('/api/update_level', methods=['GET', 'POST'])
+@app.route('/api/update-level', methods=['GET', 'POST'])
 def update_level():
     pass
 

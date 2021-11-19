@@ -139,8 +139,13 @@ class Database:
         return account_info
                 
     @classmethod
-    def get_user_transaction_history(cls, cursor, mysql, userid):
+    def get_user_transaction_history(cls, cursor, mysql, data):
+        user_type, userid, time_period = data[0], data[1], data[2]
         # TODO: select transaction histories given userid
+        # user_type: one out of [client, trader, manager]
+        # time_period: one out of [daily, weekly, monthly]
+        # in case of manager, it shows every transaction history over all
+        # client and trader
         pass
 
     @classmethod
@@ -166,6 +171,4 @@ class Database:
         # TODO: cancel transaction in database
         # 1. delete transaction specified
         # 2. update log and its status
-        pass
-
-    
+        pass    
