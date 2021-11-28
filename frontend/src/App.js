@@ -48,7 +48,7 @@ function App() {
   return (
     <div className="App">
       <header className="Login"></header>
-      <form>
+      <form onSubmit={handleLogin}>
         <label for="username">
           <b>Username</b>
         </label>
@@ -69,9 +69,7 @@ function App() {
           required
           onChange={(e)=>setPassword(e.target.value)}
         />
-        <button type="submit" onClick={handleLogin}>
-          login
-        </button>
+         <input type="submit" value="Submit" />
       </form>
       <div>
         Don't have an account? <a href="www.google.com">Click Here</a>
