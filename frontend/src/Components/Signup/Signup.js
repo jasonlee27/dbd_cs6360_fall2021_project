@@ -22,6 +22,7 @@ function Signup(props) {
       .post("http://localhost:5000/register", {
         username: username,
         password: password,
+        user_type: "user",
         clientid: null,
         client_password: null,
         firstname: firstName,
@@ -35,8 +36,6 @@ function Signup(props) {
         cellphone: cellPhoneNumber,
         phone: phoneNumber,
         level: null,
-        bitcoin: null,
-        flatcurrency: null,
       })
       .then((response) => { 
         if(response.data.msg === 'Logged in successfully !') {

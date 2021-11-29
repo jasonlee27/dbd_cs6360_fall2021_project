@@ -10,11 +10,11 @@ function Login(props) {
     function handleLogin(e, username, password) {
       axios
       .post("http://localhost:5000/login", {
-        username: username,
+        userid: username,
         password: password
       })
       .then((response) => { 
-        if(response.data.msg === 'Logged in successfully !') {
+        if(response.data.msg === "Successfully logged in!") {
             props.setLoggedIn();
         }
         else {
