@@ -13,7 +13,7 @@ function Transaction(props) {
   return (
     <div className="App">
       <header className="Transaction"></header>
-      <Form className="m-3" onSubmit={handleLogin}>
+      <Form className="m-3" onSubmit={handleTransaction}>
         <Form.Group className="mb-3" controlId="formBuySell">
           <Form.Label>Transaction Type</Form.Label>
           <Form.Check inline label="Buy" type="radio" />
@@ -38,4 +38,4 @@ function Transaction(props) {
     </div>
   );
 }
-export default Login;
+export default Transaction;

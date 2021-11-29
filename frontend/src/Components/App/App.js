@@ -1,6 +1,7 @@
 import "./App.css";
 import Login from "../Login/Login.js";
 import Signup from "../Signup/Signup.js";
+import Transaction from "../btcTransaction.js";
 import React, {useEffect} from 'react';
 import useState from 'react-usestateref';
 
@@ -13,7 +14,7 @@ function App() {
     setState('login');
   };
   let handleLogin  = () => {
-    setState('LoggedIn');
+    setState('btcTransaction');
   };
 
   return (
@@ -22,7 +23,9 @@ function App() {
         <Login createNewAccount={handleCreateNewAccount} setLoggedIn={handleLogin}/>
       }
       {state==='signup' && 
-        <Signup returnToLogin={handleReturnToLogin}/>}
+        <Signup returnToLogin={handleReturnToLogin} setLoggedIn={handleLogin} />}
+      {state==='btcTransaction' && 
+        <Transaction />}
     </div>
   )
 }

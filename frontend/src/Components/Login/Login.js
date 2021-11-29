@@ -10,7 +10,9 @@ function Login(props) {
   function handleLogin(e, username, password) {
     e.preventDefault();
     let loginInfo = new FormData(e.target);
+    props.setLoggedIn();
     console.log(loginInfo);
+    /*
     axios
       .post("http://localhost:8080/login", {
         loginInfo,
@@ -22,6 +24,7 @@ function Login(props) {
           console.log("Login Failed");
         }
       });
+      */
   }
 
   return (
