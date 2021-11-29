@@ -9,6 +9,9 @@ function App() {
   let handleCreateNewAccount = () => {
     setState('signup');
   };
+  let handleReturnToLogin  = () => {
+    setState('login');
+  };
   let handleLogin  = () => {
     setState('LoggedIn');
   };
@@ -19,7 +22,7 @@ function App() {
         <Login createNewAccount={handleCreateNewAccount} setLoggedIn={handleLogin}/>
       }
       {state==='signup' && 
-        <Signup />}
+        <Signup returnToLogin={handleReturnToLogin}/>}
     </div>
   )
 }

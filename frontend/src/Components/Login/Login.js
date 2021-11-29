@@ -3,15 +3,17 @@ import React, { useState, useEffect } from 'react'
 import axios from "axios";
 
 function Login(props) {
-    const [username, setUsername] = useState(0);
-    const [password, setPassword] = useState(0);
+   const [username, setUsername] = useState(0);
+  const [password, setPassword] = useState(0);
     
 
     function handleLogin(e, username, password) {
+      e.preventDefault();
+      let loginInfo = new FormData(e.target);
+      console.log(loginInfo);
       axios
       .post("http://localhost:8080/login", {
-        userid: username,
-        password: password
+        loginInfo
       })
       .then((response) => { 
         if(response.data.msg === "Successfully logged in!") {
