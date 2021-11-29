@@ -5,19 +5,6 @@ import useState from "react-usestateref";
 import axios from "axios";
 
 function Signup(props) {
-  const [username, setUsername] = useState(0);
-  const [password, setPassword] = useState(0);
-  const [firstName, setFirstName] = useState(0);
-  const [lastName, setLastName] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState(0);
-  const [cellPhoneNumber, setCellPhoneNumber] = useState(0);
-  const [emailAddress, setEmailAddress] = useState(0);
-  const [streetAddress1, setStreetAddress1] = useState(0);
-  const [streetAddress2, setStreetAddress2] = useState(0);
-  const [city, setCity] = useState(0);
-  const [state, setState] = useState(0);
-  const [zipCode, setZipCode] = useState(0);
-
   let handleSignup = (e) => {
     e.preventDefault();
     let signupData = new FormData(e.target);
@@ -47,7 +34,7 @@ function Signup(props) {
                   required
                   type="text"
                   placeholder="Username"
-                  onChange={(e) => setUsername(e.target.value)}
+                  name="username"
                 />
               </Form.Group>
 
@@ -57,7 +44,7 @@ function Signup(props) {
                   required
                   type="password"
                   placeholder="Password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
                 />
               </Form.Group>
             </Row>
@@ -69,7 +56,7 @@ function Signup(props) {
                   required
                   type="text"
                   placeholder="Jane"
-                  onChange={(e) => setFirstName(e.target.value)}
+                  name="firstname"
                 />
               </Form.Group>
 
@@ -79,7 +66,7 @@ function Signup(props) {
                   required
                   type="text"
                   placeholder="Doe"
-                  onChange={(e) => setLastName(e.target.value)}
+                  name="lastname"
                 />
               </Form.Group>
             </Row>
@@ -91,7 +78,7 @@ function Signup(props) {
                   required
                   type="text"
                   placeholder="##########"
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  name="phonenumber"
                 />
               </Form.Group>
 
@@ -101,7 +88,7 @@ function Signup(props) {
                   required
                   type="text"
                   placeholder="##########"
-                  onChange={(e) => setCellPhoneNumber(e.target.value)}
+                  name="cellphonenumber"
                 />
               </Form.Group>
             </Row>
@@ -112,7 +99,7 @@ function Signup(props) {
                 required
                 type="email"
                 placeholder="Email"
-                onChange={(e) => setEmailAddress(e.target.value)}
+                name="emailaddress"
               />
             </Form.Group>
 
@@ -122,7 +109,7 @@ function Signup(props) {
                 required
                 type="text"
                 placeholder="#### Street"
-                onChange={(e) => setStreetAddress1(e.target.value)}
+                name="streetaddress1"
               />
             </Form.Group>
 
@@ -132,36 +119,24 @@ function Signup(props) {
                 required
                 type="text"
                 placeholder="Bldg, Apt, floor, etc"
-                onChange={(e) => setStreetAddress2(e.target.value)}
+                name="streetaddress2"
               />
             </Form.Group>
 
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridCity">
                 <Form.Label>City</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  onChange={(e) => setCity(e.target.value)}
-                />
+                <Form.Control required type="text" name="city" />
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridState">
                 <Form.Label>State</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  onChange={(e) => setState(e.target.value)}
-                />
+                <Form.Control required type="text" name="state" />
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridZip">
                 <Form.Label>Zip</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  onChange={(e) => setZipCode(e.target.value)}
-                />
+                <Form.Control required type="text" name="zipcode" />
               </Form.Group>
             </Row>
 

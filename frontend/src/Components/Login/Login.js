@@ -4,9 +4,6 @@ import { Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 
 function Login(props) {
-  const [username, setUsername] = useState(0);
-  const [password, setPassword] = useState(0);
-
   function handleLogin(e, username, password) {
     e.preventDefault();
     let loginInfo = new FormData(e.target);
@@ -41,7 +38,6 @@ function Login(props) {
                 placeholder="Enter Username"
                 name="username"
                 required
-                onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-1" controlId="formPassword">
@@ -52,7 +48,6 @@ function Login(props) {
                 placeholder="Enter Password"
                 name="password"
                 required
-                onChange={(e) => setPassword(e.target.value)}
               />
               <br></br>
             </Form.Group>
