@@ -1,6 +1,7 @@
 import "./Signup.css";
 import React from "react";
-import useState from 'react-usestateref';
+import { Button, Form, Row, Col, Card } from "react-bootstrap";
+import useState from "react-usestateref";
 import axios from "axios";
 
 function Signup(props) {
@@ -25,143 +26,160 @@ function Signup(props) {
         signupData,
         level: null,
       })
-      .then((response) => { 
-        if(response.data.msg === 'Logged in successfully !') {
-            props.setLoggedIn();
-        }
-        else {
-          console.log('Login Failed');
+      .then((response) => {
+        if (response.data.msg === "Logged in successfully !") {
+          props.setLoggedIn();
+        } else {
+          console.log("Login Failed");
         }
       });
   };
   return (
-    <div className="Signup">
-      <form onSubmit={handleSignup}>
-        <label htmlFor="username">
-          <b>Username</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Username"
-          name="username"
-          required
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label htmlFor="password">
-          <b>Password</b>
-        </label>
-        <input
-          type="password"
-          placeholder="Password"
-          name="password"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <label htmlFor="firstname">
-          <b>First Name</b>
-        </label>
-        <input
-          type="text"
-          placeholder="First name"
-          name="firstname"
-          required
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        <label htmlFor="lastname">
-          <b>Last Name</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Last name"
-          name="lastname"
-          required
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <label htmlFor="phonenumber">
-          <b>Phone Number</b>
-        </label>
-        <input
-          type="number"
-          placeholder="Phone Number"
-          name="phonenumber"
-          required
-          onChange={(e) => setPhoneNumber(e.target.value)}
-        />
-        <label htmlFor="cellphonenumber">
-          <b>Cell Phone Number</b>
-        </label>
-        <input
-          type="number"
-          placeholder="Cellphone Number"
-          name="cellphonenumber"
-          required
-          onChange={(e) => setCellPhoneNumber(e.target.value)}
-        />
-        <label htmlFor="emailaddress">
-          <b>Email Address</b>
-        </label>
-        <input
-          type="email"
-          placeholder="Email Address"
-          name="emailaddress"
-          required
-          onChange={(e) => setEmailAddress(e.target.value)}
-        />
-        <label htmlFor="streetaddress1">
-          <b>Street Address 1</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Street Address1"
-          name="streetaddress1"
-          required
-          onChange={(e) => setStreetAddress1(e.target.value)}
-        />
-          <label htmlFor="streetaddress2">
-          <b>Street Address 2</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Street Address2"
-          name="streetaddress2"
-          required
-          onChange={(e) => setStreetAddress2(e.target.value)}
-        />
-        <label htmlFor="city">
-          <b>City</b>
-        </label>
-        <input
-          type="text"
-          placeholder="City"
-          name="city"
-          required
-          onChange={(e) => setCity(e.target.value)}
-        />
-        <label htmlFor="state">
-          <b>State</b>
-        </label>
-        <input
-          type="text"
-          placeholder="State"
-          name="state"
-          required
-          onChange={(e) => setState(e.target.value)}
-        />
-        <label htmlFor="zipcode">
-          <b>Zip Code</b>
-        </label>
-        <input
-          type="text"
-          placeholder="zipcode"
-          name="zipcode"
-          required
-          onChange={(e) => setZipCode(e.target.value)}
-        />
-        <input type="submit" value="Submit" />
-      </form>
-      <button onClick={props.returnToLogin}>
-        Return to Login Screen
-      </button>
+    <div className="Signup mt-5">
+      <Card className="mx-auto" style={{ width: "45rem" }}>
+        <Card.Header>Signup</Card.Header>
+        <Card.Body>
+          <Form onSubmit={handleSignup}>
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridUsername">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Username"
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
+
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridFname">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Jane"
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formLname">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Doe"
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
+
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridPhone">
+                <Form.Label>Phone Number</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="##########"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridCell">
+                <Form.Label>Cellphone Number</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="##########"
+                  onChange={(e) => setCellPhoneNumber(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
+
+            <Form.Group className="mb-3" controlId="formGridEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                required
+                type="email"
+                placeholder="Email"
+                onChange={(e) => setEmailAddress(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formGridAddress1">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                placeholder="#### Street"
+                onChange={(e) => setStreetAddress1(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formGridAddress2">
+              <Form.Label>Address 2</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                placeholder="Bldg, Apt, floor, etc"
+                onChange={(e) => setStreetAddress2(e.target.value)}
+              />
+            </Form.Group>
+
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridCity">
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridState">
+                <Form.Label>State</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  onChange={(e) => setState(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridZip">
+                <Form.Label>Zip</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  onChange={(e) => setZipCode(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
+
+            <Button variant="success" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Card.Body>
+        <Card.Body>
+          <Button
+            className=""
+            variant="outline-primary"
+            onClick={props.returnToLogin}
+          >
+            Return to Login
+          </Button>
+        </Card.Body>
+      </Card>
     </div>
   );
 }

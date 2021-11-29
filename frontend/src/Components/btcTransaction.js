@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, FormControl, Form } from "react-bootstrap";
+import { Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 
 function Transaction(props) {
@@ -11,30 +11,36 @@ function Transaction(props) {
   }
 
   return (
-    <div className="App">
-      <header className="Transaction"></header>
-      <Form className="m-3" onSubmit={handleTransaction}>
-        <Form.Group className="mb-3" controlId="formBuySell">
-          <Form.Label>Transaction Type</Form.Label>
-          <Form.Check inline label="Buy" type="radio" />
-          <Form.Check inline label="Sell" type="radio" />
-        </Form.Group>
+    <div className="BTCTransation mt-5">
+      <Card className="mx-auto" style={{ width: "18rem" }}>
+        <Card.Header>Bitcoin Transaction</Card.Header>
+        <Card.Body>
+          <Form onSubmit={handleTransaction}>
+            <Form.Group className="mb-3" controlId="formBuySell">
+              <Form.Label>Transaction Type</Form.Label>
+              <br></br>
+              <Form.Check inline label="Buy" type="radio" />
+              <Form.Check inline label="Sell" type="radio" />
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBtcAmount">
-          <Form.Label>Bitcoin Amount</Form.Label>
-          <Form.Control type="text" placeholder="BTC Amount" />
-        </Form.Group>
+            <Form.Group className="mb-3" controlId="formBtcAmount">
+              <Form.Label>Bitcoin Amount</Form.Label>
+              <Form.Control type="text" placeholder="BTC Amount" />
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBuySell">
-          <Form.Label>Commission Payment</Form.Label>
-          <Form.Check inline label="Bitcoin" type="radio" />
-          <Form.Check inline label="Fiat" type="radio" />
-        </Form.Group>
+            <Form.Group className="mb-3" controlId="formBuySell">
+              <Form.Label>Commission Payment</Form.Label>
+              <br></br>
+              <Form.Check inline label="Bitcoin" type="radio" />
+              <Form.Check inline label="Fiat" type="radio" />
+            </Form.Group>
 
-        <Button variant="success" type="submit">
-          Submit
-        </Button>
-      </Form>
+            <Button variant="success" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
     </div>
   );
 }
