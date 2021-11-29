@@ -6,7 +6,6 @@ import axios from "axios";
 function Login(props) {
   function handleLogin(e) {
     e.preventDefault();
-    alert(e.target);
     let loginData = new FormData(e.target);
     console.log(loginData);
     props.setLoggedIn();
