@@ -16,7 +16,6 @@ function App() {
   let handleLogin  = () => {
     setState('btcTransaction');
   };
-
   return (
     <div>
      {state==='login' && 

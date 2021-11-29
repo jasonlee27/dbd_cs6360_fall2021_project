@@ -4,15 +4,17 @@ import { Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 
 function Login(props) {
-  function handleLogin(e, username, password) {
+  function handleLogin(e) {
     e.preventDefault();
-    let loginInfo = new FormData(e.target);
+    console.log(formData);
     props.setLoggedIn();
-    console.log(loginInfo);
-    /*
+    
     axios
       .post("http://localhost:8080/login", {
-        loginInfo,
+        method: 'post',
+        url:'/login',
+        userid: formData.userid,
+        password: formData.password  
       })
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
@@ -21,8 +23,21 @@ function Login(props) {
           console.log("Login Failed");
         }
       });
-      */
   }
+  const initialFormData = Object.freeze({
+      userid: "",
+      password: ""
+  });
+  const [formData, updateFormData] = React.useState(initialFormData);
+  const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+
+      // Trimming any whitespace
+      [e.target.name]: e.target.value.trim()
+    });
+  };
+
 
   return (
     <div className="AppLogin mt-5">
@@ -38,6 +53,7 @@ function Login(props) {
                 placeholder="Enter Username"
                 name="userid"
                 required
+                onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="mb-1" controlId="formPassword">
@@ -48,11 +64,12 @@ function Login(props) {
                 placeholder="Enter Password"
                 name="password"
                 required
+                onChange={handleChange} 
               />
               <br></br>
             </Form.Group>
 
-            <Button variant="success" type="submit" value="Submit">
+            <Button variant="success" type="submit" value="Submit" onClick={handleLogin}>
               Submit
             </Button>
           </Form>
