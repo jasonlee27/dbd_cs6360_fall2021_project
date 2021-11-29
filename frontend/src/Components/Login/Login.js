@@ -64,7 +64,7 @@ function Login(props) {
               <br></br>
             </Form.Group>
 
-            <Button variant="success" type="submit" value="Submit" onClick={handleLogin}>
+            <Button variant="success" type="submit" value="Submit" >
               Submit
             </Button>
           </Form>

@@ -7,9 +7,7 @@ function Transaction(props) {
     e.preventDefault();
     let transaction = new FormData(e.target);
     axios
-      .post("http://localhost:8080//api/profile/buysell", {
-        transaction,
-      })
+      .post("http://localhost:8080//api/profile/buysell", transaction)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
