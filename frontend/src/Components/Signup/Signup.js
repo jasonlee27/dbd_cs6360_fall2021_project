@@ -1,9 +1,10 @@
 import "./Signup.css";
 import React from "react";
+import { Button, Form, Row, Col, Card } from "react-bootstrap";
+import useState from "react-usestateref";
 import axios from "axios";
 
 function Signup(props) {
-
   let handleSignup = (e) => {
     e.preventDefault();
     let signupData = new FormData(e.target);
@@ -12,131 +13,148 @@ function Signup(props) {
         signupData,
         level: null,
       })
-      .then((response) => { 
-        if(response.data.msg === 'Logged in successfully !') {
-            props.setLoggedIn();
-        }
-        else {
-          console.log('Login Failed');
+      .then((response) => {
+        if (response.data.msg === "Logged in successfully !") {
+          props.setLoggedIn();
+        } else {
+          console.log("Login Failed");
         }
       });
   };
   return (
-    <div className="Signup">
-      <form onSubmit={handleSignup}>
-        <label htmlFor="username">
-          <b>Username</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Username"
-          name="username"
-          required
-        />
-        <label htmlFor="password">
-          <b>Password</b>
-        </label>
-        <input
-          type="password"
-          placeholder="Password"
-          name="password"
-          required
-        />
-        <label htmlFor="firstname">
-          <b>First Name</b>
-        </label>
-        <input
-          type="text"
-          placeholder="First name"
-          name="firstname"
-          required
-        />
-        <label htmlFor="lastname">
-          <b>Last Name</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Last name"
-          name="lastname"
-          required
-        />
-        <label htmlFor="phonenumber">
-          <b>Phone Number</b>
-        </label>
-        <input
-          type="number"
-          placeholder="Phone Number"
-          name="phonenumber"
-          required
-        />
-        <label htmlFor="cellphonenumber">
-          <b>Cell Phone Number</b>
-        </label>
-        <input
-          type="number"
-          placeholder="Cellphone Number"
-          name="cellphonenumber"
-          required
-        />
-        <label htmlFor="emailaddress">
-          <b>Email Address</b>
-        </label>
-        <input
-          type="email"
-          placeholder="Email Address"
-          name="emailaddress"
-          required
-        />
-        <label htmlFor="streetaddress1">
-          <b>Street Address 1</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Street Address1"
-          name="streetaddress1"
-          required
-        />
-          <label htmlFor="streetaddress2">
-          <b>Street Address 2</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Street Address2"
-          name="streetaddress2"
-          required
-        />
-        <label htmlFor="city">
-          <b>City</b>
-        </label>
-        <input
-          type="text"
-          placeholder="City"
-          name="city"
-          required
-        />
-        <label htmlFor="state">
-          <b>State</b>
-        </label>
-        <input
-          type="text"
-          placeholder="State"
-          name="state"
-          required
-        />
-        <label htmlFor="zipcode">
-          <b>Zip Code</b>
-        </label>
-        <input
-          type="text"
-          placeholder="zipcode"
-          name="zipcode"
-          required
-        />
-        <input type="submit" value="Submit" />
-      </form>
-      <button onClick={props.returnToLogin}>
-        Return to Login Screen
-      </button>
+    <div className="Signup mt-5">
+      <Card className="mx-auto" style={{ width: "45rem" }}>
+        <Card.Header>Signup</Card.Header>
+        <Card.Body>
+          <Form onSubmit={handleSignup}>
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridUsername">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Username"
+                  name="username"
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                />
+              </Form.Group>
+            </Row>
+
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridFname">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Jane"
+                  name="firstname"
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formLname">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Doe"
+                  name="lastname"
+                />
+              </Form.Group>
+            </Row>
+
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridPhone">
+                <Form.Label>Phone Number</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="##########"
+                  name="phonenumber"
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridCell">
+                <Form.Label>Cellphone Number</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="##########"
+                  name="cellphonenumber"
+                />
+              </Form.Group>
+            </Row>
+
+            <Form.Group className="mb-3" controlId="formGridEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                required
+                type="email"
+                placeholder="Email"
+                name="emailaddress"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formGridAddress1">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                placeholder="#### Street"
+                name="streetaddress1"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formGridAddress2">
+              <Form.Label>Address 2</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                placeholder="Bldg, Apt, floor, etc"
+                name="streetaddress2"
+              />
+            </Form.Group>
+
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridCity">
+                <Form.Label>City</Form.Label>
+                <Form.Control required type="text" name="city" />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridState">
+                <Form.Label>State</Form.Label>
+                <Form.Control required type="text" name="state" />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridZip">
+                <Form.Label>Zip</Form.Label>
+                <Form.Control required type="text" name="zipcode" />
+              </Form.Group>
+            </Row>
+
+            <Button variant="success" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Card.Body>
+        <Card.Body>
+          <Button
+            className=""
+            variant="outline-primary"
+            onClick={props.returnToLogin}
+          >
+            Return to Login
+          </Button>
+        </Card.Body>
+      </Card>
     </div>
   );
 }

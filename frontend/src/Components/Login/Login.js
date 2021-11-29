@@ -1,10 +1,9 @@
 import "./Login.css";
-import React from "react";
-import { Button, Form } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 
 function Login(props) {
-
   function handleLogin(e, username, password) {
     e.preventDefault();
     let loginInfo = new FormData(e.target);
@@ -26,58 +25,47 @@ function Login(props) {
   }
 
   return (
-    <div className="App">
-      <header className="Login"></header>
-      <Form className="m-3" onSubmit={handleLogin}>
-        {/* <label htmlFor="username">
-          <b>Username</b>
-        </label>
-        <input
-          type="text"
-          placeholder="Enter Username"
-          name="username"
-          required
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label htmlFor="password">
-          <b>Password</b>
-        </label>
-        <input
-          type="password"
-          placeholder="Enter Password"
-          name="password"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input type="submit" value="Submit" /> */}
+    <div className="AppLogin mt-5">
+      <Card className="mx-auto" style={{ width: "18rem" }}>
+        <Card.Header>Login</Card.Header>
+        <Card.Body>
+          <Form onSubmit={handleLogin}>
+            <Form.Group controlId="formUsername">
+              <label htmlFor="userid"></label>
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter Username"
+                name="userid"
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-1" controlId="formPassword">
+              <label htmlFor="password"></label>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Enter Password"
+                name="password"
+                required
+              />
+              <br></br>
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formUsername">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            placeholder="Enter Username"
-            name="username"
-            required></input>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formPassword">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            placeholder="Enter Password"
-            name="password"
-            required></input>
-          <br></br>
-        </Form.Group>
+            <Button variant="success" type="submit" value="Submit">
+              Submit
+            </Button>
+          </Form>
 
-        <Button variant="success" type="submit" value="Submit">
-          Submit
-        </Button>
-      </Form>
-
-      <div className="mt-5">Don't have an account?</div>
-      <Button variant="outline-primary" onClick={props.createNewAccount}>
-        Create Account
-      </Button>
+          <div className="mt-4">
+            Don't have an account?
+            <br></br>
+            <Button variant="outline-primary" onClick={props.createNewAccount}>
+              Create Account
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
     </div>
   );
 }
