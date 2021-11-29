@@ -25,7 +25,7 @@ mysql = MySQL(app)
 # Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func="update_level", trigger='cron', day_of_week='1st mon')
+scheduler.add_job(func=update_level, trigger='cron', day='1st mon')
 
 @app.route("/api/status", methods=['GET'])
 def status():
