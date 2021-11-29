@@ -6,16 +6,13 @@ import axios from "axios";
 function Login(props) {
   function handleLogin(e) {
     e.preventDefault();
-    console.log(formData);
+    alert(e.target);
+    let loginData = new FormData(e.target);
+    console.log(loginData);
     props.setLoggedIn();
     
     axios
-      .post("http://localhost:8080/login", {
-        method: 'post',
-        url:'/login',
-        userid: formData.userid,
-        password: formData.password  
-      })
+      .post("http://localhost:8080/login", formData)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
@@ -69,7 +66,7 @@ function Login(props) {
               <br></br>
             </Form.Group>
 
-            <Button variant="success" type="submit" value="Submit" onClick={handleLogin}>
+            <Button variant="success" type="submit" value="Submit" >
               Submit
             </Button>
           </Form>
