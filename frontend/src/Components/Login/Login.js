@@ -8,10 +8,12 @@ function Login(props) {
   const [password, setPassword] = useState(0);
 
   function handleLogin(e, username, password) {
+    e.preventDefault();
+    let loginInfo = new FormData(e.target);
+    console.log(loginInfo);
     axios
-      .post("http://localhost:5000/login", {
-        userid: username,
-        password: password,
+      .post("http://localhost:8080/login", {
+        loginInfo,
       })
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {

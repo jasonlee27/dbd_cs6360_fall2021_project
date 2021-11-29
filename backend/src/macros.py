@@ -21,4 +21,4 @@ class Macros:
     MYSQL_PASSWORD = 'password'
     MYSQL_DB = 'bts_db'
 
-    PORT_NUM = 3000
+    PORT_NUM = 3306

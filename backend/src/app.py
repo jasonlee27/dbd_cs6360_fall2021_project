@@ -113,8 +113,8 @@ def register():
                 "phone": request.form['phone'],
                 "email": request.form['email'],
                 "level": request.form['level'],
-                "bitcoin": 0.,
-                "flatcurrency": 0.
+                "bitcoin": 0.0,
+                "flatcurrency": 0.0
             }
         elif user_type=="trader":
             # trader info
@@ -122,8 +122,8 @@ def register():
                 "user_type": user_type,
                 "userid": hash_userid,
                 "password": hash_password,
-                "bitcoin": 0.,
-                "flatcurrency": 0.
+                "bitcoin": 0.0,
+                "flatcurrency": 0.0
             }
         elif user_type=="manager":
             # trader info

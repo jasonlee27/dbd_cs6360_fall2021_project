@@ -17,24 +17,12 @@ function Signup(props) {
   const [state, setState] = useState(0);
   const [zipCode, setZipCode] = useState(0);
 
-  let handleSignup = () => {
+  let handleSignup = (e) => {
+    e.preventDefault();
+    let signupData = new FormData(e.target);
     axios
       .post("http://localhost:5000/register", {
-        username: username,
-        password: password,
-        user_type: "user",
-        clientid: null,
-        client_password: null,
-        firstname: firstName,
-        lastname: lastName,
-        email: emailAddress,
-        address1: streetAddress1,
-        address2: streetAddress2,
-        city: city,
-        state: state,
-        zipcode: zipCode,
-        cellphone: cellPhoneNumber,
-        phone: phoneNumber,
+        signupData,
         level: null,
       })
       .then((response) => { 
@@ -171,6 +159,9 @@ function Signup(props) {
         />
         <input type="submit" value="Submit" />
       </form>
+      <button onClick={props.returnToLogin}>
+        Return to Login Screen
+      </button>
     </div>
   );
 }
