@@ -1,6 +1,7 @@
 import "./Signup.css";
 import Request from "axios-react";
-import React, { useState, useEffect } from "react";
+import React from "react";
+import useState from 'react-usestateref';
 
 function Signup() {
   const [username, setUsername] = useState(0);
@@ -21,7 +22,7 @@ function Signup() {
   return (
     <div className="Signup">
       <form onSubmit={handleSignup}>
-        <label for="username">
+        <label htmlFor="username">
           <b>Username</b>
         </label>
         <input
@@ -31,7 +32,7 @@ function Signup() {
           required
           onChange={(e) => setUsername(e.target.value)}
         />
-        <label for="password">
+        <label htmlFor="password">
           <b>Password</b>
         </label>
         <input
@@ -41,7 +42,7 @@ function Signup() {
           required
           onChange={(e) => setPassword(e.target.value)}
         />
-        <label for="firstname">
+        <label htmlFor="firstname">
           <b>First Name</b>
         </label>
         <input
@@ -51,7 +52,7 @@ function Signup() {
           required
           onChange={(e) => setFirstName(e.target.value)}
         />
-        <label for="lastname">
+        <label htmlFor="lastname">
           <b>First Name</b>
         </label>
         <input
@@ -61,7 +62,7 @@ function Signup() {
           required
           onChange={(e) => setLastName(e.target.value)}
         />
-        <label for="phonenumber">
+        <label htmlFor="phonenumber">
           <b>Phone Number</b>
         </label>
         <input
@@ -71,7 +72,7 @@ function Signup() {
           required
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
-        <label for="cellphonenumber">
+        <label htmlFor="cellphonenumber">
           <b>Cell Phone Number</b>
         </label>
         <input
@@ -81,7 +82,7 @@ function Signup() {
           required
           onChange={(e) => setCellPhoneNumber(e.target.value)}
         />
-        <label for="emailaddress">
+        <label htmlFor="emailaddress">
           <b>Cell Phone Number</b>
         </label>
         <input
@@ -91,7 +92,7 @@ function Signup() {
           required
           onChange={(e) => setEmailAddress(e.target.value)}
         />
-        <label for="streetaddress">
+        <label htmlFor="streetaddress">
           <b>Cell Phone Number</b>
         </label>
         <input
@@ -101,7 +102,7 @@ function Signup() {
           required
           onChange={(e) => setStreetAddress(e.target.value)}
         />
-        <label for="city">
+        <label htmlFor="city">
           <b>Cell Phone Number</b>
         </label>
         <input
@@ -111,7 +112,7 @@ function Signup() {
           required
           onChange={(e) => setCity(e.target.value)}
         />
-        <label for="state">
+        <label htmlFor="state">
           <b>State</b>
         </label>
         <input
@@ -121,7 +122,7 @@ function Signup() {
           required
           onChange={(e) => setState(e.target.value)}
         />
-        <label for="zipcode">
+        <label htmlFor="zipcode">
           <b>Zip Code</b>
         </label>
         <input

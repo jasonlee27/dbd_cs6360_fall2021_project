@@ -48,7 +48,7 @@ function Login(props) {
       <div className="App">
         <header className="Login"></header>
         <form onSubmit={handleLogin}>
-          <label for="username">
+          <label htmlFor="username">
             <b>Username</b>
           </label>
           <input
@@ -58,7 +58,7 @@ function Login(props) {
             required
             onChange={(e)=>setUsername(e.target.value)}
           />
-          <label for="password">
+          <label htmlFor="password">
             <b>Password</b>
           </label>
           <input
@@ -71,7 +71,10 @@ function Login(props) {
            <input type="submit" value="Submit" />
         </form>
         <div>
-          Don't have an account? <a href="signup" onClick={props.createNewAccount}>Click Here</a>
+        Don't have an account?
+        <button onClick={props.createNewAccount}>
+          Create Account
+            </button>
         </div>
       </div>
     );

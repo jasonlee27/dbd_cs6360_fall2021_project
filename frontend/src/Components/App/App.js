@@ -2,24 +2,25 @@ import "./App.css";
 import Login from "../Login/Login.js";
 import Signup from "../Signup/Signup.js";
 import Request from "axios-react";
-import React, { useState, useEffect } from 'react'
+import React, {useEffect} from 'react';
+import useState from 'react-usestateref';
 
 function App() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState('login');
   let handleCreateNewAccount = () => {
-    setIsLogin(false);
+    setIsLogin('signup');
   };
+  useEffect(() => {
+  });
 
   return (
     <div>
-     {isLogin && (
+     {isLogin==='login' && 
         <Login createNewAccount={handleCreateNewAccount}/>
-      )}
-      {!isLogin && (
-        <Signup />
-      )}
+      }
+      {isLogin==='signup' && 
+        <Signup />}
     </div>
-
   )
 }
 
