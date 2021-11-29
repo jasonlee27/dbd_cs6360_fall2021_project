@@ -6,13 +6,13 @@ import axios from "axios";
 function Login(props) {
   function handleLogin(e) {
     e.preventDefault();
-
-    let loginData = new FormData(e.target);
-    console.log(loginData);
-    props.setLoggedIn();
+    console.log(formData);
+    var bodyFormData = new FormData();
+    bodyFormData.append("userid", formData.userid)
+    bodyFormData.append("password", formData.password)
     
     axios
-      .post("http://localhost:8080/login", loginData)
+      .post("http://localhost:8080/login", bodyFormData)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
@@ -34,8 +34,6 @@ function Login(props) {
       [e.target.name]: e.target.value.trim()
     });
   };
-
-
   return (
     <div className="AppLogin mt-5">
       <Card className="mx-auto" style={{ width: "18rem" }}>
