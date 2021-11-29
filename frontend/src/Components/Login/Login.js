@@ -11,7 +11,7 @@ function Login(props) {
     props.setLoggedIn();
     
     axios
-      .post("http://localhost:8080/login", formData)
+      .post("http://localhost:8080/login", loginData)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
