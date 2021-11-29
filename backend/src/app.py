@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from flask_mysqldb import MySQL
+from flask_cors import CORS
 
 from macros import Macros
 from utils import Utils
@@ -13,6 +14,7 @@ import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = Macros.SECRETE_KEY
 
 # DB connection details
@@ -34,22 +36,29 @@ def update_level():
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=update_level, trigger='cron', day='1st mon')
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    return response
+
 @app.route("/status", methods=['GET'])
 def status():
   return "running"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print("connected")
     msg = ''
     account_info = None
     if request.method =='POST' and \
        'userid' in request.form and \
        'password' in request.form:
-        userid = request.form['userid']
-        password = request.form['password']
+        userid = request.form["userid"]
+        password = request.form["password"]
         #username = Utils.hashing(username)
         #password = Utils.hashing(password)
+        print(userid, password)
         
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -226,7 +235,7 @@ def tansfer_from_bank(userid):
     pass
 
 @app.route('/api/profile/request', methods=['GET', 'POST'])
-def request(userid):
+def request_bitcoin(userid):
     # This method is for clients to request buy/sell bitcoin to trader
     msg = ''
     if request.method == 'POST' and \
