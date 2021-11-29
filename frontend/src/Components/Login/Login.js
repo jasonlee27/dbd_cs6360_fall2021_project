@@ -1,11 +1,9 @@
 import "./Login.css";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button, FormControl, Form } from "react-bootstrap";
 import axios from "axios";
 
 function Login(props) {
-  const [username, setUsername] = useState(0);
-  const [password, setPassword] = useState(0);
 
   function handleLogin(e, username, password) {
     e.preventDefault();
@@ -59,9 +57,7 @@ function Login(props) {
             type="text"
             placeholder="Enter Username"
             name="username"
-            required
-            onChange={(e) => setUsername(e.target.value)}
-          ></input>
+            required></input>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formPassword">
           <label for="password">Password</label>
@@ -69,9 +65,7 @@ function Login(props) {
             type="password"
             placeholder="Enter Password"
             name="password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
+            required></input>
           <br></br>
         </Form.Group>
 
