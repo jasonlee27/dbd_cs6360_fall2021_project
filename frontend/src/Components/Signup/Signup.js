@@ -1,9 +1,9 @@
 import "./Signup.css";
-import Request from "axios-react";
 import React from "react";
 import useState from 'react-usestateref';
+import axios from "axios";
 
-function Signup() {
+function Signup(props) {
   const [username, setUsername] = useState(0);
   const [password, setPassword] = useState(0);
   const [firstName, setFirstName] = useState(0);
@@ -11,13 +11,41 @@ function Signup() {
   const [phoneNumber, setPhoneNumber] = useState(0);
   const [cellPhoneNumber, setCellPhoneNumber] = useState(0);
   const [emailAddress, setEmailAddress] = useState(0);
-  const [streetAddress, setStreetAddress] = useState(0);
+  const [streetAddress1, setStreetAddress1] = useState(0);
+  const [streetAddress2, setStreetAddress2] = useState(0);
   const [city, setCity] = useState(0);
   const [state, setState] = useState(0);
   const [zipCode, setZipCode] = useState(0);
 
   let handleSignup = () => {
-
+    axios
+      .post("http://localhost:5000/register", {
+        username: username,
+        password: password,
+        clientid: null,
+        client_password: null,
+        firstname: firstName,
+        lastname: lastName,
+        email: emailAddress,
+        address1: streetAddress1,
+        address2: streetAddress2,
+        city: city,
+        state: state,
+        zipcode: zipCode,
+        cellphone: cellPhoneNumber,
+        phone: phoneNumber,
+        level: null,
+        bitcoin: null,
+        flatcurrency: null,
+      })
+      .then((response) => { 
+        if(response.data.msg === 'Logged in successfully !') {
+            props.setLoggedIn();
+        }
+        else {
+          console.log('Login Failed');
+        }
+      });
   };
   return (
     <div className="Signup">
@@ -92,15 +120,25 @@ function Signup() {
           required
           onChange={(e) => setEmailAddress(e.target.value)}
         />
-        <label htmlFor="streetaddress">
+        <label htmlFor="streetaddress1">
           <b>Cell Phone Number</b>
         </label>
         <input
           type="text"
-          placeholder="Street Address"
-          name="streetaddress"
+          placeholder="Street Address1"
+          name="streetaddress1"
           required
-          onChange={(e) => setStreetAddress(e.target.value)}
+          onChange={(e) => setStreetAddress1(e.target.value)}
+        />
+          <label htmlFor="streetaddress2">
+          <b>Cell Phone Number</b>
+        </label>
+        <input
+          type="text"
+          placeholder="Street Address2"
+          name="streetaddress2"
+          required
+          onChange={(e) => setStreetAddress2(e.target.value)}
         />
         <label htmlFor="city">
           <b>Cell Phone Number</b>

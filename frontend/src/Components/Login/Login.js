@@ -1,47 +1,28 @@
 import "./Login.css";
-import Request from "axios-react";
 import React, { useState, useEffect } from 'react'
+import axios from "axios";
 
 function Login(props) {
     const [username, setUsername] = useState(0);
     const [password, setPassword] = useState(0);
+    
+
     function handleLogin(e, username, password) {
-      <div>
-        <Request
-          config={{
-            method: "get",
-            url: `http://localhost:8080/${username}`,
-          }}
-        >
-          {({ loading, response, error, refetch, networkStatus }) => (
-        
-            <div>
-              {networkStatus && <span>{networkStatus}</span>}
-              {loading && <span>Loading...</span>}
-              {error && <span>{error.response.data}</span>}
-              {response && <h3>{response.data.title}</h3>}
-              <button onClick={refetch}>Refetch!</button>
-            </div>
-          )}
-        </Request>
-  
-        <Request
-          config={{
-            method: "get",
-            url: `http://localhost:8080/${password}`,
-          }}
-        >
-          {({ loading, response, error, refetch, networkStatus }) => (
-            <div>
-              {networkStatus && <span>{networkStatus}</span>}
-              {loading && <span>Loading...</span>}
-              {error && <span>{error.response.data}</span>}
-              {response && <h3>{response.data.title}</h3>}
-              <button onClick={refetch}>Refetch!</button>
-            </div>
-          )}
-        </Request>
-      </div>;
+      axios
+      .post("http://localhost:5000/login", {
+        username: username,
+        password: password
+      })
+      .then((response) => { 
+        if(response.data.msg === 'Logged in successfully !') {
+            props.setLoggedIn();
+        }
+        else {
+          console.log('Login Failed');
+        }
+      });
+           
+     
     }
   
     return (
