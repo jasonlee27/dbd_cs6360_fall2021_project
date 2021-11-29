@@ -24,15 +24,23 @@ app.config['MYSQL_DB'] = Macros.MYSQL_DB #str(Macros.DB_FILE)
 mysql = MySQL(app)
 # Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
 
+def update_level():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    Database.update_level(cursor, mysql)
+    cursor.close()
+    msg = "User level successfully updated."
+    return
+
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=update_level, trigger='cron', day='1st mon')
 
-@app.route("/api/status", methods=['GET'])
+@app.route("/status", methods=['GET'])
 def status():
   return "running"
 
-@app.route('/api/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("connected")
     msg = ''
     account_info = None
     if request.method =='POST' and \
@@ -64,7 +72,7 @@ def login():
 
 # http://localhost:5000/api/logout
 # This will be the logout page
-@app.route('/api/logout')
+@app.route('/logout')
 def logout():
     # Remove session data, this will log the user out
     session.pop('loggedin', None)
@@ -77,7 +85,7 @@ def logout():
 
 # http://localhost:5000/api/register
 # this will be the registration page, we need to use both GET and POST requests
-@app.route('/api/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     # Output message if something goes wrong...
     msg = 'No input parameters'
@@ -168,13 +176,13 @@ def register():
         userid = hash_userid
     )
 
-@app.route('/api/profile', methods=['GET', 'POST'])
-def profile():
-    userid = session['userid']
-    user_type = session['user_type']
-    pass
+# @app.route('/profile', methods=['GET', 'POST'])
+# def profile():
+#     userid = session['userid']
+#     user_type = session['user_type']
+#     pass
 
-@app.route('/api/profile', methods=['GET', 'POST'])
+@app.route('/profile', methods=['GET', 'POST'])
 def transaction_history():
     # This method shows clients and trader their transaction histories
     # daily, weekly, or monthly
@@ -195,7 +203,7 @@ def transaction_history():
         transaction_histories=transaction_histories
     )
 
-@app.route('/api/profile', methods=['GET', 'POST'])
+@app.route('/profile', methods=['GET', 'POST'])
 def request_history(userid):
     # This method shows trader their requests received from clients
     if request.method == 'POST':
@@ -213,7 +221,7 @@ def request_history(userid):
         request_histories=request_histories
     )
 
-@app.route('/api/profile/transfer_from_bank', methods=['GET', 'POST'])
+@app.route('/profile/transfer_from_bank', methods=['GET', 'POST'])
 def tansfer_from_bank(userid):
     pass
 
@@ -244,7 +252,7 @@ def request(userid):
         msg=msg
     )   
 
-@app.route('/api/profile/buysell', methods=['GET', 'POST'])
+@app.route('/profile/buysell', methods=['GET', 'POST'])
 def buysell_bitcoin(userid):
     # This method is for client/trader to buy/sell bitcoin
     msg = ''
@@ -269,7 +277,7 @@ def buysell_bitcoin(userid):
         msg=msg
     )
 
-@app.route('/api/profile/transfer', methods=['GET', 'POST'])
+@app.route('/profile/transfer', methods=['GET', 'POST'])
 def transfer_money(userid):
     # This method is for client to transfer money to trader
     msg = ''
@@ -314,12 +322,7 @@ def cancel_tansaction(userid):
         msg=msg
     )
 
-def update_level():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    Database.update_level(cursor, mysql)
-    cursor.close()
-    msg = "User level successfully updated."
-    return
+
 
 
 if __name__ == '__main__':
