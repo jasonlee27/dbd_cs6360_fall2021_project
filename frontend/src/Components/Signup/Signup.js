@@ -81,7 +81,7 @@ function Signup(props) {
           onChange={(e) => setFirstName(e.target.value)}
         />
         <label htmlFor="lastname">
-          <b>First Name</b>
+          <b>Last Name</b>
         </label>
         <input
           type="text"
@@ -111,7 +111,7 @@ function Signup(props) {
           onChange={(e) => setCellPhoneNumber(e.target.value)}
         />
         <label htmlFor="emailaddress">
-          <b>Cell Phone Number</b>
+          <b>Email Address</b>
         </label>
         <input
           type="email"
@@ -121,7 +121,7 @@ function Signup(props) {
           onChange={(e) => setEmailAddress(e.target.value)}
         />
         <label htmlFor="streetaddress1">
-          <b>Cell Phone Number</b>
+          <b>Street Address 1</b>
         </label>
         <input
           type="text"
@@ -131,7 +131,7 @@ function Signup(props) {
           onChange={(e) => setStreetAddress1(e.target.value)}
         />
           <label htmlFor="streetaddress2">
-          <b>Cell Phone Number</b>
+          <b>Street Address 2</b>
         </label>
         <input
           type="text"
@@ -141,7 +141,7 @@ function Signup(props) {
           onChange={(e) => setStreetAddress2(e.target.value)}
         />
         <label htmlFor="city">
-          <b>Cell Phone Number</b>
+          <b>City</b>
         </label>
         <input
           type="text"
