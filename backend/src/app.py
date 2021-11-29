@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from flask_mysqldb import MySQL
+from flask_cors import CORS
 
 from macros import Macros
 from utils import Utils
@@ -22,6 +23,7 @@ app.config['MYSQL_USER'] = Macros.MYSQL_USER
 app.config['MYSQL_DB'] = Macros.MYSQL_DB #str(Macros.DB_FILE)
 
 mysql = MySQL(app)
+CORS(app)
 # Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
 
 def update_level():
@@ -226,7 +228,7 @@ def tansfer_from_bank(userid):
     pass
 
 @app.route('/api/profile/request', methods=['GET', 'POST'])
-def request(userid):
+def request1(userid):
     # This method is for clients to request buy/sell bitcoin to trader
     msg = ''
     if request.method == 'POST' and \
