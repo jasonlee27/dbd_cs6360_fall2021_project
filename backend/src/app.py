@@ -25,7 +25,7 @@ mysql = MySQL(app)
 # Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=update_level, 'cron', day='1st mon')
+scheduler.add_job(func=update_level, trigger='cron', day='1st mon')
 
 @app.route("/api/status", methods=['GET'])
 def status():
@@ -107,14 +107,14 @@ def register():
                 "address1": request.form['address1'],
                 "address2": request.form['address2'],
                 "city": request.form['city'],
-                "zipcode": request.form['zipcode']
+                "zipcode": request.form['zipcode'],
                 "state": request.form['state'],
                 "cphone": request.form['cellphone'],
                 "phone": request.form['phone'],
                 "email": request.form['email'],
                 "level": request.form['level'],
                 "bitcoin": 0.,
-                "flatcurrency" = 0.
+                "flatcurrency": 0.
             }
         elif user_type=="trader":
             # trader info
@@ -123,7 +123,7 @@ def register():
                 "userid": hash_userid,
                 "password": hash_password,
                 "bitcoin": 0.,
-                "flatcurrency" = 0.
+                "flatcurrency": 0.
             }
         elif user_type=="manager":
             # trader info
