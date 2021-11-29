@@ -1,14 +1,16 @@
 import React from "react";
-import { Button, FormControl, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import axios from "axios";
 
 function Transaction(props) {
+
+  [transactionType]
 
   function handleTransaction(e) {
     e.preventDefault();
     let transaction = new FormData(e.target);
     axios
-    .post("http://localhost:8080//api/profile/request", {
+    .post("http://localhost:8080//api/profile/buysell", {
         transaction
     })
     .then((response) => {
@@ -28,6 +30,7 @@ function Transaction(props) {
           <Form.Label>Transaction Type</Form.Label>
           <Form.Check inline name="purchase_type" label="Buy" type="radio" value="Buy"/>
           <Form.Check inline name="purchase_type"label="Sell" type="radio" value="Sell"/>
+          <Form.Check inline name="purchase_type"label="Transfer" type="radio" value="Transfer"/>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBtcAmount">

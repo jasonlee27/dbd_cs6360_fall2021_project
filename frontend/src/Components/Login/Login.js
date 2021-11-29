@@ -1,6 +1,6 @@
 import "./Login.css";
 import React from "react";
-import { Button, FormControl, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import axios from "axios";
 
 function Login(props) {
@@ -52,7 +52,7 @@ function Login(props) {
         <input type="submit" value="Submit" /> */}
 
         <Form.Group className="mb-3" controlId="formUsername">
-          <label for="username">Username</label>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
             placeholder="Enter Username"
@@ -60,7 +60,7 @@ function Login(props) {
             required></input>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formPassword">
-          <label for="password">Password</label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             placeholder="Enter Password"

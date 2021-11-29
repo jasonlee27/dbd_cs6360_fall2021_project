@@ -2,7 +2,7 @@ import "./App.css";
 import Login from "../Login/Login.js";
 import Signup from "../Signup/Signup.js";
 import Transaction from "../btcTransaction.js";
-import React, {useEffect} from 'react';
+import React from 'react';
 import useState from 'react-usestateref';
 
 function App() {
