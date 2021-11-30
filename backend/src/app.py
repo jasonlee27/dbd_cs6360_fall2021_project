@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from flask_mysqldb import MySQL
-from flask_cors import CORS
 
 from macros import Macros
 from utils import Utils
@@ -14,7 +13,6 @@ import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
-CORS(app)
 app.secret_key = Macros.SECRETE_KEY
 
 # DB connection details
@@ -24,7 +22,6 @@ app.config['MYSQL_USER'] = Macros.MYSQL_USER
 app.config['MYSQL_DB'] = Macros.MYSQL_DB #str(Macros.DB_FILE)
 
 mysql = MySQL(app)
-CORS(app)
 # Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
 
 def update_level():
@@ -59,7 +56,6 @@ def login():
         password = request.form["password"]
         #username = Utils.hashing(username)
         #password = Utils.hashing(password)
-        print(userid, password)
         
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

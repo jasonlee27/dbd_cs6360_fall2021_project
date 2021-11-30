@@ -9,6 +9,7 @@ function main() {
         (cd ${SRC_DIR}
          python app.py
         )
+        mysql.server stop
 }
 
 function init_sql_tables() {

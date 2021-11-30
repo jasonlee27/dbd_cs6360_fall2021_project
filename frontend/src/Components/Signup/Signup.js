@@ -9,8 +9,10 @@ function Signup(props) {
     e.preventDefault();
     let signupData = new FormData(e.target);
     axios
-      .post("http://localhost:8080/register",
-        signupData)
+      .post("http://localhost:5000/register", {
+        signupData,
+        level: null,
+      })
       .then((response) => {
         if (response.data.msg === "Logged in successfully !") {
           props.setLoggedIn();
