@@ -153,13 +153,22 @@ class Database:
     def set_bitcoin_request(cls, cursor, mysql, data):
         cliendid, bitcoin_val, purchase_type = data[0], data[1], data[2]
         # TODO: set bitcoin request to client's trader
+        cursor.execute('INSERT INTO Request (rid, clientid, traderid, bitcoin_value, purchase_type) VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
         pass
 
     @classmethod
     def get_bitcoin_requests(cls, cursor, mysql, data):
         # TODO: get bitcoin requests from client to trader
         userid, user_type = data[0], data[1]
-        pass
+        histories = None
+        if user_type == 'client'
+            cursor.execute('SELECT R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (userid,))
+            histories = cursor.fetchall()
+        else if user_type == 'trader'
+            cursor.execute('SELECT R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (userid,))
+            histories = cursor.fetchall()
+        # end if
+        return histories
 
     @classmethod
     def buysell_bitcoin(cls, cursor, mysql, data):

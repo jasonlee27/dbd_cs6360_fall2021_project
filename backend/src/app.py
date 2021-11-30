@@ -34,12 +34,12 @@ def update_level():
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=update_level, trigger='cron', day='1st mon')
 
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    return response
+# @app.after_request
+# def after_request(response):
+#     response.headers.add('Access-Control-Allow-Origin', '*')
+#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+#     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+#     return response
 
 @app.route("/status", methods=['GET'])
 def status():
@@ -174,6 +174,8 @@ def register():
         # end if
         cursor.close()
     # end if
+    print(user_info)
+    print(msg)
     return jsonify(
         msg=msg,
         userid = hash_userid
@@ -213,6 +215,10 @@ def request_history(userid):
         userid = session['userid']
         user_type = session['user_type']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+        # request_histories:
+        # for client: each row consists of [traderid, bitcoin_value, purchase_type]
+        # for trader: each row consists of [clientid, bitcoin_value, purchase_type]
         request_histories = Database.get_bitcoin_requests(
             cursor, mysql,
             [userid, user_type]
