@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS PurchaseTransaction(
     commission_rate FLOAT(3,3),
     commision_fee FLOAT(8,3),
     bitcoin_value FLOAT(8,3),
+    usd_value FLOAT(8,3),
     purchase_type VARCHAR(4), -- buy or sell bitcoin
     PRIMARY KEY(ptrid),
     CONSTRAINT purchase_bitcoinvalue_constraint CHECK (bitcoin_value>=0.0)

@@ -174,6 +174,8 @@ class Database:
     @classmethod
     def buysell_bitcoin(cls, cursor, mysql, data):
         user_type = data[0]
+        # TODO: given bitcoin value
+        # TODO: append log for this transaction
         if user_type == "client":
             bitcoin_val, purchase_type = data[1], data[2]
             # TODO: buy/sell bitcoin by clients themselves
@@ -186,7 +188,6 @@ class Database:
             request_id = data[1]
             # TODO: find the request given request_id and purchse the requested bitcoin buy/sell
         # end if
-        # TODO: append log for it
         pass
 
     @classmethod
@@ -201,3 +202,8 @@ class Database:
         # 1. delete transaction specified
         # 2. update log and its status
         pass    
+
+    @classmethod
+    def update_level(cls, cursor, mysql, data):
+        
+        pass
