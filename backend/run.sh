@@ -18,7 +18,7 @@ function main() {
 function main_linux() {
         sudo service mysql start # start mysql server
         # sudo service mysql status
-        sudo mysql -u root < ${DB_INIT_FILE}
+        mysql -u root -p < ${DB_INIT_FILE}
         (cd ${SRC_DIR}
          python app.py
         )

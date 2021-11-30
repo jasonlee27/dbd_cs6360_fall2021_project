@@ -18,7 +18,7 @@ class Macros:
 
     MYSQL_HOST = 'localhost'
     MYSQL_USER = 'root'
-    MYSQL_PASSWORD = 'password'
+    MYSQL_PASSWORD = 'Password2021!'
     MYSQL_DB = 'bts_db'
 
     PORT_NUM = 3306
