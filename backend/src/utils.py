@@ -2,7 +2,7 @@ import hashlib
 import re, os
 
 from macros import Macros
-
+from datetime import datetime
 
 class Utils:
 
@@ -36,7 +36,6 @@ class Utils:
         m = re.match(r"^[0-9]+$", barcode)
         return True if m else False
 
-    
     @classmethod
     def get_cur_time(cls):
         now = datetime.now()

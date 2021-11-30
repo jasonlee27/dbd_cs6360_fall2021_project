@@ -107,7 +107,7 @@ def register():
         password = request.form['password']
         hash_userid = Utils.hashing(userid) if userid else None
         hash_password = Utils.hashing(password) if password else None
-        user_type = request.form["user_type"]
+        user_type = request.form["usertype"]
         user_info = None
         if user_type=="client":
             # client info
@@ -123,10 +123,10 @@ def register():
                 "city": request.form['city'],
                 "zipcode": request.form['zipcode'],
                 "state": request.form['state'],
-                "cphone": request.form['cellphone'],
+                "cphone": request.form['cphone'],
                 "phone": request.form['phone'],
                 "email": request.form['email'],
-                "level": request.form['level'],
+                "level": "silver",
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
@@ -163,7 +163,7 @@ def register():
             msg = 'Username must contain only characters and numbers!'
         elif not Utils.isvalid_password(password):
             msg = 'Invalid password format!'
-        elif not username or not password or not email:
+        elif not userid or not password:
             msg = 'Please fill out the form!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
@@ -173,9 +173,6 @@ def register():
             msg = 'Successfully registered'
         # end if
         cursor.close()
-    elif request.method == 'POST':
-        # Form is empty... (no POST data)
-        msg = 'Please fill out the form!'
     # end if
     return jsonify(
         msg=msg,
