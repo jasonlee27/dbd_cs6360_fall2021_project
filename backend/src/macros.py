@@ -22,3 +22,10 @@ class Macros:
     MYSQL_DB = 'bts_db'
 
     PORT_NUM = 3306
+
+
+    # commission rate in percentage
+    COMMISSION_RATE = {
+        'silver': 1.,
+        'gold': 0.5
+    }
