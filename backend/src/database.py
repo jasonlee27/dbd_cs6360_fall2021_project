@@ -73,10 +73,16 @@ class Database:
         user_type = user_info["user_type"]
         if user_type=="client":
             # TODO: insert client account into DB
+            cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s )',
+                               (clientid, client_password, firstname, lastname, address1, address2, city, zipcode, state, cellphone, phone, email, level, bitcoin, flatcurrency, ))
         elif user_type=="trader":
             # TODO: insert trader account into DB
+             cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s )',
+                               (traderid, trader_password, client_userid, bitcoin, flatcurrency, ))
         elif user_type=="manager":
             # TODO: insert manager account into DB
+             cursor.execute('INSERT INTO Manager VALUES (% s, % s )',
+                               (managerid, manager_password, ))
         # end if
         return
 
@@ -147,24 +153,43 @@ class Database:
         # time_period: one out of [daily, weekly, monthly]
         # in case of manager, it shows every transaction history over all
         # client and trader
+        cursor.execute('select * from TransferTransaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        cursor.execute('select * from PurchaseTransaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        cursor.execute('select * from Transaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        
+        #11/27 will display 3 table (TransferTransaction, PurchaseTransaction, Transaction), from 1 time_period to today's date, week, month, day
         pass
 
     @classmethod
     def set_bitcoin_request(cls, cursor, mysql, data):
         cliendid, bitcoin_val, purchase_type = data[0], data[1], data[2]
         # TODO: set bitcoin request to client's trader
+        cursor.execute('INSERT INTO Request (rid, clientid, traderid, bitcoin_value, purchase_type) VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type, ))
+        
+
         pass
 
     @classmethod
     def get_bitcoin_requests(cls, cursor, mysql, data):
         # TODO: get bitcoin requests from client to trader
         userid, user_type = data[0], data[1]
+        if user_type == 'client'
+            cursor.execute('select * from request where clientid = %s', (userid,))
+        else if user_type == 'trader'
+            cursor.execute('select * from request where traderid = %s', (userid,))
+            
+        #11/27 don't know the exact varibale name of user_type
         pass
 
     @classmethod
     def buysell_bitcoin(cls, cursor, mysql, data):
         # TODO: get bitcoin buy/sell in database
         user_type, bitcoin_val, purchase_type = data[0], data[1], data[2]
+        if purchase_type == 'buy'
+            cursor.execute('update Client set bitcoin = bitcoin + %s', (bitcoin_val, ))
+        else if purchase_type == 'sell'
+            cursor.execute('update Client set bitcoin = bitcoin - %s', (bitcoin_val, ))
+        #11/27 do we need to determine the user type here
         pass
 
     @classmethod
@@ -172,4 +197,10 @@ class Database:
         # TODO: cancel transaction in database
         # 1. delete transaction specified
         # 2. update log and its status
+        cursor.execute('delete from TransferTransaction where trid = %s', (transactionid, ))
+        cursor.execute('INSERT INTO Cancel VALUEs(%s, %s, %s)', (cid, traderid, trid, ))
+        
+        #11/27, should we use table 'Cancel' or 'Log' for the log updating, how to hold variable that did not occur in function parameter
+
+
         pass    
