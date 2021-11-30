@@ -195,6 +195,4 @@ class Database:
         cursor.execute('INSERT INTO Cancel VALUEs(%s, %s, %s)', (cid, traderid, trid, ))
         
         #11/27, should we use table 'Cancel' or 'Log' for the log updating, I just update "Cancel' here. how to hold variable that did not occur in function parameter
-
-
         pass    

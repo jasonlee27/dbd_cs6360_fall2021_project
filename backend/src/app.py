@@ -217,8 +217,8 @@ def request_history(userid):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
         # request_histories:
-        # for client: each row consists of [traderid, bitcoin_value, purchase_type]
-        # for trader: each row consists of [clientid, bitcoin_value, purchase_type]
+        # for client: each row consists of [rid, traderid, bitcoin_value, purchase_type]
+        # for trader: each row consists of [rid, clientid, bitcoin_value, purchase_type]
         request_histories = Database.get_bitcoin_requests(
             cursor, mysql,
             [userid, user_type]
@@ -249,16 +249,19 @@ def request_bitcoin(userid):
             bitcoin_val = request.form['bitcoin_val']
             purchase_type = request.form['purchase_type']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            Database.set_bitcoin_request(
+            # not yet finished
+            new_request = Database.set_bitcoin_request(
                 cursor, mysql,
                 [cliendid, bitcoin_val, purchase_type]
             )
+            # new_request: [rid, traderid, bitcoin_value, purchase_type]
             msg = "Successfully requested"
             cursor.close()
         # end if
     # end if
     return jsonify(
-        msg=msg
+        msg=msg,
+        request=new_request
     )   
 
 @app.route('/profile/buysell', methods=['GET', 'POST'])
@@ -266,20 +269,28 @@ def buysell_bitcoin(userid):
     # This method is for client/trader to buy/sell bitcoin
     msg = ''
     if request.method == 'POST' and \
-       'bitcoin_val' in request.form and \
-       'purchase_type' in request.form:
+       'userid' in request.form and \
+       'user_type' in request.form and \
         userid = session['userid']
         user_type = session['user_type']
-        if user_type == 'client' or user_type=="trader":
+        if user_type == 'client':
             bitcoin_val = request.form['bitcoin_val']
             purchase_type = request.form['purchase_type']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            # not yet finished
             Database.buysell_bitcoin(
                 cursor, mysql,
                 [user_type, bitcoin_val, purchase_type]
             )
             msg = "Successfully purchased."
             cursor.close()
+        elif user_type =='trader':
+            request_id = request.form['request_id']
+            # not yet finished
+            Database.buysell_bitcoin(
+                cursor, mysql,
+                [user_type, request_id]
+            )
         # end if
     # end if
     return jsonify(
@@ -297,7 +308,7 @@ def transfer_money(userid):
         if user_type == 'client':
             purchase_type = request.form['usd_val']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            Database.buysell_bitcoin(
+            Database.transfer_money(
                 cursor, mysql,
                 [userid, usd_val]
             )

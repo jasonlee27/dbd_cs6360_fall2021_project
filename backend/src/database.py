@@ -142,38 +142,57 @@ class Database:
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):
         user_type, userid, time_period = data[0], data[1], data[2]
-        # TODO: select transaction histories given userid
         # user_type: one out of [client, trader, manager]
         # time_period: one out of [daily, weekly, monthly]
         # in case of manager, it shows every transaction history over all
         # client and trader
+        # TODO: do not access to transfertransaction and purchagetransaction directly, but access them via where clause from transaction table
         pass
 
     @classmethod
     def set_bitcoin_request(cls, cursor, mysql, data):
-        cliendid, bitcoin_val, purchase_type = data[0], data[1], data[2]
-        # TODO: set bitcoin request to client's trader
-        cursor.execute('INSERT INTO Request (rid, clientid, traderid, bitcoin_value, purchase_type) VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
+        clientid, bitcoin_val, purchase_type = data[0], data[1], data[2]
+        # TODO: find traderid given clients's id
+        # TODO: get the request info as output for show cleint the request
+        cursor.execute('INSERT INTO Request (clientid, traderid, bitcoin_value, purchase_type) VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
         pass
 
     @classmethod
     def get_bitcoin_requests(cls, cursor, mysql, data):
-        # TODO: get bitcoin requests from client to trader
+        # get bitcoin requests from client to trader
         userid, user_type = data[0], data[1]
         histories = None
         if user_type == 'client'
-            cursor.execute('SELECT R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (userid,))
+            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (userid,))
             histories = cursor.fetchall()
         else if user_type == 'trader'
-            cursor.execute('SELECT R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (userid,))
+            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (userid,))
             histories = cursor.fetchall()
         # end if
         return histories
 
     @classmethod
     def buysell_bitcoin(cls, cursor, mysql, data):
-        # TODO: get bitcoin buy/sell in database
-        user_type, bitcoin_val, purchase_type = data[0], data[1], data[2]
+        user_type = data[0]
+        if user_type == "client":
+            bitcoin_val, purchase_type = data[1], data[2]
+            # TODO: buy/sell bitcoin by clients themselves
+            if purchase_type == 'buy':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
+            else if purchase_type == 'sell':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
+            # end if
+        elif user_type == "trader":
+            request_id = data[1]
+            # TODO: find the request given request_id and purchse the requested bitcoin buy/sell
+        # end if
+        # TODO: append log for it
+        pass
+
+    @classmethod
+    def transfer_money(cls, cursor, mysql, data):
+        user_type, usd_val = data[0], data[1]
+        # TODO: transfer USD to clients's trader and append log for it
         pass
 
     @classmethod
