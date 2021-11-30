@@ -7,19 +7,55 @@ import axios from "axios";
 function Signup(props) {
   let handleSignup = (e) => {
     e.preventDefault();
-    let signupData = new FormData(e.target);
+    var signupFormData = new FormData();
+    signupFormData.append("userid", formData.userid)
+    signupFormData.append("password", formData.password)
+    signupFormData.append("usertype", formData.usertype)
+    signupFormData.append("firstname", formData.firstname)
+    signupFormData.append("lastname", formData.lastname)
+    signupFormData.append("address1", formData.address1)
+    signupFormData.append("address2", formData.address2)  
+    signupFormData.append("city", formData.city)
+    signupFormData.append("zipcode", formData.zipcode)
+    signupFormData.append("state", formData.state)
+    signupFormData.append("cphone", formData.cellphonenumber)
+    signupFormData.append("phone", formData.phonenumber)
+    signupFormData.append("email", formData.email)
+      
     axios
-      .post("http://localhost:5000/register", {
-        signupData,
-        level: null,
-      })
+      .post("http://localhost:8080/register", signupFormData)
       .then((response) => {
-        if (response.data.msg === "Logged in successfully !") {
+        if (response.data.msg === "Successfully registered") {
           props.setLoggedIn();
         } else {
-          console.log("Login Failed");
+          console.log("Signup Failed");
         }
       });
+  };
+
+  const initialFormData = Object.freeze({
+      username: "",
+      password: "",
+      usertype: "client",
+      firstname: "",
+      lastname: "",
+      address1: "",
+      address2: "",
+      city: "",
+      zipcode: "",
+      state: "",
+      cellphonenumber: "",
+      phonenumber: "",
+      email: "",
+  });
+  const [formData, updateFormData] = React.useState(initialFormData);
+  const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+
+      // Trimming any whitespace
+      [e.target.name]: e.target.value.trim()
+    });
   };
   return (
     <div className="Signup mt-5">
@@ -35,6 +71,7 @@ function Signup(props) {
                   type="text"
                   placeholder="Username"
                   name="username"
+                  onChange={handleChange}
                 />
               </Form.Group>
 
@@ -45,6 +82,7 @@ function Signup(props) {
                   type="password"
                   placeholder="Password"
                   name="password"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Row>
@@ -57,6 +95,7 @@ function Signup(props) {
                   type="text"
                   placeholder="Jane"
                   name="firstname"
+                  onChange={handleChange}
                 />
               </Form.Group>
 
@@ -67,6 +106,7 @@ function Signup(props) {
                   type="text"
                   placeholder="Doe"
                   name="lastname"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Row>
@@ -79,6 +119,7 @@ function Signup(props) {
                   type="text"
                   placeholder="##########"
                   name="phonenumber"
+                  onChange={handleChange}
                 />
               </Form.Group>
 
@@ -89,6 +130,7 @@ function Signup(props) {
                   type="text"
                   placeholder="##########"
                   name="cellphonenumber"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Row>
@@ -100,16 +142,18 @@ function Signup(props) {
                 type="email"
                 placeholder="Email"
                 name="emailaddress"
+                onChange={handleChange}
               />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formGridAddress1">
-              <Form.Label>Address</Form.Label>
+              <Form.Label>Address 1</Form.Label>
               <Form.Control
                 required
                 type="text"
                 placeholder="#### Street"
-                name="streetaddress1"
+                name="address1"
+                onChange={handleChange}
               />
             </Form.Group>
 
@@ -119,24 +163,30 @@ function Signup(props) {
                 required
                 type="text"
                 placeholder="Bldg, Apt, floor, etc"
-                name="streetaddress2"
+                name="address2"
+                onChange={handleChange}
               />
             </Form.Group>
 
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridCity">
                 <Form.Label>City</Form.Label>
-                <Form.Control required type="text" name="city" />
+                <Form.Control
+                  required
+                  type="text"
+                  name="city"
+                  onChange={handleChange}
+                />
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridState">
                 <Form.Label>State</Form.Label>
-                <Form.Control required type="text" name="state" />
+                <Form.Control required type="text" name="state" onChange={handleChange}/>
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridZip">
                 <Form.Label>Zip</Form.Label>
-                <Form.Control required type="text" name="zipcode" />
+                <Form.Control required type="text" name="zipcode" onChange={handleChange}/>
               </Form.Group>
             </Row>
 

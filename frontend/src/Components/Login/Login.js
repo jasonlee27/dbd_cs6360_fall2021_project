@@ -7,12 +7,12 @@ function Login(props) {
   function handleLogin(e) {
     e.preventDefault();
     console.log(formData);
-    var bodyFormData = new FormData();
-    bodyFormData.append("userid", formData.userid)
-    bodyFormData.append("password", formData.password)
+    var loginFormData = new FormData();
+    loginFormData.append("userid", formData.userid)
+    loginFormData.append("password", formData.password)
     
     axios
-      .post("http://localhost:8080/login", bodyFormData)
+      .post("http://localhost:8080/login", loginFormData)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
