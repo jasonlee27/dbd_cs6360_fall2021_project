@@ -71,14 +71,21 @@ class Database:
     @classmethod
     def insert_user_record(cls, cursor, mysql, user_info):
         user_type = user_info["user_type"]
-        #if user_type=="client":
+        if user_type=="client":
             # TODO: insert client account into DB
-        #elif user_type=="trader":
+            cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s )',
+                               (clientid, client_password, firstname, lastname, address1, address2, city, zipcode, state, cellphone, phone, email, level, bitcoin, flatcurrency, ))
+        elif user_type=="trader":
             # TODO: insert trader account into DB
-       # elif user_type=="manager":
+             cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s )',
+                               (traderid, trader_password, client_userid, bitcoin, flatcurrency, ))
+        elif user_type=="manager":
             # TODO: insert manager account into DB
+             cursor.execute('INSERT INTO Manager VALUES (% s, % s )',
+                               (managerid, manager_password, ))
         # end if
-        #return
+        return
+   
 
     @classmethod
     def user_exists_in_db(cls, cursor, mysql, hash_username, hash_password=None):
