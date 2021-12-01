@@ -73,10 +73,16 @@ class Database:
         user_type = user_info["user_type"]
         if user_type=="client":
             # TODO: insert client account into DB
+            cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s )',
+                               (clientid, client_password, firstname, lastname, address1, address2, city, zipcode, state, cellphone, phone, email, level, bitcoin, flatcurrency, ))
         elif user_type=="trader":
             # TODO: insert trader account into DB
+            cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s )',
+                               (traderid, trader_password, client_userid, bitcoin, flatcurrency, ))
         elif user_type=="manager":
             # TODO: insert manager account into DB
+            cursor.execute('INSERT INTO Manager VALUES (% s, % s )',
+                               (managerid, manager_password, ))
         # end if
         return
 
@@ -147,10 +153,13 @@ class Database:
         # time_period: one out of [daily, weekly, monthly]
         # in case of manager, it shows every transaction history over all
         # client and trader
-        cursor.execute('select * from TransferTransaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
-        cursor.execute('select * from PurchaseTransaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
-        cursor.execute('select * from Transaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        #cursor.execute('select * from TransferTransaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        #cursor.execute('select * from PurchaseTransaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        #cursor.execute('select * from Transaction where date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
         
+        cursor.execute('select * from Transaction t, TransferTransaction t1, PurchaseTransaction t3 where t.transfer_trid = t1.ttrid and t.purchase_trid = t2.ptrid and date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        
+        # did user logged in in this step?
         #11/27 will display 3 table (TransferTransaction, PurchaseTransaction, Transaction), from 1 time_period to today's date, week, month, day
         pass
 
@@ -159,7 +168,8 @@ class Database:
         cliendid, bitcoin_val, purchase_type = data[0], data[1], data[2]
         # TODO: set bitcoin request to client's trader
         cursor.execute('INSERT INTO Request (rid, clientid, traderid, bitcoin_value, purchase_type) VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
-        
+        cursor.execute('SELECT * FROM Request',)
+
        
         pass
 
@@ -180,9 +190,15 @@ class Database:
         # TODO: get bitcoin buy/sell in database
         user_type, bitcoin_val, purchase_type = data[0], data[1], data[2]
         if purchase_type == 'buy'
-            cursor.execute('update Client set bitcoin = bitcoin + %s', (bitcoin_val, ))
+            cursor.execute('update Client set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
+            cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+            cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         else if purchase_type == 'sell'
-            cursor.execute('update Client set bitcoin = bitcoin - %s', (bitcoin_val, ))
+            cursor.execute('update Client set bitcoin = (bitcoin - %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
+            cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+            cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+
+
         #11/27 do we need to determine the user type here, I just classify buy and sell here
         pass
 
@@ -193,6 +209,7 @@ class Database:
         # 2. update log and its status
         cursor.execute('delete from TransferTransaction where trid = %s', (transactionid, ))
         cursor.execute('INSERT INTO Cancel VALUEs(%s, %s, %s)', (cid, traderid, trid, ))
-        
+        cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+
         #11/27, should we use table 'Cancel' or 'Log' for the log updating, I just update "Cancel' here. how to hold variable that did not occur in function parameter
         pass    
