@@ -205,6 +205,14 @@ class Database:
         elif user_type == "trader":
             request_id = data[1]
             # TODO: find the request given request_id and purchse the requested bitcoin buy/sell
+            if purchase_type == 'buy':
+                cursor.execute('update Trader set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
+                cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+            else if purchase_type == 'sell':
+                cursor.execute('update Trader set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
+                cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         # end if
         pass
 
