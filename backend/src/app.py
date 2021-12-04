@@ -70,7 +70,6 @@ def login():
             session['loggedin'] = True
             session['userid'] = hash_userid
             session['user_type'] = account_info["user_type"]
-            print(session)
             msg = "Successfully logged in!"
         else:
             msg = 'Incorrect username/password!'
@@ -113,12 +112,13 @@ def register():
         password = request.form['password']
         hash_userid = Utils.hashing(userid)
         hash_password = Utils.hashing(password)
-        user_type = request.form["usertype"].lower()
+        user_type = request.form["usertype"]
+        print("usertype",user_type)
         user_info = None
-        if user_type=="client":
+        if user_type.lower()=="client":
             # client info
             user_info = {
-                "user_type": user_type,
+                "user_type": user_type.lower(),
                 "userid": hash_userid,
                 "password": hash_password,
                 "register_date": Utils.get_cur_time(),
@@ -136,7 +136,7 @@ def register():
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
-        elif user_type=="trader":
+        elif user_type.lower()=="trader":
             # trader info
             user_info = {
                 "user_type": user_type,
@@ -145,7 +145,7 @@ def register():
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
-        elif user_type=="manager":
+        elif user_type.lower()=="manager":
             # trader info
             user_info = {
                 "user_type": user_type,
@@ -179,7 +179,6 @@ def register():
             msg = 'Successfully registered'
         # end if
         cursor.close()
-        print(msg)
         return jsonify(
             msg=msg,
             userid = hash_userid
@@ -274,16 +273,14 @@ def request_bitcoin(userid):
     )   
 
 @app.route('/profile/buysell', methods=['GET', 'POST'])
-def buysell_bitcoin():
+def buysell_bitcoin(userid):
     # This method is for client/trader to buy/sell bitcoin
     msg = ''
-    print(request.form)
-    if request.method == 'POST':
-        print(session)
+    if request.method == 'POST' and \
+       'userid' in request.form and \
+       'user_type' in request.form:
         userid = session['userid']
-        user_type = session['user_type'].lower()
-        print(userid, user_type)
-        
+        user_type = session['user_type']
         if user_type == 'client':
             bitcoin_val = request.form['bitcoin_val']
             purchase_type = request.form['purchase_type']
@@ -353,6 +350,23 @@ def cancel_tansaction(userid):
         msg=msg
     )
 
+#return important info pertinant to user
+@app.route('/api/profile/userInfo', methods=['GET', 'POST'])
+def user_info():
+    account_info=''
+    print("reqform",request.form)
+    if 'userid' in request.form:
+        userid = request.form['userid']
+        print('userid',userid)
+                
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            
+        # If account exists show error and validation checks
+        hash_userid = Utils.hashing(userid)
+        account_info = Database.user_exists_in_db(cursor, mysql, hash_userid)
+    return jsonify(
+        account_info=account_info
+    )
 
 
 

@@ -18,9 +18,6 @@ function Transaction(props) {
       });
   }
 
- 
-  
-
   return (
     <div className="BTCTransation mt-5">
       <Button onClick={props.logout}>
