@@ -57,12 +57,13 @@ def login():
        'password' in request.form:
         userid = request.form["userid"]
         password = request.form["password"]
-        #username = Utils.hashing(username)
-        #password = Utils.hashing(password)
+        hash_userid = Utils.hashing(userid)
+        hash_password = Utils.hashing(password)
+        print(userid, hash_userid, hash_password)
         
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        account_info = Database.user_exists_in_db(cursor, mysql, userid, hash_password=password)
+        account_info = Database.user_exists_in_db(cursor, mysql, hash_userid, hash_password=hash_password)
         if account_info:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
@@ -109,10 +110,11 @@ def register():
         # Create variables for easy access
         userid = request.form['userid']
         password = request.form['password']
-        hash_userid = Utils.hashing(userid) if userid else None
-        hash_password = Utils.hashing(password) if password else None
+        hash_userid = Utils.hashing(userid)
+        hash_password = Utils.hashing(password)
         user_type = request.form["usertype"]
         user_info = None
+        print(userid, hash_userid, hash_password)
         if user_type=="client":
             # client info
             user_info = {

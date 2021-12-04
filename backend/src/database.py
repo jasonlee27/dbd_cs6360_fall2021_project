@@ -130,7 +130,6 @@ class Database:
         else:
             cursor.execute('SELECT * FROM Client WHERE clientid = %s', (hash_username,))
         # end if
-        
         account = cursor.fetchone()
         if not account:
             if hash_password is not None:
@@ -145,6 +144,7 @@ class Database:
                 else:
                     cursor.execute('SELECT * FROM Manager WHERE managerid = %s', (hash_username,))
                 # end if
+
                 account = cursor.fetchone()
                 if account:
                     account_info = {
