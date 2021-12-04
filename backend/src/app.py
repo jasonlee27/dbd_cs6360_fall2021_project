@@ -70,6 +70,7 @@ def login():
             session['loggedin'] = True
             session['userid'] = hash_userid
             session['user_type'] = account_info["user_type"]
+            print(session)
             msg = "Successfully logged in!"
         else:
             msg = 'Incorrect username/password!'
@@ -112,12 +113,12 @@ def register():
         password = request.form['password']
         hash_userid = Utils.hashing(userid)
         hash_password = Utils.hashing(password)
-        user_type = request.form["usertype"]
+        user_type = request.form["usertype"].lower()
         user_info = None
-        if user_type.lower()=="client":
+        if user_type=="client":
             # client info
             user_info = {
-                "user_type": user_type.lower(),
+                "user_type": user_type,
                 "userid": hash_userid,
                 "password": hash_password,
                 "register_date": Utils.get_cur_time(),
@@ -135,7 +136,7 @@ def register():
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
-        elif user_type.lower()=="trader":
+        elif user_type=="trader":
             # trader info
             user_info = {
                 "user_type": user_type,
@@ -144,7 +145,7 @@ def register():
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
-        elif user_type.lower()=="manager":
+        elif user_type=="manager":
             # trader info
             user_info = {
                 "user_type": user_type,
@@ -178,6 +179,7 @@ def register():
             msg = 'Successfully registered'
         # end if
         cursor.close()
+        print(msg)
         return jsonify(
             msg=msg,
             userid = hash_userid
@@ -272,14 +274,16 @@ def request_bitcoin(userid):
     )   
 
 @app.route('/profile/buysell', methods=['GET', 'POST'])
-def buysell_bitcoin(userid):
+def buysell_bitcoin():
     # This method is for client/trader to buy/sell bitcoin
     msg = ''
-    if request.method == 'POST' and \
-       'userid' in request.form and \
-       'user_type' in request.form:
+    print(request.form)
+    if request.method == 'POST':
+        print(session)
         userid = session['userid']
-        user_type = session['user_type']
+        user_type = session['user_type'].lower()
+        print(userid, user_type)
+        
         if user_type == 'client':
             bitcoin_val = request.form['bitcoin_val']
             purchase_type = request.form['purchase_type']

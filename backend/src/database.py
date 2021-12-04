@@ -108,7 +108,7 @@ class Database:
                            %s, %s)""",
                            (user_info["userid"], user_info["password"],
                             user_info["userid"], user_info["password"],
-                            bitcoin, flatcurrency))
+                            user_info["bitcoin"], user_info["flatcurrency"]))
         elif user_type=="manager":
             cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
             cursor.execute("""INSERT INTO Trader VALUES (
