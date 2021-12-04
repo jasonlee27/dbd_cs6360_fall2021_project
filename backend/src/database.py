@@ -125,12 +125,14 @@ class Database:
     def user_exists_in_db(cls, cursor, mysql, hash_username, hash_password=None):
         account_info = None
         account = None
+        print("hey", hash_username, hash_password)
         if hash_password is not None:
             cursor.execute('SELECT * FROM Client WHERE clientid = %s AND client_password = %s', (hash_username, hash_password))
         else:
             cursor.execute('SELECT * FROM Client WHERE clientid = %s', (hash_username,))
         # end if
         account = cursor.fetchone()
+        print("hi", account)
         if not account:
             if hash_password is not None:
                 cursor.execute('SELECT * FROM Trader WHERE traderid = %s AND trader_password = %s', (hash_username, hash_password))
@@ -161,21 +163,22 @@ class Database:
                 }
             # end if
         else:
+            print("accountgfggg",account)
             account_info = {
                 "type": 'trader',
-                "first_name": account[3],
-                "last_name": account[4],
-                "address1": account[5],
-                "address2": account[6],
-                "city": account[7],
-                "zipcode": account[8],
-                "state": account[9],
-                "cellphone": account[10],
-                "phone": account[11],
-                "email": account[12],
-                "level": account[13],
-                "bitcoin": account[14],
-                "flatcurrenty": account[15]
+                "first_name": account["firstname"],
+                "last_name": account["lastname"],
+                "address1": account["address1"],
+                "address2": account["address2"],
+                "city": account["city"],
+                "zipcode": account["zipcode"],
+                "state": account["state"],
+                "cellphone": account["cellphone"],
+                "phone": account["phone"],
+                "email": account["email"],
+                "level": account["level"],
+                "bitcoin": account["bitcoin"],
+                "flatcurrenty": account["flatcurrency"]
             }
         # end if
         return account_info

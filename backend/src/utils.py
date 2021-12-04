@@ -10,6 +10,7 @@ class Utils:
     def hashing(cls, input_str, salt="5gz"):
         _input_str = input_str+salt
         h = hashlib.md5(_input_str.encode())
+        print(hashlib.md5("undefined".encode()).hexdigest())
         return h.hexdigest()
 
     @classmethod

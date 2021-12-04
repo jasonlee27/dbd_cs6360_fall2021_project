@@ -52,11 +52,14 @@ def login():
     # password: password
     msg = ''
     account_info = None
+    print('reqform', request.form)
     if request.method =='POST' and \
        'userid' in request.form and \
        'password' in request.form:
         userid = request.form["userid"]
         password = request.form["password"]
+        print("request.form: ", request.form)
+        print(password)
         hash_userid = Utils.hashing(userid)
         hash_password = Utils.hashing(password)
         print(userid, hash_userid, hash_password)
@@ -110,11 +113,12 @@ def register():
         # Create variables for easy access
         userid = request.form['userid']
         password = request.form['password']
+        print("userid", request.form['userid'])
         hash_userid = Utils.hashing(userid)
         hash_password = Utils.hashing(password)
         user_type = request.form["usertype"]
         user_info = None
-        print(userid, hash_userid, hash_password)
+        print("yoyoyo",userid, hash_userid, hash_password)
         if user_type=="client":
             # client info
             user_info = {
