@@ -53,8 +53,9 @@ CREATE TABLE IF NOT EXISTS Trader(
     client_userid VARCHAR(50),
     bitcoin FLOAT(8,3),
     flatcurrency FLOAT(8,3),
-    PRIMARY KEY(traderid),
+    PRIMARY KEY(traderid, client_userid),
     FOREIGN KEY (traderid) REFERENCES User(userid) ON DELETE CASCADE,
+    FOREIGN KEY (client_userid) REFERENCES Client(clientid) ON DELETE CASCADE,
     CONSTRAINT trader_bitcoin_constraint CHECK (bitcoin>=0.0),
     CONSTRAINT trader_flatcurrency_constraint CHECK (flatcurrency>=0.0)
 );
@@ -103,6 +104,19 @@ CREATE TABLE IF NOT EXISTS Log(
     newvalue FLOAT(8,3),
     status VARCHAR(10),
     PRIMARY KEY(logid)
+);
+
+CREATE TABLE IF NOT EXISTS Assign(
+    aid INT AUTO_INCREMENT not null,
+    clientid VARCHAR(50) not null,
+    traderid VARCHAR(50) not null,
+    bitcoin_value FLOAT(8,3),
+    purchase_type VARCHAR(10),
+    PRIMARY KEY(clientid, traderid),
+    FOREIGN KEY (clientid) REFERENCES Client(clientid),
+    FOREIGN KEY (traderid) REFERENCES Trader(traderid),
+    CONSTRAINT request_bitcoinvalue_constraint CHECK (bitcoin_value>=0.0),
+    CONSTRAINT purchase_type_constraint CHECK (purchase_type='buy' OR purchase_type='sell')
 );
 
 CREATE TABLE IF NOT EXISTS Request(
