@@ -2,8 +2,10 @@ import "./App.css";
 import Login from "../Login/Login.js";
 import Signup from "../Signup/Signup.js";
 import Transaction from "../btcTransaction.js";
+import ManagerSearch from "../ManagerSearch.js";
 import React from 'react';
 import useState from 'react-usestateref';
+import axios from "axios";
 import {BrowserRouter as Router,
   Route,
   Routes,
@@ -13,7 +15,36 @@ import {BrowserRouter as Router,
 
 function App() {
   const [state, setState] = useState('login');
+  const [userType, setUserType] = useState('');
   let navigate = useNavigate();
+
+  function getUserInfo(userId) {
+    console.log("userid",userId);
+    let formData = new FormData();
+    formData.append("userid", userId);
+    axios
+    .post("http://localhost:8080/api/profile/userInfo", formData)
+    .then((response) => {
+      if(response.data.account_info !== ""){
+        console.log(response.data.account_info.user_type);
+        setUserType(response.data.account_info.user_type);
+      }
+    }).catch((error) => { 
+      console.log("error", error);
+    });
+  }
+
+  function handleLogoutEvent(e) {
+    axios
+      .request("http://localhost:8080/logout")
+      .then((response) => {
+        if (response.data.msg === "Successfully logged out") {
+            handleLogout();
+        }
+      }).catch((error) => {
+        console.log("error", error);
+      });
+  }
 
   let handleCreateNewAccount = () => {
     setState('signup');
@@ -23,10 +54,18 @@ function App() {
     setState('login');
     navigate('/login')
   };
-  let handleLogin  = () => {
+  let handleLogin  = (userId) => {
     setState('loggedIn');
+    getUserInfo(userId);
+    console.log("1111:",userType);
+    if(userType==="client" ||userType==="trader"){
     navigate('/transaction')
+    }
+    else if(userType==="manager") {
+      navigate('/transactions/search')
+    }
   };
+  
   let handleLogout  = () => {
     setState('login');
     navigate('/login')
@@ -47,23 +86,19 @@ function App() {
       />
         <Route 
         path="/transaction"
-        element={state==='loggedIn' ? <Transaction logout={handleLogout} /> :  <Navigate to="/login" />}
+        element={state==='loggedIn' && userType === 'client' ? <Transaction logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
     />
+   <Route 
+        path="/transaction"
+        element={state==='loggedIn' && userType === 'trader' ? <Transaction logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
+/>
+        <Route 
+        path="/transactions/search"
+        element={state==='loggedIn' && userType === 'manager' ? <ManagerSearch logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
+        />
+
     </Routes>
 );
-/*
-    <div>
-     {state==='login' && 
-        <Login createNewAccount={handleCreateNewAccount} setLoggedIn={handleLogin}/>
-      }
-      {state==='signup' && 
-        <Signup returnToLogin={handleReturnToLogin} setLoggedIn={handleLogin} />}
-      {state==='btcTransaction' && 
-        <Transaction />}
-    </div>
-    
-  )
-  */
 }
 
 

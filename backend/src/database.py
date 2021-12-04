@@ -34,13 +34,13 @@ class Database:
                 account = cursor.fetchone()
                 if account:
                     account_info = {
-                        "type": 'manager',
+                        "user_type": 'manager',
                     }
                 # end if
             else:
                 clients = None # TODO: get all clients assigned to input trader
                 account_info = {
-                    "type": 'trader',
+                    "user_type": 'trader',
                     "bitcoin": account[3],
                     "flatcurrenty": account[4],
                     "clients": clients
@@ -48,7 +48,7 @@ class Database:
             # end if
         else:
             account_info = {
-                "type": 'trader',
+                "user_type": 'trader',
                 "userid": hash_username,
                 "first_name": account[3],
                 "last_name": account[4],
@@ -111,7 +111,7 @@ class Database:
                             bitcoin, flatcurrency))
         elif user_type=="manager":
             cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
-            cursor.execute("""INSERT INTO Trader VALUES (
+            cursor.execute("""INSERT INTO Manager VALUES (
                            (SELECT userid FROM User WHERE userid = %s AND user_password = %s), 
                            (SELECT user_password FROM User WHERE userid = %s AND user_password = %s))""",
                            (user_info["userid"], user_info["password"],
@@ -148,7 +148,7 @@ class Database:
                 account = cursor.fetchone()
                 if account:
                     account_info = {
-                        "type": 'manager',
+                        "user_type": 'manager',
                     }
                 # end if
             else:

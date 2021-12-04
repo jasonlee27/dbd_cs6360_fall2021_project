@@ -11,11 +11,12 @@ function Signup(props) {
   let handleSignup = (e) => {
     e.preventDefault();
     let signupData = new FormData(e.target);
+    console.log("userid", signupData.get("userid"));
     axios
       .post("http://localhost:8080/register", signupData)
       .then((response) => {
         if (response.data.msg === "Successfully registered") {
-          props.setLoggedIn();
+          props.setLoggedIn(signupData.get("userid"));
         } else {
           console.log("Signup Failed");
         }
@@ -38,7 +39,7 @@ function Signup(props) {
                 name="usertype"
                 label="Client"
                 type="radio"
-                value="Client"
+                value="client"
                 onChange={((e) => setClientChecked(true))}
                 defaultChecked
               />
@@ -48,7 +49,7 @@ function Signup(props) {
                 label="Trader"
                 id="2"
                 type="radio"
-                value="Trader"
+                value="trader"
                 onChange={((e) => setClientChecked(false))}
               />
                <Form.Check
@@ -57,7 +58,7 @@ function Signup(props) {
                 label="Manager"
                 id="3"
                 type="radio"
-                value="Manager"
+                value="manager"
                 onChange={((e) => setClientChecked(false))}
               />
       

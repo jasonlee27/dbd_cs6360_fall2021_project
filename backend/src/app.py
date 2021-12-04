@@ -105,8 +105,7 @@ def register():
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST' and \
        'userid' in request.form and \
-       'password' in request.form and \
-       'email' in request.form:
+       'password' in request.form:
         
         # Create variables for easy access
         userid = request.form['userid']
@@ -114,6 +113,7 @@ def register():
         hash_userid = Utils.hashing(userid)
         hash_password = Utils.hashing(password)
         user_type = request.form["usertype"]
+        print("usertype",user_type)
         user_info = None
         if user_type=="client":
             # client info
@@ -146,6 +146,7 @@ def register():
                 "flatcurrency": 0.0
             }
         elif user_type=="manager":
+            print("issa manager")
             # trader info
             user_info = {
                 "user_type": user_type,
@@ -153,7 +154,7 @@ def register():
                 "password": hash_password,
             }
         else:
-            msg = f"Invalid user type {user_type}"
+            msg = "Invalid user type {user_type}"
             return jsonify(
                 msg=msg,
             )
@@ -347,6 +348,23 @@ def cancel_tansaction(userid):
         msg=msg
     )
 
+#return important info pertinant to user
+@app.route('/api/profile/userInfo', methods=['GET', 'POST'])
+def user_info():
+    account_info=''
+    print("reqform",request.form)
+    if 'userid' in request.form:
+        userid = request.form['userid']
+        print('userid',userid)
+                
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            
+        # If account exists show error and validation checks
+        hash_userid = Utils.hashing(userid)
+        account_info = Database.user_exists_in_db(cursor, mysql, hash_userid)
+    return jsonify(
+        account_info=account_info
+    )
 
 
 

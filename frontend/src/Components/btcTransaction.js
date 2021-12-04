@@ -18,21 +18,12 @@ function Transaction(props) {
       });
   }
 
-  function handleLogout(e) {
-    axios
-      .request("http://localhost:8080/logout")
-      .then((response) => {
-        if (response.data.msg === "Successfully logged out") {
-            props.logout();
-        }
-      }).catch((error) => {
-        console.log("error", error);
-      });
-  }
+ 
+  
 
   return (
     <div className="BTCTransation mt-5">
-      <Button onClick={handleLogout}>
+      <Button onClick={props.logout}>
         Logout
       </Button>
       <Card className="mx-auto" style={{ width: "18rem" }}>

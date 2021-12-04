@@ -11,7 +11,7 @@ function Login(props) {
       .post("http://localhost:8080/login", loginData)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
-          props.setLoggedIn();
+          props.setLoggedIn(loginData.get("userid"));
         } else {
           console.log("Login Failed");
         }
