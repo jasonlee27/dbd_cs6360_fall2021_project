@@ -72,27 +72,54 @@ class Database:
     def insert_user_record(cls, cursor, mysql, user_info):
         user_type = user_info["user_type"]
         if user_type=="client":
-            # TODO: insert client account into DB
-            cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s )',
+            print(user_info)
+            cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
+            cursor.execute('INSERT IGNORE INTO Name VALUES (%s, %s)', (user_info["firstname"], user_info["lastname"]))
+            cursor.execute('INSERT IGNORE INTO Address VALUES (%s, %s, %s, %s, %s)', (user_info["address1"], user_info["address2"],user_info["city"], user_info["zipcode"], user_info["state"]))
+            cursor.execute("""INSERT INTO Client VALUES (
+                           (SELECT userid FROM User WHERE userid = %s AND user_password = %s), 
+                           (SELECT user_password FROM User WHERE userid = %s AND user_password = %s),
+                           %s,
+                           (SELECT firstname FROM Name WHERE firstname = %s AND lastname = %s), 
+                           (SELECT lastname FROM Name WHERE firstname = %s AND lastname = %s), 
+                           (SELECT address1 FROM Address WHERE address1 = %s AND address2 = %s AND city = %s AND zipcode = %s AND state = %s), 
+                           (SELECT address2 FROM Address WHERE address1 = %s AND address2 = %s AND city = %s AND zipcode = %s AND state = %s), 
+                           (SELECT city FROM Address WHERE address1 = %s AND address2 = %s AND city = %s AND zipcode = %s AND state = %s), 
+                           (SELECT zipcode FROM Address WHERE address1 = %s AND address2 = %s AND city = %s AND zipcode = %s AND state = %s), 
+                           (SELECT state FROM Address WHERE address1 = %s AND address2 = %s AND city = %s AND zipcode = %s AND state = %s), 
+                           %s, %s, %s, %s, %s, %s)""",
                            (user_info["userid"], user_info["password"],
+                            user_info["userid"], user_info["password"],
+                            user_info["register_date"],
                             user_info["firstname"], user_info["lastname"],
-                            user_info["address1"], user_info["address2"],
-                            user_info["city"], user_info["zipcode"],
-                            user_info["state"], user_info["cphone"],
-                            user_info["phone"], user_info["email"],
-                            user_info["level"], user_info["bitcoin"], user_info["flatcurrency"],
-                            ))
+                            user_info["firstname"], user_info["lastname"],
+                            user_info["address1"], user_info["address2"], user_info["city"], user_info["zipcode"], user_info["state"],
+                            user_info["address1"], user_info["address2"], user_info["city"], user_info["zipcode"], user_info["state"],
+                            user_info["address1"], user_info["address2"], user_info["city"], user_info["zipcode"], user_info["state"],
+                            user_info["address1"], user_info["address2"], user_info["city"], user_info["zipcode"], user_info["state"],
+                            user_info["address1"], user_info["address2"], user_info["city"], user_info["zipcode"], user_info["state"],
+                            user_info["cphone"], user_info["phone"],
+                            user_info["email"], user_info["level"],
+                            user_info["bitcoin"], user_info["flatcurrency"]))
         elif user_type=="trader":
-            # TODO: insert trader account into DB
-             cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s )',
-                            (traderid, trader_password, client_userid, bitcoin, flatcurrency, ))
+            cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
+            cursor.execute("""INSERT INTO Trader VALUES (
+                           (SELECT userid FROM User WHERE userid = %s AND user_password = %s), 
+                           (SELECT user_password FROM User WHERE userid = %s AND user_password = %s),
+                           %s, %s)""",
+                           (user_info["userid"], user_info["password"],
+                            user_info["userid"], user_info["password"],
+                            bitcoin, flatcurrency))
         elif user_type=="manager":
-            # TODO: insert manager account into DB
-             cursor.execute('INSERT INTO Manager VALUES (% s, % s )',
-                               (managerid, manager_password, ))
+            cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
+            cursor.execute("""INSERT INTO Trader VALUES (
+                           (SELECT userid FROM User WHERE userid = %s AND user_password = %s), 
+                           (SELECT user_password FROM User WHERE userid = %s AND user_password = %s))""",
+                           (user_info["userid"], user_info["password"],
+                            user_info["userid"], user_info["password"]))
         # end if
         return
-   
+    
 
     @classmethod
     def user_exists_in_db(cls, cursor, mysql, hash_username, hash_password=None):
