@@ -7,12 +7,14 @@ function Transaction(props) {
     e.preventDefault();
     let transaction = new FormData(e.target);
     axios
-      .post("http://localhost:8080//api/profile/buysell", transaction)
+      .post("http://localhost:8080/profile/buysell", transaction)
       .then((response) => {
-        if (response.data.msg === "Successfully logged in!") {
-        //  props.setLoggedIn();
+        if (response.data.msg === "Successfully purchased.") {
+          e.target.clear();
         } else {
         }
+      }).catch((error) => {
+        console.log("error", error);
       });
   }
 
@@ -23,6 +25,8 @@ function Transaction(props) {
         if (response.data.msg === "Successfully logged out") {
             props.logout();
         }
+      }).catch((error) => {
+        console.log("error", error);
       });
   }
 
