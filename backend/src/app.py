@@ -66,7 +66,7 @@ def login():
         if account_info:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
-            session['userid'] = account_info['userid']
+            session['userid'] = hash_userid
             session['user_type'] = account_info["user_type"]
             msg = "Successfully logged in!"
         else:
