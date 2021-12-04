@@ -7,21 +7,23 @@ import axios from "axios";
 function Signup(props) {
   let handleSignup = (e) => {
     e.preventDefault();
-    var signupFormData = new FormData();
-    signupFormData.append("userid", formData.userid)
-    signupFormData.append("password", formData.password)
-    signupFormData.append("usertype", formData.usertype)
-    signupFormData.append("firstname", formData.firstname)
-    signupFormData.append("lastname", formData.lastname)
-    signupFormData.append("address1", formData.address1)
-    signupFormData.append("address2", formData.address2)  
-    signupFormData.append("city", formData.city)
-    signupFormData.append("zipcode", formData.zipcode)
-    signupFormData.append("state", formData.state)
-    signupFormData.append("cphone", formData.cellphonenumber)
-    signupFormData.append("phone", formData.phonenumber)
-    signupFormData.append("email", formData.email)
-      
+    let signupData = new FormData(e.target);
+    signupData.append("usertype", "client")
+    let signupFormData = new FormData();
+    signupFormData.append("userid", signupData.get("userid"))
+    signupFormData.append("password", signupData.get("password"))
+    signupFormData.append("usertype", signupData.get("usertype"))
+    signupFormData.append("firstname", signupData.get("firstname"))
+    signupFormData.append("lastname", signupData.get("lastname"))
+    signupFormData.append("address1", signupData.get("address1"))
+    signupFormData.append("address2", signupData.get("address2"))  
+    signupFormData.append("city", signupData.get("city"))
+    signupFormData.append("zipcode", signupData.get("zipcode"))
+    signupFormData.append("state", signupData.get("state"))
+    signupFormData.append("cphone", signupData.get("cellphonenumber"))
+    signupFormData.append("phone", signupData.get("phonenumber"))
+    signupFormData.append("email", signupData.get("email"))
+    console.log("userid: ", signupData.get("userid"))
     axios
       .post("http://localhost:8080/register", signupFormData)
       .then((response) => {
@@ -64,19 +66,19 @@ function Signup(props) {
         <Card.Body>
           <Form onSubmit={handleSignup}>
             <Row className="mb-3">
-              <Form.Group as={Col} controlId="formGridUsername">
-                <Form.Label>Username</Form.Label>
+              <Form.Group as={Col} controlId="userid">
+                <Form.Label htmlFor="userid">Username</Form.Label>
                 <Form.Control
                   required
                   type="text"
                   placeholder="Username"
-                  name="username"
+                  name="userid"
                   onChange={handleChange}
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridPassword">
-                <Form.Label>Password</Form.Label>
+              <Form.Group as={Col} controlId="password">
+                <Form.Label htmlFor="password">Password</Form.Label>
                 <Form.Control
                   required
                   type="password"
@@ -89,7 +91,7 @@ function Signup(props) {
 
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridFname">
-                <Form.Label>First Name</Form.Label>
+                <Form.Label htmlFor="firstname">First Name</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -100,7 +102,7 @@ function Signup(props) {
               </Form.Group>
 
               <Form.Group as={Col} controlId="formLname">
-                <Form.Label>Last Name</Form.Label>
+                <Form.Label htmlFor="lastname">Last Name</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -113,7 +115,7 @@ function Signup(props) {
 
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridPhone">
-                <Form.Label>Phone Number</Form.Label>
+                <Form.Label htmlFor="phonenumber">Phone Number</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -124,7 +126,7 @@ function Signup(props) {
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridCell">
-                <Form.Label>Cellphone Number</Form.Label>
+                <Form.Label htmlFor="cellphonenumber">Cellphone Number</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -136,7 +138,7 @@ function Signup(props) {
             </Row>
 
             <Form.Group className="mb-3" controlId="formGridEmail">
-              <Form.Label>Email</Form.Label>
+              <Form.Label htmlFor="emailaddress">Email</Form.Label>
               <Form.Control
                 required
                 type="email"
@@ -147,7 +149,7 @@ function Signup(props) {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formGridAddress1">
-              <Form.Label>Address 1</Form.Label>
+              <Form.Label htmlFor="address1">Address 1</Form.Label>
               <Form.Control
                 required
                 type="text"
@@ -158,7 +160,7 @@ function Signup(props) {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formGridAddress2">
-              <Form.Label>Address 2</Form.Label>
+              <Form.Label htmlFor="address2">Address 2</Form.Label>
               <Form.Control
                 required
                 type="text"
@@ -170,7 +172,7 @@ function Signup(props) {
 
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridCity">
-                <Form.Label>City</Form.Label>
+                <Form.Label htmlFor="city">City</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -180,12 +182,12 @@ function Signup(props) {
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridState">
-                <Form.Label>State</Form.Label>
+                <Form.Label htmlFor="state">State</Form.Label>
                 <Form.Control required type="text" name="state" onChange={handleChange}/>
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridZip">
-                <Form.Label>Zip</Form.Label>
+                <Form.Label htmlFor="zipcode">Zip</Form.Label>
                 <Form.Control required type="text" name="zipcode" onChange={handleChange}/>
               </Form.Group>
             </Row>

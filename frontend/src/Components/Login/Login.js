@@ -7,15 +7,18 @@ function Login(props) {
   function handleLogin(e) {
     e.preventDefault();
     console.log(formData);
-    var loginFormData = new FormData();
-    loginFormData.append("userid", formData.userid)
-    loginFormData.append("password", formData.password)
-    
+    let loginData= new FormData(e.target)
+    let loginFormData = new FormData();
+    loginFormData.append("userid", loginData.get("userid"))
+    loginFormData.append("password", loginData.get("password"))
+    //loginFormData={...loinData}
     axios
       .post("http://localhost:8080/login", loginFormData)
       .then((response) => {
+        console.log("data returned");
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
+          console.log("good");
         } else {
           console.log("Login Failed");
         }
@@ -40,9 +43,8 @@ function Login(props) {
         <Card.Header>Login</Card.Header>
         <Card.Body>
           <Form onSubmit={handleLogin}>
-            <Form.Group controlId="formUsername">
-              <label htmlFor="userid"></label>
-              <Form.Label>Username</Form.Label>
+            <Form.Group controlId="userid">
+              <Form.Label htmlFor="userid">Username</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Username"
@@ -51,9 +53,8 @@ function Login(props) {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-1" controlId="formPassword">
-              <label htmlFor="password"></label>
-              <Form.Label>Password</Form.Label>
+            <Form.Group className="mb-1" controlId="password">
+              <Form.Label htmlFor="password">Password</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Enter Password"
