@@ -105,7 +105,7 @@ def register():
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST' and \
        'userid' in request.form and \
-       'password' in request.form:
+       'password' in request.form:        
         
         # Create variables for easy access
         userid = request.form['userid']
@@ -115,10 +115,10 @@ def register():
         user_type = request.form["usertype"]
         print("usertype",user_type)
         user_info = None
-        if user_type=="client":
+        if user_type.lower()=="client":
             # client info
             user_info = {
-                "user_type": user_type,
+                "user_type": user_type.lower(),
                 "userid": hash_userid,
                 "password": hash_password,
                 "register_date": Utils.get_cur_time(),
@@ -129,14 +129,14 @@ def register():
                 "city": request.form['city'],
                 "zipcode": request.form['zipcode'],
                 "state": request.form['state'],
-                "cphone": request.form['cphone'],
-                "phone": request.form['phone'],
-                "email": request.form['email'],
+                "cphone": request.form['cellphonenumber'],
+                "phone": request.form['phonenumber'],
+                "email": request.form['emailaddress'],
                 "level": "silver",
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
-        elif user_type=="trader":
+        elif user_type.lower()=="trader":
             # trader info
             user_info = {
                 "user_type": user_type,
@@ -145,8 +145,7 @@ def register():
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
-        elif user_type=="manager":
-            print("issa manager")
+        elif user_type.lower()=="manager":
             # trader info
             user_info = {
                 "user_type": user_type,
@@ -154,10 +153,7 @@ def register():
                 "password": hash_password,
             }
         else:
-            msg = "Invalid user type {user_type}"
-            return jsonify(
-                msg=msg,
-            )
+            msg = f"Invalid user type {user_type}"
         # end if
 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -174,17 +170,23 @@ def register():
             msg = 'Please fill out the form!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            # cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s...)', user_info)
-            # mysql.connection.commit()
             Database.insert_user_record(cursor, mysql, user_info)
+            
+            # Create session data, we can access this data in other routes
+            session['loggedin'] = True
+            session['userid'] = hash_userid
+            session['user_type'] = user_info["user_type"]
             msg = 'Successfully registered'
         # end if
         cursor.close()
+        return jsonify(
+            msg=msg,
+            userid = hash_userid
+        )
     # end if
     print(msg)
     return jsonify(
         msg=msg,
-        userid = hash_userid
     )
 
 # @app.route('/profile', methods=['GET', 'POST'])
