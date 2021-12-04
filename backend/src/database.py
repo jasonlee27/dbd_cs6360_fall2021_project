@@ -72,7 +72,6 @@ class Database:
     def insert_user_record(cls, cursor, mysql, user_info):
         user_type = user_info["user_type"]
         if user_type=="client":
-            print(user_info)
             cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
             cursor.execute('INSERT IGNORE INTO Name VALUES (%s, %s)', (user_info["firstname"], user_info["lastname"]))
             cursor.execute('INSERT IGNORE INTO Address VALUES (%s, %s, %s, %s, %s)', (user_info["address1"], user_info["address2"],user_info["city"], user_info["zipcode"], user_info["state"]))
@@ -118,6 +117,7 @@ class Database:
                            (user_info["userid"], user_info["password"],
                             user_info["userid"], user_info["password"]))
         # end if
+        mysql.connection.commit()
         return
     
 
@@ -199,7 +199,7 @@ class Database:
         # TODO: get the request info as output for show cleint the request
         cursor.execute('INSERT INTO Request (clientid, traderid, bitcoin_value, purchase_type) VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
         cursor.execute('SELECT * FROM Request',)
-
+        mysql.connection.commit()
         pass
 
     @classmethod
@@ -248,6 +248,7 @@ class Database:
                 cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         # end if
+        mysql.connection.commit()
         pass
 
     @classmethod
@@ -257,7 +258,7 @@ class Database:
         cursor.execute('update Client set flatcurrency = (flatcurrency - %s)', (usd_val, ))
         cursor.execute('update Trader set flatcurrency = (flatcurrency + %s)', (usd_val, ))
         cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
-
+        mysql.connection.commit()
         pass
 
     @classmethod
@@ -268,6 +269,7 @@ class Database:
         cursor.execute('delete from TransferTransaction where trid = %s', (transactionid, ))
         cursor.execute('INSERT INTO Cancel VALUEs(%s, %s, %s)', (cid, traderid, trid, ))
         cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+        mysql.connection.commit()
         pass    
 
     @classmethod
