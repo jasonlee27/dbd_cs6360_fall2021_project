@@ -270,7 +270,7 @@ def buysell_bitcoin(userid):
     msg = ''
     if request.method == 'POST' and \
        'userid' in request.form and \
-       'user_type' in request.form and \
+       'user_type' in request.form:
         userid = session['userid']
         user_type = session['user_type']
         if user_type == 'client':

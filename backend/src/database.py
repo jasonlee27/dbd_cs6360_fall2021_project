@@ -173,10 +173,10 @@ class Database:
         # get bitcoin requests from client to trader
         userid, user_type = data[0], data[1]
         histories = None
-        if user_type == 'client'
+        if user_type == 'client':
             cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (userid,))
             histories = cursor.fetchall()
-        else if user_type == 'trader'
+        elif user_type == 'trader':
             cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (userid,))
             histories = cursor.fetchall()
         # end if
@@ -195,7 +195,7 @@ class Database:
                 cursor.execute('update Client set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
                 cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
-            else if purchase_type == 'sell':
+            elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
                 cursor.execute('update Client set bitcoin = (bitcoin - %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
                 cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
@@ -209,7 +209,7 @@ class Database:
                 cursor.execute('update Trader set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
                 cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
-            else if purchase_type == 'sell':
+            elif purchase_type == 'sell':
                 cursor.execute('update Trader set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
                 cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
