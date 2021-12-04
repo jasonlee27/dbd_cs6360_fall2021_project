@@ -156,7 +156,7 @@ class Database:
                 account_info = {
                     "type": 'trader',
                     "bitcoin": account["bitcoin"],
-                    "flatcurrenty": account["flatcurrenty"],
+                    "flatcurrenty": account["flatcurrency"],
                 }
             # end if
         else:
