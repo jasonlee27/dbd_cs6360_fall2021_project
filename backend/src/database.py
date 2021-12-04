@@ -74,11 +74,18 @@ class Database:
         if user_type=="client":
             # TODO: insert client account into DB
             cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s )',
-                               (clientid, client_password, firstname, lastname, address1, address2, city, zipcode, state, cellphone, phone, email, level, bitcoin, flatcurrency, ))
+                           (user_info["userid"], user_info["password"],
+                            user_info["firstname"], user_info["lastname"],
+                            user_info["address1"], user_info["address2"],
+                            user_info["city"], user_info["zipcode"],
+                            user_info["state"], user_info["cphone"],
+                            user_info["phone"], user_info["email"],
+                            user_info["level"], user_info["bitcoin"], user_info["flatcurrency"],
+                            ))
         elif user_type=="trader":
             # TODO: insert trader account into DB
              cursor.execute('INSERT INTO Client VALUES (% s, % s, % s, % s, % s )',
-                               (traderid, trader_password, client_userid, bitcoin, flatcurrency, ))
+                            (traderid, trader_password, client_userid, bitcoin, flatcurrency, ))
         elif user_type=="manager":
             # TODO: insert manager account into DB
              cursor.execute('INSERT INTO Manager VALUES (% s, % s )',

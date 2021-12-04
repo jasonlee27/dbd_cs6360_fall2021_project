@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Client(
     cellphone VARCHAR(15),
     phone VARCHAR(15),
     email VARCHAR(30),
-    level VARCHAR(5),
+    level VARCHAR(10),
     bitcoin FLOAT(8,3),
     flatcurrency FLOAT(8,3),
     PRIMARY KEY(clientid),
@@ -110,33 +110,16 @@ CREATE TABLE IF NOT EXISTS Assign(
     aid INT AUTO_INCREMENT not null,
     clientid VARCHAR(50) not null,
     traderid VARCHAR(50) not null,
-    bitcoin_value FLOAT(8,3),
-    purchase_type VARCHAR(10),
-    PRIMARY KEY(clientid, traderid),
+    PRIMARY KEY (aid),
     FOREIGN KEY (clientid) REFERENCES Client(clientid),
-    FOREIGN KEY (traderid) REFERENCES Trader(traderid),
-    CONSTRAINT request_bitcoinvalue_constraint CHECK (bitcoin_value>=0.0),
-    CONSTRAINT purchase_type_constraint CHECK (purchase_type='buy' OR purchase_type='sell')
-);
-
-CREATE TABLE IF NOT EXISTS Request(
-    rid INT AUTO_INCREMENT not null,
-    clientid VARCHAR(50) not null,
-    traderid VARCHAR(50) not null,
-    bitcoin_value FLOAT(8,3),
-    purchase_type VARCHAR(10),
-    PRIMARY KEY(rid),
-    FOREIGN KEY (clientid) REFERENCES Client(clientid),
-    FOREIGN KEY (traderid) REFERENCES Trader(traderid),
-    CONSTRAINT request_bitcoinvalue_constraint CHECK (bitcoin_value>=0.0),
-    CONSTRAINT purchase_type_constraint CHECK (purchase_type='buy' OR purchase_type='sell')
+    FOREIGN KEY (traderid) REFERENCES Trader(traderid)
 );
 
 CREATE TABLE IF NOT EXISTS Transfer(
     tid INT AUTO_INCREMENT not null,
     clientid VARCHAR(50),
     transactionid INT not null,
-    PRIMARY KEY(tid),
+    PRIMARY KEY (tid),
     FOREIGN KEY (clientid) REFERENCES Client(clientid),
     FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
 );
@@ -145,7 +128,7 @@ CREATE TABLE IF NOT EXISTS Buysell(
     bsid INT AUTO_INCREMENT not null,
     userid VARCHAR(50),
     transactionid INT not null,
-    PRIMARY KEY(bsid),
+    PRIMARY KEY (bsid),
     FOREIGN KEY (userid) REFERENCES Client(clientid),
     FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
 );

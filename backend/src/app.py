@@ -18,7 +18,7 @@ app.secret_key = Macros.SECRETE_KEY
 # DB connection details
 # app.config['MYSQL_HOST'] = Macros.MYSQL_HOST
 app.config['MYSQL_USER'] = Macros.MYSQL_USER
-app.config['MYSQL_PASSWORD'] = Macros.MYSQL_PASSWORD
+# app.config['MYSQL_PASSWORD'] = Macros.MYSQL_PASSWORD
 app.config['MYSQL_DB'] = Macros.MYSQL_DB #str(Macros.DB_FILE)
 
 mysql = MySQL(app)
@@ -47,6 +47,9 @@ def status():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # test id
+    # clientid: jasonlee123
+    # password: password
     msg = ''
     account_info = None
     if request.method =='POST' and \
@@ -71,6 +74,7 @@ def login():
         # end if
         cursor.close()
     # end if
+    print(msg)
     return jsonify(
         msg=msg,
         account_info=account_info
@@ -174,7 +178,6 @@ def register():
         # end if
         cursor.close()
     # end if
-    print(user_info)
     print(msg)
     return jsonify(
         msg=msg,
