@@ -6,15 +6,9 @@ import axios from "axios";
 function Login(props) {
   function handleLogin(e) {
     e.preventDefault();
-    console.log(formData);
     let loginData= new FormData(e.target)
-    let loginFormData = new FormData();
-    loginFormData.append("userid", loginData.get("userid"))
-    loginFormData.append("password", loginData.get("password"))
-    //loginFormData={...loinData}
-    console.log("data sent");
     axios
-      .post("http://localhost:8080/login", loginFormData)
+      .post("http://localhost:8080/login", loginData)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
@@ -25,19 +19,6 @@ function Login(props) {
         console.log("error", error);
       });
   }
-  const initialFormData = Object.freeze({
-      userid: "",
-      password: ""
-  });
-  const [formData, updateFormData] = React.useState(initialFormData);
-  const handleChange = (e) => {
-    updateFormData({
-      ...formData,
-
-      // Trimming any whitespace
-      [e.target.name]: e.target.value.trim()
-    });
-  };
   return (
     <div className="AppLogin mt-5">
       <Card className="mx-auto" style={{ width: "18rem" }}>
@@ -51,7 +32,6 @@ function Login(props) {
                 placeholder="Enter Username"
                 name="userid"
                 required
-                onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="mb-1" controlId="password">
@@ -61,7 +41,6 @@ function Login(props) {
                 placeholder="Enter Password"
                 name="password"
                 required
-                onChange={handleChange} 
               />
               <br></br>
             </Form.Group>

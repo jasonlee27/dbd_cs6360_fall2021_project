@@ -5,27 +5,15 @@ import useState from "react-usestateref";
 import axios from "axios";
 
 function Signup(props) {
+
+  let [clientChecked,setClientChecked]= useState(true);
+
   let handleSignup = (e) => {
     e.preventDefault();
     let signupData = new FormData(e.target);
-    signupData.append("usertype", "client")
     let signupFormData = new FormData();
-    signupFormData.append("userid", signupData.get("userid"))
-    signupFormData.append("password", signupData.get("password"))
-    signupFormData.append("usertype", signupData.get("usertype"))
-    signupFormData.append("firstname", signupData.get("firstname"))
-    signupFormData.append("lastname", signupData.get("lastname"))
-    signupFormData.append("address1", signupData.get("address1"))
-    signupFormData.append("address2", signupData.get("address2"))  
-    signupFormData.append("city", signupData.get("city"))
-    signupFormData.append("zipcode", signupData.get("zipcode"))
-    signupFormData.append("state", signupData.get("state"))
-    signupFormData.append("cphone", signupData.get("cellphonenumber"))
-    signupFormData.append("phone", signupData.get("phonenumber"))
-    signupFormData.append("email", signupData.get("email"))
-    console.log("userid: ", signupData.get("userid"))
     axios
-      .post("http://localhost:8080/register", signupFormData)
+      .post("http://localhost:8080/register", signupData)
       .then((response) => {
         if (response.data.msg === "Successfully registered") {
           props.setLoggedIn();
@@ -35,36 +23,47 @@ function Signup(props) {
       });
   };
 
-  const initialFormData = Object.freeze({
-      username: "",
-      password: "",
-      usertype: "client",
-      firstname: "",
-      lastname: "",
-      address1: "",
-      address2: "",
-      city: "",
-      zipcode: "",
-      state: "",
-      cellphonenumber: "",
-      phonenumber: "",
-      email: "",
-  });
-  const [formData, updateFormData] = React.useState(initialFormData);
-  const handleChange = (e) => {
-    updateFormData({
-      ...formData,
 
-      // Trimming any whitespace
-      [e.target.name]: e.target.value.trim()
-    });
-  };
   return (
     <div className="Signup mt-5">
       <Card className="mx-auto" style={{ width: "45rem" }}>
         <Card.Header>Signup</Card.Header>
         <Card.Body>
           <Form onSubmit={handleSignup}>
+          <Row className="mb-3">
+          <Form.Group controlId="user-type">
+              <Form.Label htmlFor="usertype">User Type</Form.Label>
+              <br></br>
+              <Form.Check
+                inline
+                name="usertype"
+                label="Client"
+                type="radio"
+                value="Client"
+                onChange={((e) => setClientChecked(true))}
+                defaultChecked
+              />
+              <Form.Check
+                inline
+                name="usertype"
+                label="Trader"
+                id="2"
+                type="radio"
+                value="Trader"
+                onChange={((e) => setClientChecked(false))}
+              />
+               <Form.Check
+                inline
+                name="usertype"
+                label="Manager"
+                id="3"
+                type="radio"
+                value="Manager"
+                onChange={((e) => setClientChecked(false))}
+              />
+      
+            </Form.Group>
+            </Row>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="userid">
                 <Form.Label htmlFor="userid">Username</Form.Label>
@@ -73,7 +72,6 @@ function Signup(props) {
                   type="text"
                   placeholder="Username"
                   name="userid"
-                  onChange={handleChange}
                 />
               </Form.Group>
 
@@ -84,7 +82,6 @@ function Signup(props) {
                   type="password"
                   placeholder="Password"
                   name="password"
-                  onChange={handleChange}
                 />
               </Form.Group>
             </Row>
@@ -97,7 +94,6 @@ function Signup(props) {
                   type="text"
                   placeholder="Jane"
                   name="firstname"
-                  onChange={handleChange}
                 />
               </Form.Group>
 
@@ -108,11 +104,12 @@ function Signup(props) {
                   type="text"
                   placeholder="Doe"
                   name="lastname"
-                  onChange={handleChange}
                 />
               </Form.Group>
             </Row>
-
+            {clientChecked && 
+              (
+          <div>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridPhone">
                 <Form.Label htmlFor="phonenumber">Phone Number</Form.Label>
@@ -121,7 +118,7 @@ function Signup(props) {
                   type="text"
                   placeholder="##########"
                   name="phonenumber"
-                  onChange={handleChange}
+                  maxLength={10}
                 />
               </Form.Group>
 
@@ -132,7 +129,7 @@ function Signup(props) {
                   type="text"
                   placeholder="##########"
                   name="cellphonenumber"
-                  onChange={handleChange}
+                  maxLength={10}
                 />
               </Form.Group>
             </Row>
@@ -144,7 +141,6 @@ function Signup(props) {
                 type="email"
                 placeholder="Email"
                 name="emailaddress"
-                onChange={handleChange}
               />
             </Form.Group>
 
@@ -155,7 +151,6 @@ function Signup(props) {
                 type="text"
                 placeholder="#### Street"
                 name="address1"
-                onChange={handleChange}
               />
             </Form.Group>
 
@@ -166,7 +161,6 @@ function Signup(props) {
                 type="text"
                 placeholder="Bldg, Apt, floor, etc"
                 name="address2"
-                onChange={handleChange}
               />
             </Form.Group>
 
@@ -177,20 +171,22 @@ function Signup(props) {
                   required
                   type="text"
                   name="city"
-                  onChange={handleChange}
                 />
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridState">
                 <Form.Label htmlFor="state">State</Form.Label>
-                <Form.Control required type="text" name="state" onChange={handleChange}/>
+                <Form.Control required type="text" name="state" />
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridZip">
                 <Form.Label htmlFor="zipcode">Zip</Form.Label>
-                <Form.Control required type="text" name="zipcode" onChange={handleChange}/>
+                <Form.Control required type="text" name="zipcode" />
               </Form.Group>
+  
             </Row>
+            </div>
+              )}
 
             <Button variant="success" type="submit">
               Submit
