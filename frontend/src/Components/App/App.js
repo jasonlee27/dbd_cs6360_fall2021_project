@@ -3,6 +3,7 @@ import Login from "../Login/Login.js";
 import Signup from "../Signup/Signup.js";
 import Transaction from "../btcTransaction.js";
 import ManagerSearch from "../ManagerSearch.js";
+import TraderPage from "../TraderPage.js";
 import React from 'react';
 import useState from 'react-usestateref';
 import axios from "axios";
@@ -59,8 +60,11 @@ function App() {
     setState('loggedIn');
    getUserInfo(userId).then((response)=> {
     console.log(userTypeRef.current);
-    if(userTypeRef.current==="client" ||userTypeRef.current==="trader"){
+    if(userTypeRef.current==="client"){
     navigate('/transaction')
+    }
+    else if(userTypeRef.current==="trader") {
+      navigate('/trader')
     }
     else if(userTypeRef.current==="manager") {
       navigate('/transactions/search')
@@ -91,8 +95,8 @@ function App() {
         element={state==='loggedIn' && userType === 'client' ? <Transaction logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
     />
    <Route 
-        path="/transaction"
-        element={state==='loggedIn' && userType === 'trader' ? <Transaction logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
+        path="/trader"
+        element={state==='loggedIn' && userType === 'trader' ? <TraderPage logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
 />
         <Route 
         path="/transactions/search"

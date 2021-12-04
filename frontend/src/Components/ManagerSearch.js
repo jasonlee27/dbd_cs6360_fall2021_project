@@ -25,7 +25,7 @@ function ManagerSearch(props) {
   }
 
   return (
-    <div className="Signup mt-5">
+    <div className="Manager-Search mt-5">
          <Button onClick={props.logout}>
         Logout
       </Button>
