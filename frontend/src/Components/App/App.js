@@ -15,19 +15,20 @@ import {BrowserRouter as Router,
 
 function App() {
   const [state, setState] = useState('login');
-  const [userType, setUserType] = useState('');
+  const [userType, setUserType, userTypeRef] = useState('');
   let navigate = useNavigate();
 
-  function getUserInfo(userId) {
+  async function getUserInfo(userId) {
     console.log("userid",userId);
     let formData = new FormData();
     formData.append("userid", userId);
-    axios
+    await axios
     .post("http://localhost:8080/api/profile/userInfo", formData)
     .then((response) => {
       if(response.data.account_info !== ""){
         console.log(response.data.account_info.user_type);
         setUserType(response.data.account_info.user_type);
+        return Promise.resolve(1);
       }
     }).catch((error) => { 
       console.log("error", error);
@@ -54,17 +55,18 @@ function App() {
     setState('login');
     navigate('/login')
   };
-  let handleLogin  = (userId) => {
+  let handleLogin  = async (userId) => {
     setState('loggedIn');
-    getUserInfo(userId);
-    console.log("1111:",userType);
-    if(userType==="client" ||userType==="trader"){
+   getUserInfo(userId).then((response)=> {
+    console.log(userTypeRef.current);
+    if(userTypeRef.current==="client" ||userTypeRef.current==="trader"){
     navigate('/transaction')
     }
-    else if(userType==="manager") {
+    else if(userTypeRef.current==="manager") {
       navigate('/transactions/search')
     }
-  };
+  });
+};
   
   let handleLogout  = () => {
     setState('login');
