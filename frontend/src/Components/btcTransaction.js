@@ -10,14 +10,27 @@ function Transaction(props) {
       .post("http://localhost:8080//api/profile/buysell", transaction)
       .then((response) => {
         if (response.data.msg === "Successfully logged in!") {
-          props.setLoggedIn();
+        //  props.setLoggedIn();
         } else {
+        }
+      });
+  }
+
+  function handleLogout(e) {
+    axios
+      .request("http://localhost:8080/logout")
+      .then((response) => {
+        if (response.data.msg === "Successfully logged out") {
+            props.logout();
         }
       });
   }
 
   return (
     <div className="BTCTransation mt-5">
+      <Button onClick={handleLogout}>
+        Logout
+      </Button>
       <Card className="mx-auto" style={{ width: "18rem" }}>
         <Card.Header>Bitcoin Transaction</Card.Header>
         <Card.Body>

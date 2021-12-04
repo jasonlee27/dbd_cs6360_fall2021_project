@@ -11,7 +11,6 @@ function Signup(props) {
   let handleSignup = (e) => {
     e.preventDefault();
     let signupData = new FormData(e.target);
-    let signupFormData = new FormData();
     axios
       .post("http://localhost:8080/register", signupData)
       .then((response) => {

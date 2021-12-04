@@ -27,6 +27,10 @@ function App() {
     setState('loggedIn');
     navigate('/transaction')
   };
+  let handleLogout  = () => {
+    setState('login');
+    navigate('/login')
+  };
   return (
     <Routes>
       <Route
@@ -43,7 +47,7 @@ function App() {
       />
         <Route 
         path="/transaction"
-        element={state==='loggedIn' ? <Transaction /> :  <Navigate to="/login" />}
+        element={state==='loggedIn' ? <Transaction logout={handleLogout} /> :  <Navigate to="/login" />}
     />
     </Routes>
 );
