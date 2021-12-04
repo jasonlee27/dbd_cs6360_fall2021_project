@@ -155,30 +155,49 @@ class Database:
                 clients = None # TODO: get all clients assigned to input trader
                 account_info = {
                     "type": 'trader',
-                    "bitcoin": account[3],
-                    "flatcurrenty": account[4],
-                    "clients": clients
+                    "bitcoin": account["bitcoin"],
+                    "flatcurrenty": account["flatcurrenty"],
                 }
             # end if
         else:
             account_info = {
-                "type": 'trader',
-                "first_name": account[3],
-                "last_name": account[4],
-                "address1": account[5],
-                "address2": account[6],
-                "city": account[7],
-                "zipcode": account[8],
-                "state": account[9],
-                "cellphone": account[10],
-                "phone": account[11],
-                "email": account[12],
-                "level": account[13],
-                "bitcoin": account[14],
-                "flatcurrenty": account[15]
+                "type": 'client',
+                "first_name": account["firstname"],
+                "last_name": account["lastname"],
+                "address1": account["address1"],
+                "address2": account["address2"],
+                "city": account["city"],
+                "zipcode": account["zipcode"],
+                "state": account["state"],
+                "cellphone": account["cellphone"],
+                "phone": account["phone"],
+                "email": account["email"],
+                "level": account["level"],
+                "bitcoin": account["bitcoin"],
+                "flatcurrency": account["flatcurrency"]
             }
         # end if
         return account_info
+
+    @classmethod
+    def get_assgned_trader_in_db(cls, cursor, mysql, hash_username):
+        # hash_username: client id
+        cursor.execute('SELECT * FROM Client WHERE clientid = %s', (hash_username))
+        account = cursor.fetchone()
+        if account:
+            cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (hash_username))
+        # end if
+        return account
+
+    @classmethod
+    def get_assgned_clients_in_db(cls, cursor, mysql, hash_username):
+        # hash_username: trader id
+        cursor.execute('SELECT * FROM Trader WHERE traderid = %s', (hash_username))
+        account = cursor.fetchone()
+        if account:
+            cursor.execute('SELECT clientid FROM Assign WHERE traderid = %s', (hash_username))
+        # end if
+        return account
                 
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):

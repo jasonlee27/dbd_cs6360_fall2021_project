@@ -114,7 +114,6 @@ def register():
         hash_password = Utils.hashing(password)
         user_type = request.form["usertype"]
         user_info = None
-        print(userid, hash_userid, hash_password)
         if user_type=="client":
             # client info
             user_info = {
