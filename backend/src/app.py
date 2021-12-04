@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from flask_mysqldb import MySQL
+from flask_cors import CORS
 
 from macros import Macros
 from utils import Utils
@@ -13,6 +14,7 @@ import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = Macros.SECRETE_KEY
 
 # DB connection details

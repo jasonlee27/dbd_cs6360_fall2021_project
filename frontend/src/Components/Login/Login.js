@@ -12,16 +12,17 @@ function Login(props) {
     loginFormData.append("userid", loginData.get("userid"))
     loginFormData.append("password", loginData.get("password"))
     //loginFormData={...loinData}
+    console.log("data sent");
     axios
       .post("http://localhost:8080/login", loginFormData)
       .then((response) => {
-        console.log("data returned");
         if (response.data.msg === "Successfully logged in!") {
           props.setLoggedIn();
-          console.log("good");
         } else {
           console.log("Login Failed");
         }
+      }).catch((error) => { 
+        console.log("error", error);
       });
   }
   const initialFormData = Object.freeze({

@@ -154,14 +154,14 @@ class Database:
             else:
                 clients = None # TODO: get all clients assigned to input trader
                 account_info = {
-                    "type": 'trader',
+                    "user_type": 'trader',
                     "bitcoin": account["bitcoin"],
                     "flatcurrenty": account["flatcurrency"],
                 }
             # end if
         else:
             account_info = {
-                "type": 'client',
+                "user_type": 'client',
                 "first_name": account["firstname"],
                 "last_name": account["lastname"],
                 "address1": account["address1"],
