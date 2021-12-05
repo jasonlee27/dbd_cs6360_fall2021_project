@@ -13,7 +13,8 @@ function Transaction(props) {
         .post("http://localhost:8080/profile/buysell", transaction)
         .then((response) => {
           if (response.data.msg === "Successfully purchased.") {
-            e.target.clear();
+           // e.target.clear();
+           console.log(response.data)
           } else {
           }
         })

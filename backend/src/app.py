@@ -419,12 +419,12 @@ def buysell_bitcoin():
     # This method is for client/trader to buy/sell bitcoin
     msg = ''
     if request.method == 'POST':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         userid = session['userid']
         user_type = session['user_type']
         if user_type == 'client':
             bitcoin_val = request.form['bitcoin_val']
             purchase_type = request.form['purchase_type'].lower()
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             # not yet finished
             Database.buysell_bitcoin(
                 cursor, mysql,
