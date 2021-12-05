@@ -205,7 +205,7 @@ class Database:
     @classmethod
     def get_traders_in_db(cls, cursor, mysql):
         # hash_username: trader id
-        cursor.execute('SELECT traderid FROM Trader')
+        cursor.execute('SELECT traderid, firstname, lastname FROM Trader')
         traders = cursor.fetchall()
         return traders
 
