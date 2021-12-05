@@ -226,30 +226,21 @@ class Database:
             
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):
-        bitcoin_transactions, transfer_transactions = None, None
-        user_type, userid = data[0], data[1]
+        # TODO
+        user_type, userid, time_period = data[0], data[1], data[2]
+        # user_type: one out of [client, trader, manager]
+        # time_period: one out of [daily, weekly, monthly]
+        # in case of manager, it shows every transaction history over all
+        # client and trader
+        #cursor.execute('SELECT * FROM Transaction WHERE transfer_trid = (SELECT ttrid FROM TransferTransaction WHERE ttrid = %s) AND TransferTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
+        #if user_type == 'client':
+            #if date_range == "daily":
+                #cursor.execute('SELECT * FROM Transaction WHERE date BETWEEN %s AND %s', (start_date, end_date))
+                #cursor.execute("""SELECT * FROM TransferTransaction WHERE date BETWEEN %s AND %s """, (start_date, end_date))
+        #cursor.execute('SELECT * FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE ptrid = %s) AND PurchaseTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
 
-        if user_type == "client":
+        pass
 
-            # get bitcoin transactions
-            cursor.execute('SELECT * FROM PurchaseTransaction WHERE userid = %s', [userid])
-            bitcoin_transactions = cursor.fetchall()
-
-            # get transfer transactions
-            cursor.execute('SELECT * FROM TransferTransaction WHERE clientid = %s', [userid])
-            transfer_transactions = cursor.fetchall()
-
-        elif user_type == "trader":
-            clientid = data[2]
-            # get bitcoin transactions
-            cursor.execute('SELECT * FROM PurchaseTransaction WHERE userid = %s', [clientid])
-            bitcoin_transactions = cursor.fetchall()
-            # get transfer transactions
-            cursor.execute('SELECT * FROM TransferTransaction WHERE clientid = %s AND traderid = %s', [clientid, userid])
-            transfer_transactions = cursor.fetchall()
-        # end if
-        return bitcoin_transactions, transfer_transactions
-        
     @classmethod
     def set_bitcoin_request(cls, cursor, mysql, data):
         # TODO
@@ -285,30 +276,36 @@ class Database:
             if cursor.execute('SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (userid, )) == "gold":
                                  
                 if purchase_type == 'buy':
-                # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
+                # we hard coded 1 bitcoin = 10000usd
                     #cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
-                    cursor.execute('UPDATE Client SET bitcoin = bitcoin + (%s * (1 - 0.001)) WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))             
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
+                    cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET flatcurrency = flatcurrency - (10000 * %s) *(1 - 0.001)) WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))             
+
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.001, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
                 elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                    cursor.execute('UPDATE Client SET bitcoin = bitcoin - (%s * (1 - 0.001) WHERE clientid = (SELECT userid FROM User WHERE userid = %s))', (bitcoin_val, userid, ))
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                    cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET flatcurrency = flatcurrency + (10000 * %s) *(1 - 0.001)) WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))                                 
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.001, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
             elif cursor.execute('SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (userid, )) == "silver":
                 if purchase_type == 'buy':
-                # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                    #cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
-                    cursor.execute('UPDATE Client SET bitcoin = bitcoin + (%s * (1 - 0.01)) WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, )) 
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
-                elif purchase_type == 'sell':
-                # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                    #cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
-                    cursor.execute('UPDATE Client SET bitcoin = bitcoin - (%s * (1 - 0.01)) WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, )) 
+                    cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET flatcurrency = flatcurrency - (10000 * %s) *(1 - 0.01)) WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))             
 
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.01, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
+                elif purchase_type == 'sell':
+                    cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET flatcurrency = flatcurrency + (10000 * %s) *(1 - 0.01)) WHERE clientid = (SELECT userid FROM User WHERE userid = %s)', (bitcoin_val, userid, ))                                 
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.01, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
+                    
             # end if
         elif user_type == "trader":
             request_id = data[1]
@@ -316,30 +313,36 @@ class Database:
             if cursor.execute('SELECT level FROM Client WHERE clientid = (SELECT clientid FROM Request WHERE clientid = %s)', (userid, )) == "gold":
                 if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin + (%s * (1 - 0.001)) WHERE clientid = (SELECT clientid FROM Request WHERE clientid = %s)', (bitcoin_val, userid, ))   
-                    #cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
+                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin + %s WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))
+                    cursor.execute('UPDATE Trader SET flatcurrency = flatcurrency - (10000 * %s) *(1 - 0.001)) WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))   
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.001, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
+                    
                 elif purchase_type == 'sell':
-                # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin - (%s * (1 - 0.001)) WHERE clientid = (SELECT clientid FROM Request WHERE clientid = %s)', (bitcoin_val, userid, ))    
-                    #cursor.execute('UPDATE Client SET bitcoin = (bitcoin -  %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin - %s WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))
+                    cursor.execute('UPDATE Trader SET flatcurrency = flatcurrency + (10000 * %s) *(1 - 0.001)) WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))   
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.001, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
+                    
             elif cursor.execute('SELECT level FROM Client WHERE clientid = (SELECT clientid FROM Request WHERE clientid = %s)', (userid, )) == "silver":
                 if purchase_type == 'buy':
-                # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin + (%s * (1 - 0.01)) WHERE clientid = (SELECT clientid FROM Request WHERE clientid = %s)', (bitcoin_val, userid, ))                 
-
-                    #cursor.execute('UPDATE Trader SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
+                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin + %s WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))
+                    cursor.execute('UPDATE Trader SET flatcurrency = flatcurrency - (10000 * %s) *(1 - 0.01)) WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))   
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.01, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
+                    
+               
                 elif purchase_type == 'sell':
-                # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin - (%s * (1 - 0.01)) WHERE clientid = (SELECT clientid FROM Request WHERE clientid = %s)', (bitcoin_val, userid, ))                 
-                    #cursor.execute('UPDATE Trader SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
-                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                    cursor.execute('UPDATE Trader SET bitcoin = bitcoin - %s WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))
+                    cursor.execute('UPDATE Trader SET flatcurrency = flatcurrency + (10000 * %s) *(1 - 0.01)) WHERE traderid = (SELECT traderid FROM Request WHERE traderid = %s)', (bitcoin_val, request_id, ))   
+                    cursor.execute('INSERT INTO PurchaseTransaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), (NOW()), (SELECT level FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), 0.01, %s, (SELECT flatcurrecy FROM Client WHERE clientid = (SELECT userid FROM User WHERE userid = %s)), %s, %s, )', (userid, bitcoin_value, userid, purchase_type, userid, ))
+                    cursor.execute('INSERT INTO Transaction VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), NULL, (SELECT ptrid FROM PurchaseTransaction WHERE userid = (SELECT userid FROM User WHERE userid = %s)))', (userid, ))
+                    cursor.execute('INSERT INTO Log VALUES ((SELECT FLOOR(200000+RAND()*(1-200000))), 'Bitcoin', (SELECT trid FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE userid = %s)))', (userid, ))
+                    
+                
         # end if
         mysql.connection.commit()
         pass
@@ -374,9 +377,6 @@ class Database:
                 # add log for the transfer transaction
                 cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND usd_value = %s AND clientid = %s AND traderid = %s', (transaction_date, usd_val, userid, traderid))
                 ttrid = cursor.fetchone()
-
-                cursor.execute("INSERT INTO Transaction(transfer_trid, purchase_trid) VALUES (%s, NULL)", [ttrid])
-                
                 cursor.execute("INSERT INTO Log(log_type, trid) VALUES (update_transfertransaction, %s)", [ttrid])
                 mysql.connection.commit()
             # end if
