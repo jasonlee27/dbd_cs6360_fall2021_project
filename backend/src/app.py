@@ -248,7 +248,7 @@ def assign():
                 cursor, mysql, [userid, traderid]
             )
             cursor.close()
-            msg = "Successfully trader captured"
+            msg = "Successfully assigned trader"
         # end if
     # end if
     return jsonify(msg=msg)
@@ -262,7 +262,7 @@ def traders():
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             traders = Database.get_traders_in_db(cursor, mysql)
             cursor.close()
-            msg = "Successfully trader captured"
+            msg = "Successfully found all traders"
             return jsonify(
                 msg=msg,
                 traders=traders
