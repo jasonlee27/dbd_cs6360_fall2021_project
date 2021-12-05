@@ -237,11 +237,12 @@ class Database:
 
     @classmethod
     def buysell_bitcoin(cls, cursor, mysql, data):
-        user_type = data[0]
+        user_type, userid = data[0], data[1]
         # TODO: given bitcoin value
         # TODO: append log for this transaction
         if user_type == "client":
-            bitcoin_val, purchase_type = data[1], data[2]
+            bitcoin_val, purchase_type = data[2], data[3]
+
             # TODO: buy/sell bitcoin by clients themselves
             if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))

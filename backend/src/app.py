@@ -91,7 +91,6 @@ def login():
 @app.route('/logout')
 def logout():
     # Remove session data, this will log the user out
-    print(session)
     variable = session["userid"]
     session.pop('loggedin', None)
     session.pop('userid', None)
@@ -281,19 +280,17 @@ def request_bitcoin(userid):
 def buysell_bitcoin():
     # This method is for client/trader to buy/sell bitcoin
     msg = ''
-    if request.method == 'POST' and \
-       'userid' in request.form and \
-       'user_type' in request.form:
+    if request.method == 'POST':
         userid = session['userid']
         user_type = session['user_type']
         if user_type == 'client':
             bitcoin_val = request.form['bitcoin_val']
-            purchase_type = request.form['purchase_type']
+            purchase_type = request.form['purchase_type'].lower()
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             # not yet finished
             Database.buysell_bitcoin(
                 cursor, mysql,
-                [user_type, bitcoin_val, purchase_type]
+                [user_type, userid, bitcoin_val, purchase_type]
             )
             msg = "Successfully purchased."
             cursor.close()
@@ -306,6 +303,7 @@ def buysell_bitcoin():
             )
         # end if
     # end if
+    print(msg)
     return jsonify(
         msg=msg
     )
