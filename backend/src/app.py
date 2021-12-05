@@ -389,7 +389,10 @@ def cancel_tansaction(userid):
         user_type = session['user_type']
         if user_type == 'trader':
             transactionid = request.form['transactionid']
+
+            # transactiontype: [bitcoin, transfer]
             transactiontype = request.form['transactiontype']
+            
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             Database.cancel_transaction(
                 cursor, mysql,
