@@ -290,12 +290,11 @@ def transaction_history():
     if request.method == 'POST' and 'time_period' in request.form:
         userid = session['userid']
         user_type = session['user_type']
-        time_period = request.form['time_period']
         
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         transaction_histories = Database.get_user_transaction_history(
             cursor, mysql,
-            [user_type, userid, time_period]
+            [user_type, userid]
         )
         cursor.close()
         return jsonify(

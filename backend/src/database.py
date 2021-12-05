@@ -227,7 +227,7 @@ class Database:
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):
         # TODO
-        user_type, userid, time_period = data[0], data[1], data[2]
+        user_type, userid = data[0], data[1], data[2]
         # user_type: one out of [client, trader, manager]
         # time_period: one out of [daily, weekly, monthly]
         # in case of manager, it shows every transaction history over all
