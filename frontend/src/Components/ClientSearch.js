@@ -17,7 +17,7 @@ function ClientSearch(props) {
     let searchData = new FormData(e.target);
 
     axios
-      .post("http://localhost:8080/clients_assigned", searchData)
+      .post("http://localhost:8080/transaction_history", searchData)
       .then((response) => {
         if (response.data.msg === "Successfully clients captured") {
           setTransactionHistory(response.data.clients);
