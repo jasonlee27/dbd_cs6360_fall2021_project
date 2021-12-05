@@ -230,7 +230,23 @@ def clients_assigned():
         # end if
     # end if
     return jsonify(msg=msg)
-        
+
+@app.route('/profile/assign', methods=['GET', 'POST'])
+def assign():
+    msg = ''
+    if request.method == 'POST':
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type == "client":
+            traderid = request.form['traderid']
+            Database.assign_trader(
+                cursor, mysql, [userid, traderid]
+            )
+            cursor.close()
+            msg = "Successfully trader captured"
+        # end if
+    # end if
+    return jsonify(msg=msg)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def transaction_history():
