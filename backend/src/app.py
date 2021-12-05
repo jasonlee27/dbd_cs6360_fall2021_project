@@ -331,19 +331,22 @@ def transfer_money():
         msg=msg
     )
 
-@app.route('/api/profile/cancel', methods=['GET', 'POST'])
+@app.route('/profile/cancel', methods=['GET', 'POST'])
 def cancel_tansaction(userid):
     # This method is for trader to cancel his/her transactions
     msg = ''
     if request.method == 'POST' and \
-       'transactionid' in request.form:
+       'transactionid' in request.form and \
+       'transactiontype' in request.form:
         userid = session['userid']
         user_type = session['user_type']
         if user_type == 'trader':
             transactionid = request.form['transactionid']
+            transactiontype = request.form['transactiontype']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             Database.cancel_transaction(
-                cursor, mysql, transactionid
+                cursor, mysql,
+                [user_type, userid, transactionid, transactiontype]
             )
             msg = "Transaction successfully canceled."
             cursor.close()

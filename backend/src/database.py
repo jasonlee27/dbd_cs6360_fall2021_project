@@ -300,7 +300,7 @@ class Database:
                 new_value = cursor.fetchone()
 
                 # add log for the transfer transaction
-                cursor.execute('INSERT INTO Log(log_type, oldvalue, newvalue) VALUES (update_transfertransaction, %s, %s)', (old_value, new_value))
+                cursor.execute("INSERT INTO Log(log_type, oldvalue, newvalue) VALUES ('update_transfertransaction', %s, %s)", (old_value, new_value))
             
                 mysql.connection.commit()
             # end if
