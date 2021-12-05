@@ -104,9 +104,15 @@ class Database:
             cursor.execute("""INSERT INTO Trader VALUES (
                            (SELECT userid FROM User WHERE userid = %s AND user_password = %s), 
                            (SELECT user_password FROM User WHERE userid = %s AND user_password = %s),
+                           %s,
+                           (SELECT firstname FROM Name WHERE firstname = %s AND lastname = %s), 
+                           (SELECT lastname FROM Name WHERE firstname = %s AND lastname = %s),
                            %s, %s)""",
                            (user_info["userid"], user_info["password"],
                             user_info["userid"], user_info["password"],
+                            user_info["register_date"],
+                            user_info["firstname"], user_info["lastname"],
+                            user_info["firstname"], user_info["lastname"],
                             user_info["bitcoin"], user_info["flatcurrency"]))
         elif user_type=="manager":
             cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
@@ -365,12 +371,11 @@ class Database:
         # end if
         return
 
-    # @classmethod
-    # def update_level(cls, cursor, mysql, prev_month):
-    #     SELECT clientid FROM Client C, (SELECT bitcoin_value FROM PurchaseTransaction WHERE userid = %s date BETWEEN %s AND %s) AS T WHERE
+    @classmethod
+    def update_level(cls, cursor, mysql, prev_month):
+        SELECT clientid FROM Client C, (SELECT SUM(bitcoin_value) FROM PurchaseTransaction WHERE userid = %s AND date BETWEEN %s AND %s) AS amount WHERE C.clientid = %s AND SUM(
         
-        
-    #     pass
+        pass
 
     @classmethod
     def get_all_transaction_history(cls, cursor, mysql, data):

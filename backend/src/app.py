@@ -146,6 +146,9 @@ def register():
                 "user_type": user_type,
                 "userid": hash_userid,
                 "password": hash_password,
+                "register_date": Utils.get_cur_time(),
+                "firstname": request.form['firstname'],
+                "lastname": request.form['lastname'],
                 "bitcoin": 0.0,
                 "flatcurrency": 0.0
             }
