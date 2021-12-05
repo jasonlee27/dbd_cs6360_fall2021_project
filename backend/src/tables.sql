@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS Client(
 CREATE TABLE IF NOT EXISTS Trader(
     traderid VARCHAR(50) not null,
     trader_password VARCHAR(50) not null,
+    register_date VARCHAR(50),
     firstname VARCHAR(15),
     lastname VARCHAR(15),
     bitcoin FLOAT(8,3),
