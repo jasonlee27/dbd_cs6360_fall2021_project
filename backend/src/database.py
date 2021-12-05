@@ -329,8 +329,9 @@ class Database:
         user_type, userid, date_range, start_date, end_date = data[0], data[1], data[2], data[3], data[4]
         start_year, start_month, start_day = start_date.split("-")
         end_year, end_month, end_day = end_date.split("-")
+        purchase_trans_history, transfer_trans_history = None, None
         if date_range == "daily":
-            cursor.execute("""SELECT date, usd_value, traderid FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (start_date, end_date))
+            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (start_date, end_date))
             purchase_trans_history = cursor.fetchall()
             cursor.execute("""SELECT * FROM TransferTransaction WHERE date BETWEEN '%s' AND '%s' """, (start_date, end_date))
             transfer_trans_history = cursor.fetchall()
@@ -362,5 +363,4 @@ class Database:
             cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (_start_date, _end_date))
             transfer_trans_history = cursor.fetchall()
         # end if
-        
-        return history
+        return purchase_trans_history, transfer_trans_history

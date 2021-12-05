@@ -247,6 +247,7 @@ def manager_transaction_history():
     # This method shows clients and trader their transaction histories
     # daily, weekly, or monthly
     msg = ''
+    trans_history = None
     if request.method == 'POST' and 'time_period' in request.form:
         userid = session['userid']
         user_type = session['user_type']
@@ -256,17 +257,21 @@ def manager_transaction_history():
             end_date = request.form['enddate'] # format: YYYY-MM-DD
         
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            transaction_histories = Database.get_all_transaction_history(
+            purchase_trans_history, transfer_trans_history = Database.get_all_transaction_history(
                 cursor, mysql,
                 [user_type, userid, date_range, start_date, end_date]
             )
             cursor.close()
             msg = "Successfully received transaction history."
+            trans_history = {
+                "purchase_transaction": purchase_trans_history,
+                "transfer_transaction": transfer_trans_history
+            }
         # end if
     # end if
     return jsonify(
         msg=msg,
-        transaction_histories=transaction_histories
+        history=trans_history
     )
 
 @app.route('/profile/transfer_from_bank', methods=['GET', 'POST'])
