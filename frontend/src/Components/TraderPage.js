@@ -7,6 +7,7 @@ import ClientSearch from "./ClientSearch.js";
 
 function TraderPage(props) {
   let [purchaseType, setPurchaseType] = useState("buy");
+  let [pageStatus, setPageStatus] = useState("transaction");
 
   function handleTransaction(e) {
     e.preventDefault();
@@ -80,8 +81,32 @@ function TraderPage(props) {
     <div className="trader m-3">
       <Button onClick={props.logout}>Logout</Button>
       <div className="mt-3">
+      <Form.Group className="mb-3">
+              <Form.Label htmlFor="page_type">Transaction Type</Form.Label>
+              <br></br>
+              <Form.Check
+                inline
+                name="page_type"
+                label="Transaction for Client"
+                type="radio"
+                value="transaction"
+                defaultChecked
+                onChange={(e) => setPageStatus("transaction")}
+              />
+              <Form.Check
+                inline
+                name="page_type"
+                label="search"
+                type="radio"
+                value="search"
+                onChange={(e) => setPageStatus("search")}
+              />
+         
+              </Form.Group>
+              </div>
       <div class="row">
-      <div class="mx-auto col-sm-1">
+
+      {pageStatus === "transaction" && <div class="mx-auto col-sm-1">
       <Card className="mr-1" style={{ width: "18rem" }}>
         <Card.Header>Bitcoin Transaction</Card.Header>
           <Card.Body>
@@ -156,9 +181,10 @@ function TraderPage(props) {
           </Form>
         </Card.Body>
       </Card>
+      
       </div>
-      <div class="col-sm-6">
-      <Card className="ml-1" style={{ width: "30rem" }}>
+} {pageStatus === "search" &&
+      <Card className="ml-1" style={{ width: "20rem" }}>
         <Card.Header>Client Search</Card.Header>
         <Card.Body>
           <Form onSubmit={handleSearch}>
@@ -225,11 +251,11 @@ function TraderPage(props) {
           </Form>
         </Card.Body>
       </Card>
-      </div>
+}
     </div>
+                
       </div>
-     
-    </div>
+
   );
 }
 

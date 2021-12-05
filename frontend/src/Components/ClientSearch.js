@@ -44,9 +44,9 @@ function ClientSearch(props) {
   }, []);
 
   return (
-    <div className="Client-Search mt-5">
+    <div className="Client-Search m-3">
       <Button onClick={props.logout}>Logout</Button>
-      <Card className="mx-auto" style={{ width: "30rem" }}>
+      <Card className="mx-auto" style={{ width: "25rem" }}>
         <Card.Header>Client Search</Card.Header>
         <Card.Body>
           <Form onSubmit={handleSearch}>

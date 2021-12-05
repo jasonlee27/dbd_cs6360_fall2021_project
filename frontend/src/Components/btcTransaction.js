@@ -37,7 +37,7 @@ function Transaction(props) {
   }
 
   return (
-    <div className="BTCTransation mt-5">
+    <div className="BTCTransation m-3">
       <Button onClick={props.logout}>Logout</Button>
       <Card className="mx-auto" style={{ width: "18rem" }}>
         <Card.Header>Bitcoin Transaction</Card.Header>
