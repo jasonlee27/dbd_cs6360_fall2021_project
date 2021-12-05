@@ -217,7 +217,7 @@ class Database:
         clientid, bitcoin_val, purchase_type = data[0], data[1], data[2]
         # TODO: find traderid given clients's id
         # TODO: get the request info as output for show cleint the request
-        cursor.execute('INSERT INTO Request VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
+        cursor.execute('INSERT INTO Request VALUES (%s, (SELECT clientid FROM CLient WHERE clientid = %s), (SELECT traderid FROM Trader WHERE traderid = %s), %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
         cursor.execute('SELECT * FROM Request',)
         mysql.connection.commit()
         pass
