@@ -80,7 +80,7 @@ function TraderPage(props) {
   return (
     <div className="trader m-3">
       <Button onClick={props.logout}>Logout</Button>
-      <div className="mt-3">
+      <div className="mx-auto mt-3">
       <Form.Group className="mb-3">
               <Form.Label htmlFor="page_type">Transaction Type</Form.Label>
               <br></br>
@@ -106,8 +106,8 @@ function TraderPage(props) {
               </div>
       <div class="row">
 
-      {pageStatus === "transaction" && <div class="mx-auto col-sm-1">
-      <Card className="mr-1" style={{ width: "18rem" }}>
+      {pageStatus === "transaction" &&
+      <Card className="mx-auto" style={{ width: "18rem" }}>
         <Card.Header>Bitcoin Transaction</Card.Header>
           <Card.Body>
             <Form onSubmit={handleTransaction}>
@@ -181,10 +181,9 @@ function TraderPage(props) {
           </Form>
         </Card.Body>
       </Card>
-      
-      </div>
+    
 } {pageStatus === "search" &&
-      <Card className="ml-1" style={{ width: "20rem" }}>
+      <Card className="mx-auto" style={{ width: "20rem" }}>
         <Card.Header>Client Search</Card.Header>
         <Card.Body>
           <Form onSubmit={handleSearch}>
