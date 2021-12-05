@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS PurchaseTransaction(
     date VARCHAR(50),
     commision_type VARCHAR(50),
     commission_rate FLOAT(3,3),
-    commision_fee FLOAT(8,3),
+    -- commision_fee FLOAT(8,3),
     bitcoin_value FLOAT(8,3),
-    usd_value FLOAT(8,3),
+    fiat_value FLOAT(8,3),
     purchase_type VARCHAR(4), -- buy or sell bitcoin
     userid VARCHAR(50),
     PRIMARY KEY(ptrid),
@@ -101,8 +101,8 @@ CREATE TABLE IF NOT EXISTS Transaction(
 CREATE TABLE IF NOT EXISTS Log(
     logid INT AUTO_INCREMENT not null,
     log_type VARCHAR(10),
-    oldvalue FLOAT(8,3),
-    newvalue FLOAT(8,3),
+    trid INT DEFAULT NULL,
+    UNIQUE(log_type, trid),
     PRIMARY KEY(logid)
 );
 
@@ -121,9 +121,9 @@ CREATE TABLE IF NOT EXISTS Request(
     traderid VARCHAR(50) not null,
     bitcoin_value FLOAT(8,3) not null,
     purchase_type VARCHAR(5) not null,
-    PRIMARY KEY (aid),
+    PRIMARY KEY (rid),
     FOREIGN KEY (clientid) REFERENCES Client(clientid),
-    FOREIGN KEY (traderid) REFERENCES Trader(traderid),
+    FOREIGN KEY (traderid) REFERENCES Trader(traderid)
 );
 
 CREATE TABLE IF NOT EXISTS Transfer(
@@ -144,20 +144,20 @@ CREATE TABLE IF NOT EXISTS Buysell(
     FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
 );
 
-CREATE TABLE IF NOT EXISTS Cancel(
-    cid INT AUTO_INCREMENT not null,
-    traderid VARCHAR(50),
-    transactionid INT not null,
-    PRIMARY KEY(cid),
-    FOREIGN KEY (traderid) REFERENCES Trader(traderid),
-    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
-);
+-- CREATE TABLE IF NOT EXISTS Cancel(
+--     cid INT AUTO_INCREMENT not null,
+--     traderid VARCHAR(50),
+--     transactionid INT not null,
+--     PRIMARY KEY(cid),
+--     FOREIGN KEY (traderid) REFERENCES Trader(traderid),
+--     FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
+-- );
 
-CREATE TABLE IF NOT EXISTS Have(
-    hid INT AUTO_INCREMENT not null,
-    logid INT not null,
-    transactionid INT not null,
-    PRIMARY KEY(hid),
-    FOREIGN KEY (logid) REFERENCES Log(logid),
-    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
-);
+-- CREATE TABLE IF NOT EXISTS Have(
+--     hid INT AUTO_INCREMENT not null,
+--     logid INT not null,
+--     transactionid INT not null,
+--     PRIMARY KEY(hid),
+--     FOREIGN KEY (logid) REFERENCES Log(logid),
+--     FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
+-- );

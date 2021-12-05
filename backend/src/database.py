@@ -66,7 +66,6 @@ class Database:
             }
         # end if
         return account_info
-    
 
     @classmethod
     def insert_user_record(cls, cursor, mysql, user_info):
@@ -119,7 +118,6 @@ class Database:
         # end if
         mysql.connection.commit()
         return
-    
 
     @classmethod
     def user_exists_in_db(cls, cursor, mysql, hash_username, hash_password=None):
@@ -180,33 +178,38 @@ class Database:
         return account_info
 
     @classmethod
+    def add_client_money(cls, cursor, mysql, data):
+        user_type, hash_username, flatcurrency = data[0], data[1], data[2]
+        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (hash_username))
+        old_flatcurrency = cursor.fetchone()
+        cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency + %s) WHERE clientid = %s', (flatcurrency))
+        mysql.connection.commit()
+        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (hash_username))
+        new_flatcurrency = cursor.fetchone()
+        return old_flatcurrency, new_flatcurrency
+        
+    @classmethod
     def get_assgned_trader_in_db(cls, cursor, mysql, hash_username):
         # hash_username: client id
-        cursor.execute('SELECT * FROM Client WHERE clientid = %s', (hash_username))
-        account = cursor.fetchone()
-        if account:
-            cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (hash_username))
-        # end if
-        return account
+        cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (hash_username))
+        trader = cursor.fetchone()
+        return trader
 
     @classmethod
     def get_assgned_clients_in_db(cls, cursor, mysql, hash_username):
         # hash_username: trader id
-        cursor.execute('SELECT * FROM Trader WHERE traderid = %s', (hash_username))
-        account = cursor.fetchone()
-        if account:
-            cursor.execute('SELECT clientid FROM Assign WHERE traderid = %s', (hash_username))
-        # end if
-        return account
+        cursor.execute('SELECT clientid FROM Assign WHERE traderid = %s', (hash_username))
+        clients = cursor.fetchall()
+        return clients
                 
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):
+        # TODO
         user_type, userid, time_period = data[0], data[1], data[2]
         # user_type: one out of [client, trader, manager]
         # time_period: one out of [daily, weekly, monthly]
         # in case of manager, it shows every transaction history over all
         # client and trader
-        # TODO: do not access to transfertransaction and purchagetransaction directly, but access them via where clause from transaction table, but why?
         cursor.execute('SELECT * FROM Transaction WHERE transfer_trid = (SELECT ttrid FROM TransferTransaction WHERE ttrid = %s) AND TransferTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
         cursor.execute('SELECT * FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE ptrid = %s) AND PurchaseTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
 
@@ -214,9 +217,8 @@ class Database:
 
     @classmethod
     def set_bitcoin_request(cls, cursor, mysql, data):
+        # TODO
         clientid, bitcoin_val, purchase_type = data[0], data[1], data[2]
-        # TODO: find traderid given clients's id
-        # TODO: get the request info as output for show cleint the request
         cursor.execute('INSERT INTO Request VALUES (%s, (SELECT clientid FROM CLient WHERE clientid = %s), (SELECT traderid FROM Trader WHERE traderid = %s), %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
         cursor.execute('SELECT * FROM Request',)
         mysql.connection.commit()
@@ -228,10 +230,10 @@ class Database:
         userid, user_type = data[0], data[1]
         histories = None
         if user_type == 'client':
-            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = (SELECT clientid FROM CLient WHERE clientid = %s)', (clientid,))
+            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (clientid))
             histories = cursor.fetchall()
         elif user_type == 'trader':
-            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = (SELECT traderid FROM Trader WHERE traderid = %s)', (traderid,))
+            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (traderid,))
             histories = cursor.fetchall()
         # end if
         return histories
@@ -239,8 +241,7 @@ class Database:
     @classmethod
     def buysell_bitcoin(cls, cursor, mysql, data):
         user_type, userid = data[0], data[1]
-        # TODO: given bitcoin value
-        # TODO: append log for this transaction
+        # TODO
         # please let me know more about "level' in user table
         if user_type == "client":
             bitcoin_val, purchase_type = data[2], data[3]
@@ -277,7 +278,6 @@ class Database:
     def transfer_money(cls, cursor, mysql, data):
         trader = None
         user_type, userid, usd_val = data[0], data[1], data[2]
-        # TODO: transfer USD to clients's trader and append log for it
         # from my previous experience, you dont need to find the client id to update as long as you are logged in, i.e use the "session"
         if user_type=="client":
             # find the client's trader
@@ -308,19 +308,47 @@ class Database:
         return
 
     @classmethod
-    def cancel_transaction(cls, cursor, mysql, transactionid):
-        # TODO: cancel transaction in database
-        # 1. delete transaction specified
-        # 2. update log and its status
-        cursor.execute('DELETE FROM TransferTransaction WHERE trid = %s', (transactionid, ))
-        cursor.execute('INSERT INTO Cancel VALUES(%s, %s, %s)', (cid, traderid, trid, ))
-        cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
-        mysql.connection.commit()
-        pass    
+    def cancel_transaction(cls, cursor, mysql, data):
+        # log : (logid, log_type, trid)
+        # log_type: [update_purchasetransaction, update_transfertransaction, cancel_purchasetransaction, cancel_transfertransaction]
+        user_type, userid, transactionid, transactiontype = data[0], data[1], data[2], data[3]
+        if transactiontype=="bitcoin":
+            cursor.execute('SELECT purchase_type, bitcoin_value, fiat_value, commission_rate FROM PurchaseTransaction WHERE ptrid = %s', (transactionid))
+            trans_info = cursor.fetchone()
+            purchase_type, bitcoin_value, fiat_value, commission_rate = trans_info[0], trans_info[1], trans_info[2], trans_info[3]
+            if purchase_type=="buy":
+                # get the bitcoin and fiat value back to trader
+                cursor.execute('UPDATE Trader SET bitcoin = (bitcoin - %s), flatcurrency = (flatcurrency + %s *(1+%s)) WHERE traderid = %s', (bitcoin_value, fiat_value, commission_rate, userid))
+                # delete the tranaction from transaction table
+            elif purchase_type=="sell":
+                # get the bitcoin and fiat value back to trader
+                cursor.execute('UPDATE Trader SET bitcoin = (bitcoin + %s), flatcurrency = (flatcurrency - %s *(1+%s)) WHERE traderid = %s', (bitcoin_value, fiat_value, commission_rate, userid))
+            # end if
+            
+            # delete the tranaction from transaction table
+            cursor.execute('DELETE FROM PurchaseTransaction WHERE trid = %s', (transactionid))
+            cursor.execute("INSERT INTO Log(log_type, trid) VALUES ('cancel_purchasetransaction', DEFAULT)")
+            mysql.connection.commit()
+            
+        elif transactiontype=="transfer":
+            cursor.execute('SELECT usd_value, clientid FROM TransferTransaction WHERE ttrid = %s AND traderid = %s', (transactionid, userid))
+            trans_info = cursor.fetchone()
+            usd_value, clientid = trans_info[0], trans_info[1]
+
+            # get the fiat value back to trader
+            cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency - %s) WHERE traderid = %s', (usd_value, userid))
+            cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency + %s) WHERE clientid = %s', (usd_value, clientid))
+
+            # delete the tranaction from transaction table
+            cursor.execute('DELETE FROM TransferTransaction WHERE ttrid = %s', (transactionid))
+            cursor.execute("INSERT INTO Log(log_type, trid) VALUES ('cancel_transfertransaction', DEFAULT)")
+            mysql.connection.commit()
+        # end if
+        return
 
     @classmethod
     def update_level(cls, cursor, mysql, data):
-        
+        # TODO
         pass
 
                 

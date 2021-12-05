@@ -189,15 +189,7 @@ def register():
         )
     # end if
     print(msg)
-    return jsonify(
-        msg=msg,
-    )
-
-# @app.route('/profile', methods=['GET', 'POST'])
-# def profile():
-#     userid = session['userid']
-#     user_type = session['user_type']
-#     pass
+    return jsonify(msg=msg)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def transaction_history():
@@ -214,12 +206,13 @@ def transaction_history():
             [user_type, userid, time_period]
         )
         cursor.close()
+        return jsonify(
+            msg=msg,
+            transaction_histories=transaction_histories
+        )
     # end if
-    return jsonify(
-        msg=msg,
-        transaction_histories=transaction_histories
-    )
-
+    return jsonify(msg=msg)
+    
 @app.route('/profile', methods=['GET', 'POST'])
 def request_history(userid):
     # This method shows trader their requests received from clients
@@ -236,11 +229,12 @@ def request_history(userid):
             [userid, user_type]
         )
         cursor.close()
+        return jsonify(
+            msg=msg,
+            request_histories=request_histories
+        )
     # end if
-    return jsonify(
-        msg=msg,
-        request_histories=request_histories
-    )
+    return jsonify(msg=msg)
 
 @app.route('/profile/manager/history', methods=['GET', 'POST'])
 def manager_transaction_history():
@@ -262,21 +256,42 @@ def manager_transaction_history():
                 [user_type, userid, date_range, start_date, end_date]
             )
             cursor.close()
-            msg = "Successfully received transaction history."
             trans_history = {
                 "purchase_transaction": purchase_trans_history,
                 "transfer_transaction": transfer_trans_history
             }
+            msg = "Successfully received transaction history."
+            return jsonify(
+                msg=msg,
+                history=trans_history
+            )
         # end if
     # end if
-    return jsonify(
-        msg=msg,
-        history=trans_history
-    )
+    return jsonify(msg=msg)
 
-@app.route('/profile/transfer_from_bank', methods=['GET', 'POST'])
-def tansfer_from_bank(userid):
-    pass
+@app.route('/profile/add_money', methods=['GET', 'POST'])
+def add_money():
+    msg = ''
+    if request.method == 'POST' and 'flatcurrency' in request.form:
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type=="client":
+            flatcurrency = request.form['flatcurrency']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            old_flatcurrency, new_flatcurrency = Database.add_client_money(
+                cursor, mysql,
+                [user_type, userid, flatcurrency]
+            )
+            cursor.close()
+            msg = "Successfully added money."
+            return jsonify(
+                msg=msg,
+                old_flatcurrency=old_flatcurrency,
+                new_flatcurrency=new_flatcurrency
+            )
+        # end if
+    # end if
+    return jsonify(msg=msg)
 
 @app.route('/api/profile/request', methods=['GET', 'POST'])
 def request_bitcoin(userid):
@@ -374,7 +389,10 @@ def cancel_tansaction(userid):
         user_type = session['user_type']
         if user_type == 'trader':
             transactionid = request.form['transactionid']
+
+            # transactiontype: [bitcoin, transfer]
             transactiontype = request.form['transactiontype']
+            
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             Database.cancel_transaction(
                 cursor, mysql,
