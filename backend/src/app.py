@@ -189,15 +189,7 @@ def register():
         )
     # end if
     print(msg)
-    return jsonify(
-        msg=msg,
-    )
-
-# @app.route('/profile', methods=['GET', 'POST'])
-# def profile():
-#     userid = session['userid']
-#     user_type = session['user_type']
-#     pass
+    return jsonify(msg=msg)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def transaction_history():
@@ -214,12 +206,13 @@ def transaction_history():
             [user_type, userid, time_period]
         )
         cursor.close()
+        return jsonify(
+            msg=msg,
+            transaction_histories=transaction_histories
+        )
     # end if
-    return jsonify(
-        msg=msg,
-        transaction_histories=transaction_histories
-    )
-
+    return jsonify(msg=msg)
+    
 @app.route('/profile', methods=['GET', 'POST'])
 def request_history(userid):
     # This method shows trader their requests received from clients
@@ -236,11 +229,12 @@ def request_history(userid):
             [userid, user_type]
         )
         cursor.close()
+        return jsonify(
+            msg=msg,
+            request_histories=request_histories
+        )
     # end if
-    return jsonify(
-        msg=msg,
-        request_histories=request_histories
-    )
+    return jsonify(msg=msg)
 
 @app.route('/profile/manager/history', methods=['GET', 'POST'])
 def manager_transaction_history():
@@ -267,12 +261,13 @@ def manager_transaction_history():
                 "transfer_transaction": transfer_trans_history
             }
             msg = "Successfully received transaction history."
+            return jsonify(
+                msg=msg,
+                history=trans_history
+            )
         # end if
     # end if
-    return jsonify(
-        msg=msg,
-        history=trans_history
-    )
+    return jsonify(msg=msg)
 
 @app.route('/profile/add_money', methods=['GET', 'POST'])
 def add_money():
