@@ -290,16 +290,18 @@ def transaction_history():
     if request.method == 'POST':
         userid = session['userid']
         user_type = session['user_type']
-        
+        if user_type == "client":
+            data = [user_type, userid]
+        elif user_type == "trader":
+            clientid = request.form['clientid']
+            data = [user_type, userid, clientid]
+        # end if
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        transaction_histories = Database.get_user_transaction_history(
-            cursor, mysql,
-            [user_type, userid]
-        )
+        transaction_histories = Database.get_user_transaction_history(cursor, mysql, data)
         cursor.close()
         return jsonify(
             msg=msg,
-            transaction_histories=transaction_histories
+            history=history
         )
     # end if
     return jsonify(msg=msg)
