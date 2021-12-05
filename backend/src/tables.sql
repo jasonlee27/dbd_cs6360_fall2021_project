@@ -113,6 +113,17 @@ CREATE TABLE IF NOT EXISTS Assign(
     FOREIGN KEY (traderid) REFERENCES Trader(traderid)
 );
 
+CREATE TABLE IF NOT EXISTS Request(
+    rid INT AUTO_INCREMENT not null,
+    clientid VARCHAR(50) not null,
+    traderid VARCHAR(50) not null,
+    bitcoin_value FLOAT(8,3) not null,
+    purchase_type VARCHAR(5) not null,
+    PRIMARY KEY (aid),
+    FOREIGN KEY (clientid) REFERENCES Client(clientid),
+    FOREIGN KEY (traderid) REFERENCES Trader(traderid),
+);
+
 CREATE TABLE IF NOT EXISTS Transfer(
     tid INT AUTO_INCREMENT not null,
     clientid VARCHAR(50),
