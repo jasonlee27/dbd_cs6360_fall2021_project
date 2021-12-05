@@ -228,10 +228,10 @@ class Database:
         userid, user_type = data[0], data[1]
         histories = None
         if user_type == 'client':
-            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (userid,))
+            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = (SELECT clientid FROM CLient WHERE clientid = %s)', (clientid,))
             histories = cursor.fetchall()
         elif user_type == 'trader':
-            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (userid,))
+            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = (SELECT traderid FROM Trader WHERE traderid = %s)', (traderid,))
             histories = cursor.fetchall()
         # end if
         return histories
