@@ -374,6 +374,9 @@ class Database:
                 # add log for the transfer transaction
                 cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND usd_value = %s AND clientid = %s AND traderid = %s', (transaction_date, usd_val, userid, traderid))
                 ttrid = cursor.fetchone()
+
+                cursor.execute("INSERT INTO Transaction(transfer_trid, purchase_trid) VALUES (%s, NULL)", [ttrid])
+                
                 cursor.execute("INSERT INTO Log(log_type, trid) VALUES (update_transfertransaction, %s)", [ttrid])
                 mysql.connection.commit()
             # end if
