@@ -207,7 +207,7 @@ class Database:
         # in case of manager, it shows every transaction history over all
         # client and trader
         # TODO: do not access to transfertransaction and purchagetransaction directly, but access them via where clause from transaction table, but why?
-        cursor.execute('select * from Transaction t, TransferTransaction t1, PurchaseTransaction t3 where t.transfer_trid = t1.ttrid and t.purchase_trid = t2.ptrid and date between date_sub(now(),INTERVAL 1 %s) and now()', (time_period,))
+        cursor.execute('SELECT * FROM Transaction t, TransferTransaction t1, PurchaseTransaction t3 WHERE t.transfer_trid = t1.ttrid AND t.purchase_trid = t2.ptrid AND date between date_sub(now(),INTERVAL 1 %s) AND now()', (time_period,))
 
         pass
 
@@ -245,27 +245,27 @@ class Database:
             # TODO: buy/sell bitcoin by clients themselves
             if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                cursor.execute('update Client set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
+                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
             elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                cursor.execute('update Client set bitcoin = (bitcoin - %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
+                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
 
             # end if
         elif user_type == "trader":
             request_id = data[1]
             # TODO: find the request given request_id and purchse the requested bitcoin buy/sell
             if purchase_type == 'buy':
-                cursor.execute('update Trader set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                cursor.execute('UPDATE Trader SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
+                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
             elif purchase_type == 'sell':
-                cursor.execute('update Trader set bitcoin = (bitcoin + %s) * (1 - (select commission_rate from PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('insert into Transaction values (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                cursor.execute('UPDATE Trader SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
+                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         # end if
         mysql.connection.commit()
         pass
@@ -274,9 +274,9 @@ class Database:
     def transfer_money(cls, cursor, mysql, data):
         user_type, usd_val = data[0], data[1]
         # TODO: transfer USD to clients's trader and append log for it
-        cursor.execute('update Client set flatcurrency = (flatcurrency - %s)', (usd_val, ))
-        cursor.execute('update Trader set flatcurrency = (flatcurrency + %s)', (usd_val, ))
-        cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+        cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s)', (usd_val, ))
+        cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)', (usd_val, ))
+        cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         mysql.connection.commit()
         pass
 
@@ -285,9 +285,9 @@ class Database:
         # TODO: cancel transaction in database
         # 1. delete transaction specified
         # 2. update log and its status
-        cursor.execute('delete from TransferTransaction where trid = %s', (transactionid, ))
-        cursor.execute('INSERT INTO Cancel VALUEs(%s, %s, %s)', (cid, traderid, trid, ))
-        cursor.execute('insert into Log values (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+        cursor.execute('DELETE FROM TransferTransaction WHERE trid = %s', (transactionid, ))
+        cursor.execute('INSERT INTO Cancel VALUES(%s, %s, %s)', (cid, traderid, trid, ))
+        cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         mysql.connection.commit()
         pass    
 
