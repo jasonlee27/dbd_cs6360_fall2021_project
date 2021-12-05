@@ -195,6 +195,7 @@ def register():
 def trader_assigned():
     msg = ''
     if request.method == 'POST':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         userid = session['userid']
         user_type = session['user_type']
         if user_type == "client":
@@ -215,6 +216,7 @@ def trader_assigned():
 def clients_assigned():
     msg = ''
     if request.method == 'POST':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         userid = session['userid']
         user_type = session['user_type']
         if user_type == "trader":

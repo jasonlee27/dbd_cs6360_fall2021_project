@@ -51,8 +51,9 @@ function App() {
 
   async function getClientTrader(userId) {
     await axios
-    .request("http://localhost:8080/profile/trader_assigned")
+    .post("http://localhost:8080/profile/trader_assigned")
     .then((response) => {
+      console.log("trader info: ", response.data);
       if (response.data.msg === "Successfully captured trader") {
           return response.data.trader;
       }
