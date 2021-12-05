@@ -16,7 +16,7 @@ function ManagerSearch(props) {
       .post("http://localhost:8080/profile/manager/history", searchData)
       .then((response) => {
         if (response.data.msg === "Successfully received transaction history.") {
-            transactionHistory(response.data.transaction_history);
+            setTransactionHistory(response.data.transaction_history);
           e.target.clear();
         } else {
         }
