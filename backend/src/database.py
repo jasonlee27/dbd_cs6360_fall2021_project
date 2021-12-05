@@ -265,6 +265,7 @@ class Database:
         user_type, userid = data[0], data[1]
         # TODO
         # 
+        print("data", data)
         if user_type == "client":
             bitcoin_val, purchase_type = data[2], data[3]
 

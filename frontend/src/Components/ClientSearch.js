@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useState from "react-usestateref";
 import axios from "axios";
-import { Button, Form, Row, Col, Card } from "react-bootstrap";
+import { Button, Form, Row, Col, Card, Table } from "react-bootstrap";
 
 function ClientSearch(props) {
+
+  let [
+    transactionHistory,
+    setTransactionHistory,
+    transactionHistoryRef,
+  ] = useState("");
+  const [isLoading, setIsLoading, isLoadingRef] = useState(false);
+
   function handleSearch(e) {
     e.preventDefault();
     let searchData = new FormData(e.target);
 
     axios
-      .post("http://localhost:8080/profile/buysell", searchData)
+      .post("http://localhost:8080/clients_assigned", searchData)
       .then((response) => {
-        if (response.data.msg === "Successfully purchased.") {
-          e.target.clear();
+        if (response.data.msg === "Successfully clients captured") {
+          setTransactionHistory(response.data.clients);
         } else {
         }
       })
@@ -20,6 +28,20 @@ function ClientSearch(props) {
         console.log("error", error);
       });
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      try {
+        await handleSearch;
+      } catch (error) {
+        console.log("error", error);
+      }
+      setIsLoading(false);
+      console.log("trklsijwdj", transactionHistoryRef.current);
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="Client-Search mt-5">
@@ -61,47 +83,29 @@ function ClientSearch(props) {
                 />
               </Form.Group>
             </Row>
-            <Row className="mb-3">
-              <Form.Group as={Col}>
-              <Form.Label htmlFor="address1">Address </Form.Label>
-                <Form.Control
-                  type="text"
-                  name="address1"
-                  PlaceHolder="Address"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group as={Col}>
-              <Form.Label htmlFor="address2">Address 2</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="address2"
-                  PlaceHolder="Address 2"
-                />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3">
-              <Form.Group as={Col}>
-              <Form.Label htmlFor="city">City</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  name="city"
-                />
-              </Form.Group>
+       
+            {!isLoading && transactionHistoryRef.current !== "" && (
+        <Table striped bordered hover variant="dark">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Transactions</th>
+            </tr>
+          </thead>
 
-              <Form.Group as={Col}>
-                <Form.Label htmlFor="state">State</Form.Label>
-                <Form.Control required type="text" name="state" />
-              </Form.Group>
-
-              <Form.Group as={Col} >
-                <Form.Label htmlFor="zipcode">Zip</Form.Label>
-                <Form.Control required type="text" name="zipcode" />
-              </Form.Group>
-  
-            </Row>
+          {!isLoading && transactionHistoryRef.current !== "" && (
+            <tbody>
+              <tr>
+                <td>{"hi"}</td>
+                {transactionHistoryRef.current.purchase_transaction.map((transaction) => (
+                  <td>{transaction}</td>
+                ))}
+              </tr>
+            </tbody>
+          )}
+        </Table>
+      )}
+         
 
             <Button variant="success" type="submit">
               Search
