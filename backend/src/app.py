@@ -202,7 +202,7 @@ def trader_assigned():
                 cursor, mysql, userid
             )
             cursor.close()
-            msg = "Successfully trader captured"
+            msg = "Successfully captured trader"
             return jsonify(
                 msg=msg,
                 trader=trader

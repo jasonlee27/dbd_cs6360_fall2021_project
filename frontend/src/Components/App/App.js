@@ -13,6 +13,7 @@ import {BrowserRouter as Router,
   Navigate,
   useNavigate,
 } from "react-router-dom";
+import AssignTrader from "../AssignTrader";
 
 function App() {
   const [state, setState] = useState('login');
@@ -36,8 +37,8 @@ function App() {
     });
   }
 
-  function handleLogoutEvent(e) {
-    axios
+  async function handleLogoutEvent(e) {
+    await axios
       .request("http://localhost:8080/logout")
       .then((response) => {
         if (response.data.msg === "Successfully logged out") {
@@ -46,6 +47,18 @@ function App() {
       }).catch((error) => {
         console.log("error", error);
       });
+  }
+
+  async function getClientTrader(userId) {
+    await axios
+    .request("http://localhost:8080/profile/trader_assigned")
+    .then((response) => {
+      if (response.data.msg === "Successfully captured trader") {
+          return response.data.trader;
+      }
+    }).catch((error) => {
+      console.log("error", error);
+    });
   }
 
   let handleCreateNewAccount = () => {
@@ -61,7 +74,18 @@ function App() {
    getUserInfo(userId).then((response)=> {
     console.log(userTypeRef.current);
     if(userTypeRef.current==="client"){
-    navigate('/transaction')
+    getClientTrader(userId).then((trader) => {
+        if(trader === null) {
+          console.log("null trader");
+          navigate('/assign/trader');
+        }
+        else {
+          navigate('/transaction');
+        }
+
+    }).catch((error) => {
+      console.log("error", error);
+    });
     }
     else if(userTypeRef.current==="trader") {
       navigate('/trader')
@@ -102,6 +126,9 @@ function App() {
         path="/transactions/search"
         element={state==='loggedIn' && userType === 'manager' ? <ManagerSearch logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
         />
+           <Route 
+        path="/assign/trader"
+        element={state==='loggedIn' && userType === 'client' ? <AssignTrader goToTransaction={handleLogin} /> :  <Navigate to="/login" />} />
 
     </Routes>
 );
