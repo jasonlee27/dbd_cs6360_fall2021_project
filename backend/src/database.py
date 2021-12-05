@@ -346,7 +346,7 @@ class Database:
             
             # delete the tranaction from transaction table
             cursor.execute('DELETE FROM PurchaseTransaction WHERE trid = %s', (transactionid))
-            cursor.execute("INSERT INTO Log(log_type, trid) VALUES ('cancel_purchasetransaction', DEFAULT)")
+            cursor.execute("INSERT INTO Log(log_type, trid) VALUES (cancel_purchasetransaction, DEFAULT)")
             mysql.connection.commit()
             
         elif transactiontype=="transfer":
@@ -360,14 +360,14 @@ class Database:
 
             # delete the tranaction from transaction table
             cursor.execute('DELETE FROM TransferTransaction WHERE ttrid = %s', (transactionid))
-            cursor.execute("INSERT INTO Log(log_type, trid) VALUES ('cancel_transfertransaction', DEFAULT)")
+            cursor.execute("INSERT INTO Log(log_type, trid) VALUES (cancel_transfertransaction, DEFAULT)")
             mysql.connection.commit()
         # end if
         return
 
     # @classmethod
     # def update_level(cls, cursor, mysql, prev_month):
-    #     SELECT clientid FROM Client C, (SELECT SUM(bitcoin_value) FROM PurchaseTransaction WHERE userid = %s date BETWEEN %s AND %s) AS T WHERE
+    #     SELECT clientid FROM Client C, (SELECT bitcoin_value FROM PurchaseTransaction WHERE userid = %s date BETWEEN %s AND %s) AS T WHERE
         
         
     #     pass
