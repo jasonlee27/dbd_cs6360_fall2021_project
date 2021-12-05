@@ -359,9 +359,9 @@ class Database:
         end_year, end_month, end_day = end_date.split("-")
         purchase_trans_history, transfer_trans_history = None, None
         if date_range == "daily":
-            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (start_date, end_date))
+            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN %s AND %s """, (start_date, end_date))
             purchase_trans_history = cursor.fetchall()
-            cursor.execute("""SELECT * FROM TransferTransaction WHERE date BETWEEN '%s' AND '%s' """, (start_date, end_date))
+            cursor.execute("""SELECT * FROM TransferTransaction WHERE date BETWEEN %s AND %s """, (start_date, end_date))
             transfer_trans_history = cursor.fetchall()
         elif date_range == "monthly":
             _start_date = f"{start_year}-{start_month}-01"
@@ -379,16 +379,16 @@ class Database:
                     _end_date = f"{end_year}-{end_month}-28"
                 # end if
             # end if
-            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (_start_date, _end_date))
+            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN %s AND %s """, (_start_date, _end_date))
             purchase_trans_history = cursor.fetchall()
-            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (_start_date, _end_date))
+            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN %s AND %s """, (_start_date, _end_date))
             transfer_trans_history = cursor.fetchall()
         else: # date_range == "yearly"
             _start_date = f"{start_year}-01-01"
             _end_date = f"{end_year}-12-31"
-            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (_start_date, _end_date))
+            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN %s AND %s """, (_start_date, _end_date))
             purchase_trans_history = cursor.fetchall()
-            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN '%s' AND '%s' """, (_start_date, _end_date))
+            cursor.execute("""SELECT * FROM PurchaseTransaction WHERE date BETWEEN %s AND %s """, (_start_date, _end_date))
             transfer_trans_history = cursor.fetchall()
         # end if
         return purchase_trans_history, transfer_trans_history
