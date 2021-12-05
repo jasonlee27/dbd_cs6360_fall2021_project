@@ -251,16 +251,18 @@ def manager_transaction_history():
         userid = session['userid']
         user_type = session['user_type']
         if user_type=="manager":
-            time_period = request.form['time_period']
-            start_date = request.form[""]
+            date_range = request.form['daterange'].lower()
+            start_date = request.form['startdate'] # format: YYYY-MM-DD
+            end_date = request.form['enddate'] # format: YYYY-MM-DD
         
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        transaction_histories = Database.get_user_transaction_history(
-            cursor, mysql,
-            [user_type, userid, time_period]
-        )
-        cursor.close()
-        msg = "Successfully received transaction history."
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            transaction_histories = Database.get_all_transaction_history(
+                cursor, mysql,
+                [user_type, userid, date_range, start_date, end_date]
+            )
+            cursor.close()
+            msg = "Successfully received transaction history."
+        # end if
     # end if
     return jsonify(
         msg=msg,

@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS TransferTransaction(
     ttrid INT AUTO_INCREMENT not null,
     date VARCHAR(50),
     usd_value FLOAT(8,3),
+    clientid VARCHAR(50),
     traderid VARCHAR(50),
     PRIMARY KEY(ttrid),
     CONSTRAINT transfer_usdvalue_constraint CHECK (usd_value>=0.0)
@@ -83,6 +84,7 @@ CREATE TABLE IF NOT EXISTS PurchaseTransaction(
     bitcoin_value FLOAT(8,3),
     usd_value FLOAT(8,3),
     purchase_type VARCHAR(4), -- buy or sell bitcoin
+    userid VARCHAR(50),
     PRIMARY KEY(ptrid),
     CONSTRAINT purchase_bitcoinvalue_constraint CHECK (bitcoin_value>=0.0)
 );
