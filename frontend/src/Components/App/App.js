@@ -18,6 +18,7 @@ import AssignTrader from "../AssignTrader";
 function App() {
   const [state, setState] = useState('login');
   const [userType, setUserType, userTypeRef] = useState('');
+  const [trader, setTrader, traderRef] = useState('');
   let navigate = useNavigate();
 
   async function getUserInfo(userId) {
@@ -55,7 +56,7 @@ function App() {
     .then((response) => {
       console.log("trader info: ", response.data);
       if (response.data.msg === "Successfully captured trader") {
-          return response.data.trader;
+        setTrader(response.data.trader);
       }
     }).catch((error) => {
       console.log("error", error);
@@ -72,16 +73,19 @@ function App() {
   };
   let handleLogin  = async (userId) => {
     setState('loggedIn');
-   getUserInfo(userId).then((response)=> {
+    console.log("logging in...");
+  await getUserInfo(userId).then((response)=> {
     console.log(userTypeRef.current);
     if(userTypeRef.current==="client"){
-    getClientTrader(userId).then((trader) => {
-        if(trader === null) {
+    getClientTrader(userId).then((response) => {
+      console.log("trade data", trader);
+        if(traderRef.current ==="") {
           console.log("null trader");
-          navigate('/assign/trader');
+          navigate('/transaction');
         }
         else {
-          navigate('/transaction');
+          //navigate('/transaction');
+          navigate('/assign/trader');
         }
 
     }).catch((error) => {
@@ -96,6 +100,11 @@ function App() {
     }
   });
 };
+
+function handleClientSelected() {
+  setState('loggedIn');
+  navigate('/transaction');
+}
   
   let handleLogout  = () => {
     setState('login');
@@ -129,7 +138,7 @@ function App() {
         />
            <Route 
         path="/assign/trader"
-        element={state==='loggedIn' && userType === 'client' ? <AssignTrader goToTransaction={handleLogin} /> :  <Navigate to="/login" />} />
+        element={state==='loggedIn' && userType === 'client' ? <AssignTrader goToTransaction={handleClientSelected} /> :  <Navigate to="/login" />} />
 
     </Routes>
 );
