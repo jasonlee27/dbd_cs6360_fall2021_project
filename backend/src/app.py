@@ -262,11 +262,11 @@ def manager_transaction_history():
                 [user_type, userid, date_range, start_date, end_date]
             )
             cursor.close()
-            msg = "Successfully received transaction history."
             trans_history = {
                 "purchase_transaction": purchase_trans_history,
                 "transfer_transaction": transfer_trans_history
             }
+            msg = "Successfully received transaction history."
         # end if
     # end if
     return jsonify(
@@ -274,9 +274,29 @@ def manager_transaction_history():
         history=trans_history
     )
 
-@app.route('/profile/transfer_from_bank', methods=['GET', 'POST'])
-def tansfer_from_bank(userid):
-    pass
+@app.route('/profile/add_money', methods=['GET', 'POST'])
+def add_money():
+    msg = ''
+    if request.method == 'POST' and 'flatcurrency' in request.form:
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type=="client":
+            flatcurrency = request.form['flatcurrency']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            old_flatcurrency, new_flatcurrency = Database.add_client_money(
+                cursor, mysql,
+                [user_type, userid, flatcurrency]
+            )
+            cursor.close()
+            msg = "Successfully added money."
+            return jsonify(
+                msg=msg,
+                old_flatcurrency=old_flatcurrency,
+                new_flatcurrency=new_flatcurrency
+            )
+        # end if
+    # end if
+    return jsonify(msg=msg)
 
 @app.route('/api/profile/request', methods=['GET', 'POST'])
 def request_bitcoin(userid):

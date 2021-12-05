@@ -66,7 +66,6 @@ class Database:
             }
         # end if
         return account_info
-    
 
     @classmethod
     def insert_user_record(cls, cursor, mysql, user_info):
@@ -119,7 +118,6 @@ class Database:
         # end if
         mysql.connection.commit()
         return
-    
 
     @classmethod
     def user_exists_in_db(cls, cursor, mysql, hash_username, hash_password=None):
@@ -180,24 +178,29 @@ class Database:
         return account_info
 
     @classmethod
+    def add_client_money(cls, cursor, mysql, data):
+        user_type, hash_username, flatcurrency = data[0], data[1], data[2]
+        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (hash_username))
+        old_flatcurrency = cursor.fetchone()
+        cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency + %s) WHERE clientid = %s', (flatcurrency))
+        mysql.connection.commit()
+        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (hash_username))
+        new_flatcurrency = cursor.fetchone()
+        return old_flatcurrency, new_flatcurrency
+        
+    @classmethod
     def get_assgned_trader_in_db(cls, cursor, mysql, hash_username):
         # hash_username: client id
-        cursor.execute('SELECT * FROM Client WHERE clientid = %s', (hash_username))
-        account = cursor.fetchone()
-        if account:
-            cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (hash_username))
-        # end if
-        return account
+        cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (hash_username))
+        trader = cursor.fetchone()
+        return trader
 
     @classmethod
     def get_assgned_clients_in_db(cls, cursor, mysql, hash_username):
         # hash_username: trader id
-        cursor.execute('SELECT * FROM Trader WHERE traderid = %s', (hash_username))
-        account = cursor.fetchone()
-        if account:
-            cursor.execute('SELECT clientid FROM Assign WHERE traderid = %s', (hash_username))
-        # end if
-        return account
+        cursor.execute('SELECT clientid FROM Assign WHERE traderid = %s', (hash_username))
+        clients = cursor.fetchall()
+        return clients
                 
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):
