@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS Assign(
     clientid VARCHAR(50) not null,
     traderid VARCHAR(50) not null,
     PRIMARY KEY (aid),
+    UNIQUE(clientid, traderid)
     FOREIGN KEY (clientid) REFERENCES Client(clientid),
     FOREIGN KEY (traderid) REFERENCES Trader(traderid)
 );
