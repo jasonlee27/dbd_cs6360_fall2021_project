@@ -30,8 +30,17 @@ CORS(app, supports_credentials=True)
 # Macros.DB_DIR.mkdir(parents=True, exist_ok=True)
 
 def update_level():
+    current_time = Utils.get_cur_time()
+    _cur_month = int(current_time.split("-")[1].strip())
+    _prev_month = _cur_month-1
+    prev_month = str(_prev_month)
+    cur_month = current_time.split("-")[1].strip()
+    cur_year = current_time.split("-")[0].strip()
+    if _prev_month<10:
+        prev_month = f"0{prev_month}"
+    # end if
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    Database.update_level(cursor, mysql)
+    Database.update_level(cursor, mysql, prev_month, cur_month, cur_year)
     cursor.close()
     msg = "User level successfully updated."
     return
