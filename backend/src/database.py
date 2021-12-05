@@ -275,14 +275,37 @@ class Database:
 
     @classmethod
     def transfer_money(cls, cursor, mysql, data):
-        user_type, usd_val = data[0], data[1]
+        trader = None
+        user_type, userid, usd_val = data[0], data[1], data[2]
         # TODO: transfer USD to clients's trader and append log for it
         # from my previous experience, you dont need to find the client id to update as long as you are logged in, i.e use the "session"
-        cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s)', (usd_val, ))
-        cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)', (usd_val, ))
-        cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
-        mysql.connection.commit()
-        pass
+        if user_type=="client":
+            # find the client's trader
+            cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (userid))
+            traderid = cursor.fetchone()
+            if traderid:
+                # get the old usd value
+                cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (userid))
+                old_value = cursor.fetchone()
+                
+                # remove the amount of money from client
+                cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s) WHERE clientid = %s', (usd_val, userid))
+
+                # add the amount of money from client
+                cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)  WHERE clientid = %s', (usd_val, traderid))
+                mysql.connection.commit()
+
+                # get the new usd value
+                cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (userid))
+                new_value = cursor.fetchone()
+
+                # add log for the transfer transaction
+                cursor.execute('INSERT INTO Log(log_type, oldvalue, newvalue) VALUES (update_transfertransaction, %s, %s)', (old_value, new_value))
+            
+                mysql.connection.commit()
+            # end if
+        # end if
+        return
 
     @classmethod
     def cancel_transaction(cls, cursor, mysql, transactionid):

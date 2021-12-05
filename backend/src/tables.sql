@@ -101,7 +101,6 @@ CREATE TABLE IF NOT EXISTS Log(
     log_type VARCHAR(10),
     oldvalue FLOAT(8,3),
     newvalue FLOAT(8,3),
-    status VARCHAR(10),
     PRIMARY KEY(logid)
 );
 

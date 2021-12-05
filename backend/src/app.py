@@ -309,7 +309,7 @@ def buysell_bitcoin():
     )
 
 @app.route('/profile/transfer', methods=['GET', 'POST'])
-def transfer_money(userid):
+def transfer_money():
     # This method is for client to transfer money to trader
     msg = ''
     if request.method == 'POST' and \
@@ -317,11 +317,11 @@ def transfer_money(userid):
         userid = session['userid']
         user_type = session['user_type']
         if user_type == 'client':
-            purchase_type = request.form['usd_val']
+            usd_val = request.form['usd_val']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             Database.transfer_money(
                 cursor, mysql,
-                [userid, usd_val]
+                [user_type, userid, usd_val]
             )
             msg = "Successfully purchased."
             cursor.close()
