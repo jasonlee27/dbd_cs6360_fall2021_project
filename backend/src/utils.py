@@ -39,7 +39,7 @@ class Utils:
     @classmethod
     def get_cur_time(cls):
         now = datetime.now()
-        dt_str = now.strftime("%d/%m/%Y_%H:%M:%S")
+        dt_str = now.strftime("%Y-%m-%d_%H:%M:%S")
         return dt_str
 
     @classmethod
