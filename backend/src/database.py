@@ -272,23 +272,23 @@ class Database:
             if level == "gold":
                 if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
                 elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
             elif level == "silver":
                 if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
                 elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
             # end if
@@ -298,23 +298,23 @@ class Database:
             if level == "gold":
                 if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
                 elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin -  %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
             elif level == "silver":
                 if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
                 elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
                 #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
                 #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         # end if
