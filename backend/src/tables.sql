@@ -50,10 +50,13 @@ CREATE TABLE IF NOT EXISTS Client(
 CREATE TABLE IF NOT EXISTS Trader(
     traderid VARCHAR(50) not null,
     trader_password VARCHAR(50) not null,
+    firstname VARCHAR(15),
+    lastname VARCHAR(15),
     bitcoin FLOAT(8,3),
     flatcurrency FLOAT(8,3),
     PRIMARY KEY(traderid),
     FOREIGN KEY (traderid) REFERENCES User(userid) ON DELETE CASCADE,
+    FOREIGN KEY (firstname, lastname) REFERENCES Name(firstname, lastname) ON UPDATE NO ACTION,
     CONSTRAINT trader_bitcoin_constraint CHECK (bitcoin>=0.0),
     CONSTRAINT trader_flatcurrency_constraint CHECK (flatcurrency>=0.0)
 );
@@ -111,7 +114,7 @@ CREATE TABLE IF NOT EXISTS Assign(
     clientid VARCHAR(50) not null,
     traderid VARCHAR(50) not null,
     PRIMARY KEY (aid),
-    UNIQUE(clientid, traderid)
+    UNIQUE(clientid, traderid),
     FOREIGN KEY (clientid) REFERENCES Client(clientid),
     FOREIGN KEY (traderid) REFERENCES Trader(traderid)
 );

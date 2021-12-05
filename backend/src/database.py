@@ -184,21 +184,21 @@ class Database:
         old_flatcurrency = cursor.fetchone()
         cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency + %s) WHERE clientid = %s', (flatcurrency))
         mysql.connection.commit()
-        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (hash_username))
+        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', [hash_username])
         new_flatcurrency = cursor.fetchone()
         return old_flatcurrency, new_flatcurrency
         
     @classmethod
-    def get_assgned_trader_in_db(cls, cursor, mysql, hash_username):
+    def get_assigned_trader_in_db(cls, cursor, mysql, hash_username):
         # hash_username: client id
-        cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (hash_username))
+        cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [hash_username])
         trader = cursor.fetchone()
         return trader
 
     @classmethod
-    def get_assgned_clients_in_db(cls, cursor, mysql, hash_username):
+    def get_assigned_clients_in_db(cls, cursor, mysql, hash_username):
         # hash_username: trader id
-        cursor.execute('SELECT clientid FROM Assign WHERE traderid = %s', (hash_username))
+        cursor.execute('SELECT clientid FROM Assign WHERE traderid = %s', [hash_username])
         clients = cursor.fetchall()
         return clients
 

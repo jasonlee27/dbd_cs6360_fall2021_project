@@ -200,7 +200,7 @@ def trader_assigned():
         user_type = session['user_type']
         if user_type == "client":
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            trader = Database.get_assgned_trader_in_db(
+            trader = Database.get_assigned_trader_in_db(
                 cursor, mysql, userid
             )
             cursor.close()
@@ -222,7 +222,7 @@ def clients_assigned():
         user_type = session['user_type']
         if user_type == "trader":
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            clients = Database.get_assgned_clients_in_db(
+            clients = Database.get_assigned_clients_in_db(
                 cursor, mysql, userid
             )
             cursor.close()
