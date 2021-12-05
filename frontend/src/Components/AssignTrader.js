@@ -8,7 +8,7 @@ axios.defaults.withCredentials = true;
 function AssignTrader(props) {
 
     
-const [ isLoading, setIsLoading] = useState(false)
+const [ isLoading, setIsLoading] = useState(false);
   let [traders, setTraders, tradersRef] = useState("");
   let [selectedTrader, setSelectedTrader, selectedTraderRef] = useState("");
 
@@ -68,7 +68,9 @@ function handleSelect(e) {
 }
   return (
     <div className="Assign-Trader mt-5">
+            <Button onClick={props.logout}>Logout</Button>
       <Card className="mx-auto" style={{ width: "18rem" }}>
+
         <Card.Header>AssignTrader</Card.Header>
         <Card.Body>
             <Form onSubmit={assignTrader}>

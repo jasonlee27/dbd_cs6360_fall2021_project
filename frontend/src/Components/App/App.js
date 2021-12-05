@@ -138,7 +138,7 @@ function handleClientSelected() {
         />
            <Route 
         path="/assign/trader"
-        element={state==='loggedIn' && userType === 'client' ? <AssignTrader goToTransaction={handleClientSelected} /> :  <Navigate to="/login" />} />
+        element={state==='loggedIn' && userType === 'client' ? <AssignTrader logout={handleLogoutEvent} goToTransaction={handleClientSelected} /> :  <Navigate to="/login" />} />
 
     </Routes>
 );

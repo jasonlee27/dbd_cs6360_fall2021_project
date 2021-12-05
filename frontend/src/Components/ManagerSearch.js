@@ -1,108 +1,144 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useState from "react-usestateref";
 import axios from "axios";
-import moment from 'moment';
-import { Button, Form, Row, Col, Card } from "react-bootstrap";
-import Picker from 'react-month-picker';
+import moment from "moment";
+import { Button, Form, Row, Col, Card, Table } from "react-bootstrap";
+import Picker from "react-month-picker";
 
 function ManagerSearch(props) {
-
-    let [dateRange, setDateRange] = useState("Daily");
-    let [transactionHistory, setTransactionHistory] = useState(null);
-  function handleSearch(e) {
+  let [dateRange, setDateRange, dateRangeRef] = useState("Daily");
+  let [
+    transactionHistory,
+    setTransactionHistory,
+    transactionHistoryRef,
+  ] = useState("");
+  const [isLoading, setIsLoading, isLoadingRef] = useState(false);
+  async function handleSearch(e) {
     e.preventDefault();
     let searchData = new FormData(e.target);
 
-    axios
+    await axios
       .post("http://localhost:8080/profile/manager/history", searchData)
       .then((response) => {
-          console.log("data:",response.data)
-        if (response.data.msg === "Successfully received transaction history.") {
-            setTransactionHistory(response.data.history);
-            console.log("transaction history:",transactionHistory);
-          e.target.clear();
+        console.log("data:", response.data);
+        if (
+          response.data.msg === "Successfully received transaction history."
+        ) {
+          setTransactionHistory(response.data.history);
+          console.log("transaction history:", transactionHistoryRef.current);
         } else {
-            console.log("else");
+          console.log("else");
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log("error", error);
       });
-
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      try {
+        await handleSearch;
+      } catch (error) {
+        console.log("error", error);
+      }
+      setIsLoading(false);
+      console.log("trklsijwdj", transactionHistoryRef.current);
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="Manager-Search mt-5">
-         <Button onClick={props.logout}>
-        Logout
-      </Button>
-    <Card className="mx-auto" style={{ width: "20rem" }}>
-      <Card.Header>Transactions Search</Card.Header>
-      <Card.Body>
-        <Form onSubmit={handleSearch}>
-        <Row className="mb-3">
-        <Form.Group className="mb-3">
-              <Form.Label htmlFor="daterange">Date Range</Form.Label>
-              <br></br>
-              <Form.Check
-                inline
-                name="daterange"
-                label="Daily"
-                type="radio"
-                value="Daily"
-                defaultChecked
-                onChange={(e)=> setDateRange("Daily")}
-              />
-              <Form.Check
-                inline
-                name="daterange"
-                label="Weekly"
-                type="radio"
-                value="Weekly"
-                onChange={(e)=> setDateRange("Weekly")}
-              />
+      <Button onClick={props.logout}>Logout</Button>
+      <Card className="mx-auto" style={{ width: "20rem" }}>
+        <Card.Header>Transactions Search</Card.Header>
+        <Card.Body>
+          <Form onSubmit={handleSearch}>
+            <Row className="mb-3">
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="daterange">Date Range</Form.Label>
+                <br></br>
                 <Form.Check
-                inline
-                name="daterange"
-                label="Monthly"
-                type="radio"
-                value="Monthly"
-                onChange={(e)=> setDateRange("Monthly")}
-              />
-            </Form.Group>
+                  inline
+                  name="daterange"
+                  label="Daily"
+                  type="radio"
+                  value="Daily"
+                  defaultChecked
+                  onChange={(e) => setDateRange("Daily")}
+                />
+                <Form.Check
+                  inline
+                  name="daterange"
+                  label="Weekly"
+                  type="radio"
+                  value="Weekly"
+                  onChange={(e) => setDateRange("Weekly")}
+                />
+                <Form.Check
+                  inline
+                  name="daterange"
+                  label="Monthly"
+                  type="radio"
+                  value="Monthly"
+                  onChange={(e) => setDateRange("Monthly")}
+                />
+              </Form.Group>
             </Row>
-          <Row className="mb-3">
+            <Row className="mb-3">
+              <Form.Group as={Col}>
+                <Form.Label htmlFor="startdate">Start Date</Form.Label>
+                <Form.Control
+                  required
+                  type="date"
+                  name="startdate"
+                  max={moment().format("YYYY-MM-DD")}
+                  showClearButton
+                />
+              </Form.Group>
 
-       
-            <Form.Group as={Col}>
-            <Form.Label htmlFor="startdate">Start Date</Form.Label>
-              <Form.Control
-                required
-                type="date"
-                name="startdate"
-                max={moment().format("YYYY-MM-DD")}
-                showClearButton
-              />
-            </Form.Group>
-  
-            <Form.Group as={Col}>
-            <Form.Label htmlFor="enddate">End Date</Form.Label>
-              <Form.Control
-                required
-                type="date"
-                name="enddate"
-                max={moment().format("YYYY-MM-DD")}
-                showClearButton
-              />
-            </Form.Group>
+              <Form.Group as={Col}>
+                <Form.Label htmlFor="enddate">End Date</Form.Label>
+                <Form.Control
+                  required
+                  type="date"
+                  name="enddate"
+                  max={moment().format("YYYY-MM-DD")}
+                  showClearButton
+                />
+              </Form.Group>
+            </Row>
 
-          </Row>
-
-          <Button variant="success" type="submit">
+            <Button variant="success" type="submit">
               Search
             </Button>
-        </Form>
-      </Card.Body>
-    </Card>
+          </Form>
+        </Card.Body>
+      </Card>
+
+      {!isLoading && transactionHistoryRef.current !== "" && (
+        <Table striped bordered hover variant="dark">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Transactions</th>
+            </tr>
+          </thead>
+
+          {!isLoading && transactionHistoryRef.current !== "" && (
+            <tbody>
+              <tr>
+                <td>{"hi"}</td>
+                {transactionHistoryRef.current.purchase_transaction.map((transaction) => (
+                  <td>{transaction}</td>
+                ))}
+              </tr>
+            </tbody>
+          )}
+        </Table>
+      )}
     </div>
   );
 }
