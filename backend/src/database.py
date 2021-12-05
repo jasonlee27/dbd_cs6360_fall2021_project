@@ -202,13 +202,21 @@ class Database:
         clients = cursor.fetchall()
         return clients
 
-    classmethod
+    @classmethod
+    def get_traders_in_db(cls, cursor, mysql):
+        # hash_username: trader id
+        cursor.execute('SELECT traderid FROM Trader')
+        traders = cursor.fetchall()
+        return traders
+
+    @classmethod
     def assign_trader(cls, cursor, mysql, data):
         hash_username, traderid = data[0], data[1]
         # hash_username: trader id
         cursor.execute('INSERT INTO Assign(clientid, traderid) VALUES (%s, %s)', (hash_username, traderid))
         mysql.connection.commit()
         return
+    
                 
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):

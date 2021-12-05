@@ -198,6 +198,7 @@ def trader_assigned():
         userid = session['userid']
         user_type = session['user_type']
         if user_type == "client":
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             trader = Database.get_assgned_trader_in_db(
                 cursor, mysql, userid
             )
@@ -218,6 +219,7 @@ def clients_assigned():
         userid = session['userid']
         user_type = session['user_type']
         if user_type == "trader":
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             clients = Database.get_assgned_clients_in_db(
                 cursor, mysql, userid
             )
@@ -238,12 +240,31 @@ def assign():
         userid = session['userid']
         user_type = session['user_type']
         if user_type == "client":
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             traderid = request.form['traderid']
             Database.assign_trader(
                 cursor, mysql, [userid, traderid]
             )
             cursor.close()
             msg = "Successfully trader captured"
+        # end if
+    # end if
+    return jsonify(msg=msg)
+
+@app.route('/profile/traders', methods=['GET', 'POST'])
+def traders():
+    msg = ''
+    if request.method == 'POST':
+        user_type = session['user_type']
+        if user_type == "client":
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            traders = Database.get_traders_in_db(cursor, mysql)
+            cursor.close()
+            msg = "Successfully trader captured"
+            return jsonify(
+                msg=msg,
+                traders=traders
+            )
         # end if
     # end if
     return jsonify(msg=msg)
