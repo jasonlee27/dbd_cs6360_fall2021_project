@@ -371,11 +371,11 @@ class Database:
         # end if
         return
 
-    @classmethod
-    def update_level(cls, cursor, mysql, prev_month):
-        SELECT clientid FROM Client C, (SELECT SUM(bitcoin_value) FROM PurchaseTransaction WHERE userid = %s AND date BETWEEN %s AND %s) AS amount WHERE C.clientid = %s AND SUM(
+    # @classmethod
+    # def update_level(cls, cursor, mysql, prev_month):
+    #     SELECT clientid FROM Client C, (SELECT SUM(bitcoin_value) FROM PurchaseTransaction WHERE userid = %s AND date BETWEEN %s AND %s) AS amount WHERE C.clientid = %s AND SUM(
         
-        pass
+    #     pass
 
     @classmethod
     def get_all_transaction_history(cls, cursor, mysql, data):
