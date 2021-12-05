@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS Transaction(
 
 CREATE TABLE IF NOT EXISTS Log(
     logid INT AUTO_INCREMENT not null,
+    log_type VARCHAR(10),
     oldvalue FLOAT(8,3),
     newvalue FLOAT(8,3),
     status VARCHAR(10),
