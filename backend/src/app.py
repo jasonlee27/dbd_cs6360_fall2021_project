@@ -242,14 +242,14 @@ def manager_transaction_history():
     # daily, weekly, or monthly
     msg = ''
     trans_history = None
-    if request.method == 'POST' and 'time_period' in request.form:
+    if request.method == 'POST' and 'daterange' in request.form and 'startdate' in request.form and 'enddate' in request.form:
         userid = session['userid']
         user_type = session['user_type']
         if user_type=="manager":
             date_range = request.form['daterange'].lower()
             start_date = request.form['startdate'] # format: YYYY-MM-DD
             end_date = request.form['enddate'] # format: YYYY-MM-DD
-        
+            print("hi",date_range, start_date, end_date)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             purchase_trans_history, transfer_trans_history = Database.get_all_transaction_history(
                 cursor, mysql,

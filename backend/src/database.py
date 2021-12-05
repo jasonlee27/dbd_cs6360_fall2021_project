@@ -251,7 +251,7 @@ class Database:
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
                 cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
                 cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
             elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
                 cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))

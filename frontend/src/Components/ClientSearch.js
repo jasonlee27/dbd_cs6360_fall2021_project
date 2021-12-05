@@ -5,6 +5,7 @@ import { Button, Form, Row, Col, Card } from "react-bootstrap";
 
 function ClientSearch(props) {
   function handleSearch(e) {
+    e.preventDefault();
     let searchData = new FormData(e.target);
 
     axios
@@ -28,8 +29,9 @@ function ClientSearch(props) {
         <Card.Body>
           <Form onSubmit={handleSearch}>
             <Row className="mb-3">
-              <Form.Label htmlFor="userid">Client ID</Form.Label>
+            
               <Form.Group as={Col}>
+              <Form.Label htmlFor="userid">Client ID</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -39,8 +41,8 @@ function ClientSearch(props) {
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              <Form.Label htmlFor="firstname">First Name</Form.Label>
               <Form.Group as={Col}>
+              <Form.Label htmlFor="firstname">First Name</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -50,8 +52,8 @@ function ClientSearch(props) {
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              <Form.Label htmlFor="lastname">Last Name</Form.Label>
               <Form.Group as={Col}>
+              <Form.Label htmlFor="lastname">Last Name</Form.Label>
                 <Form.Control
                   type="text"
                   name="lastname"
@@ -60,8 +62,8 @@ function ClientSearch(props) {
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              <Form.Label htmlFor="address1">Address </Form.Label>
               <Form.Group as={Col}>
+              <Form.Label htmlFor="address1">Address </Form.Label>
                 <Form.Control
                   type="text"
                   name="address1"
@@ -70,8 +72,8 @@ function ClientSearch(props) {
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              <Form.Label htmlFor="address2">Address 2</Form.Label>
               <Form.Group as={Col}>
+              <Form.Label htmlFor="address2">Address 2</Form.Label>
                 <Form.Control
                   type="text"
                   name="address2"
@@ -81,7 +83,7 @@ function ClientSearch(props) {
             </Row>
             <Row className="mb-3">
               <Form.Group as={Col}>
-                <Form.Label htmlFor="city">City</Form.Label>
+              <Form.Label htmlFor="city">City</Form.Label>
                 <Form.Control
                   required
                   type="text"

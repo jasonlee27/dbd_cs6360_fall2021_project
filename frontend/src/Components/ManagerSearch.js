@@ -10,15 +10,19 @@ function ManagerSearch(props) {
     let [dateRange, setDateRange] = useState("Daily");
     let [transactionHistory, setTransactionHistory] = useState(null);
   function handleSearch(e) {
+    e.preventDefault();
     let searchData = new FormData(e.target);
 
     axios
       .post("http://localhost:8080/profile/manager/history", searchData)
       .then((response) => {
+          console.log("data:",response.data)
         if (response.data.msg === "Successfully received transaction history.") {
-            setTransactionHistory(response.data.transaction_history);
+            setTransactionHistory(response.data.history);
+            console.log("transaction history:",transactionHistory);
           e.target.clear();
         } else {
+            console.log("else");
         }
       }).catch((error) => {
         console.log("error", error);
@@ -36,12 +40,12 @@ function ManagerSearch(props) {
       <Card.Body>
         <Form onSubmit={handleSearch}>
         <Row className="mb-3">
-        <Form.Group className="mb-3" controlId="dateRange">
-              <Form.Label htmlFor="time_period">Date Range</Form.Label>
+        <Form.Group className="mb-3">
+              <Form.Label htmlFor="daterange">Date Range</Form.Label>
               <br></br>
               <Form.Check
                 inline
-                name="time_period"
+                name="daterange"
                 label="Daily"
                 type="radio"
                 value="Daily"
@@ -50,7 +54,7 @@ function ManagerSearch(props) {
               />
               <Form.Check
                 inline
-                name="time_period"
+                name="daterange"
                 label="Weekly"
                 type="radio"
                 value="Weekly"
@@ -58,7 +62,7 @@ function ManagerSearch(props) {
               />
                 <Form.Check
                 inline
-                name="time_period"
+                name="daterange"
                 label="Monthly"
                 type="radio"
                 value="Monthly"
@@ -68,22 +72,24 @@ function ManagerSearch(props) {
             </Row>
           <Row className="mb-3">
 
-          <Form.Label htmlFor="start_date">Start Date</Form.Label>
+       
             <Form.Group as={Col}>
+            <Form.Label htmlFor="startdate">Start Date</Form.Label>
               <Form.Control
                 required
                 type="date"
-                name="start_date"
+                name="startdate"
                 max={moment().format("YYYY-MM-DD")}
                 showClearButton
               />
             </Form.Group>
-            <Form.Label htmlFor="end_date">End Date</Form.Label>
+  
             <Form.Group as={Col}>
+            <Form.Label htmlFor="enddate">End Date</Form.Label>
               <Form.Control
                 required
                 type="date"
-                name="end_date"
+                name="enddate"
                 max={moment().format("YYYY-MM-DD")}
                 showClearButton
               />

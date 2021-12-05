@@ -27,8 +27,8 @@ function Transaction(props) {
         <Card.Header>Bitcoin Transaction</Card.Header>
         <Card.Body>
           <Form onSubmit={handleTransaction}>
-            <Form.Group className="mb-3" controlId="formBuySell">
-              <Form.Label>Transaction Type</Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="purchase_type">Transaction Type</Form.Label>
               <br></br>
               <Form.Check
                 inline
@@ -46,8 +46,8 @@ function Transaction(props) {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBtcAmount">
-              <Form.Label>Bitcoin Amount</Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="bitcoin_val">Bitcoin Amount</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="BTC Amount"
@@ -55,8 +55,8 @@ function Transaction(props) {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBuySell">
-              <Form.Label>Commission Payment</Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="commission_type">Commission Payment</Form.Label>
               <br></br>
               <Form.Check
                 inline
