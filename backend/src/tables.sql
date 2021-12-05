@@ -131,23 +131,23 @@ CREATE TABLE IF NOT EXISTS Request(
     FOREIGN KEY (traderid) REFERENCES Trader(traderid)
 );
 
-CREATE TABLE IF NOT EXISTS Transfer(
-    tid INT AUTO_INCREMENT not null,
-    clientid VARCHAR(50),
-    transactionid INT not null,
-    PRIMARY KEY (tid),
-    FOREIGN KEY (clientid) REFERENCES Client(clientid),
-    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
-);
+--CREATE TABLE IF NOT EXISTS Transfer(
+--    tid INT AUTO_INCREMENT not null,
+--    clientid VARCHAR(50),
+--    transactionid INT not null,
+--    PRIMARY KEY (tid),
+--    FOREIGN KEY (clientid) REFERENCES Client(clientid),
+--    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
+--);
 
-CREATE TABLE IF NOT EXISTS Buysell(
-    bsid INT AUTO_INCREMENT not null,
-    userid VARCHAR(50),
-    transactionid INT not null,
-    PRIMARY KEY (bsid),
-    FOREIGN KEY (userid) REFERENCES Client(clientid),
-    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
-);
+--CREATE TABLE IF NOT EXISTS Buysell(
+--    bsid INT AUTO_INCREMENT not null,
+--    userid VARCHAR(50),
+--    transactionid INT not null,
+--    PRIMARY KEY (bsid),
+--    FOREIGN KEY (userid) REFERENCES Client(clientid),
+--    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
+--);
 
 -- CREATE TABLE IF NOT EXISTS Cancel(
 --     cid INT AUTO_INCREMENT not null,
