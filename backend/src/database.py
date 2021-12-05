@@ -374,14 +374,32 @@ class Database:
 
     @classmethod
     def update_level(cls, cursor, mysql, prev_month):
-        """SELECT clientid 
-           FROM Client C 
-           WHERE %s < (
-              SELECT SUM(bitcoin_value) 
-              FROM Client C2, PurchaseTransaction Ptr 
-              WHERE (C.userid = C2.clientid) AND (Ptr.date BETWEEN %s AND %s)
-           )"""
-        pass
+        fiat_threshold = Macros.fiat_threshold
+        # update client's level from silver to gold for whom their fiat_value purchase amount is more than 100k
+        cursor.execute("""UPDATE Client C SET level = gold
+           WHERE C.clientid IN (
+              SELECT clientid 
+              FROM Client C1
+              WHERE %s <= (
+                 SELECT SUM(fiat_value)
+                 FROM Client C2, PurchaseTransaction Ptr 
+                 WHERE (C1.clientid = C2.clientid) AND (C1.clientid = Ptr.userid) AND (Ptr.date BETWEEN %s AND %s)
+              )
+           )""", [fiat_threshold])
+
+        # update client's level from silver to gold for whom their bitcoin purchase amount is more than 100k
+        cursor.execute("""UPDATE Client C SET level = silver
+           WHERE C.clientid IN (
+              SELECT clientid 
+              FROM Client C1
+              WHERE %s > (
+                 SELECT SUM(fiat_value) 
+                 FROM Client C2, PurchaseTransaction Ptr 
+                 WHERE (C1.clientid = C2.clientid) AND (C1.clientid = Ptr.userid) AND (Ptr.date BETWEEN %s AND %s)
+              )
+           )""", [fiat_threshold])
+        mysql.connection.commit()
+        return
 
     @classmethod
     def get_all_transaction_history(cls, cursor, mysql, data):
