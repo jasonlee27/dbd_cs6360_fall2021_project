@@ -8,8 +8,8 @@ import ClientSearch from "./ClientSearch.js";
 function TraderPage(props) {
   return (
     <div>
-      <ClientSearch></ClientSearch>
-      <Transaction></Transaction>
+      <ClientSearch logout={props.logout} ></ClientSearch>
+      <Transaction logout={props.logout} ></Transaction>
     </div>
   );
 }
