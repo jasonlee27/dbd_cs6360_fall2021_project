@@ -81,11 +81,10 @@ function App() {
       console.log("trade data", trader);
         if(traderRef.current ==="") {
           console.log("null trader");
-          navigate('/transaction');
+          navigate('/assign/trader');
         }
         else {
-          //navigate('/transaction');
-          navigate('/assign/trader');
+          navigate('/transaction');
         }
 
     }).catch((error) => {

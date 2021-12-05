@@ -70,7 +70,6 @@ function handleSelect(e) {
     <div className="Assign-Trader mt-5">
             <Button onClick={props.logout}>Logout</Button>
       <Card className="mx-auto" style={{ width: "18rem" }}>
-
         <Card.Header>AssignTrader</Card.Header>
         <Card.Body>
             <Form onSubmit={assignTrader}>
