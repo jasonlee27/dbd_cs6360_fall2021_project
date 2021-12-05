@@ -101,11 +101,12 @@ class Database:
                             user_info["bitcoin"], user_info["flatcurrency"]))
         elif user_type=="trader":
             cursor.execute('INSERT IGNORE INTO User VALUES (%s, %s)', (user_info["userid"], user_info["password"]))
+            cursor.execute('INSERT IGNORE INTO Name VALUES (%s, %s)', (user_info["firstname"], user_info["lastname"]))
             cursor.execute("""INSERT INTO Trader VALUES (
                            (SELECT userid FROM User WHERE userid = %s AND user_password = %s), 
                            (SELECT user_password FROM User WHERE userid = %s AND user_password = %s),
                            %s,
-                           (SELECT firstname FROM Name WHERE firstname = %s AND lastname = %s), 
+                           (SELECT firstname FROM Name WHERE firstname = %s AND lastname = %s),
                            (SELECT lastname FROM Name WHERE firstname = %s AND lastname = %s),
                            %s, %s)""",
                            (user_info["userid"], user_info["password"],
@@ -371,11 +372,16 @@ class Database:
         # end if
         return
 
-    # @classmethod
-    # def update_level(cls, cursor, mysql, prev_month):
-    #     SELECT clientid FROM Client C, (SELECT SUM(bitcoin_value) FROM PurchaseTransaction WHERE userid = %s AND date BETWEEN %s AND %s) AS amount WHERE C.clientid = %s AND SUM(
-        
-    #     pass
+    @classmethod
+    def update_level(cls, cursor, mysql, prev_month):
+        """SELECT clientid 
+           FROM Client C 
+           WHERE %s < (
+              SELECT SUM(bitcoin_value) 
+              FROM Client C2, PurchaseTransaction Ptr 
+              WHERE (C.userid = C2.clientid) AND (Ptr.date BETWEEN %s AND %s)
+           )"""
+        pass
 
     @classmethod
     def get_all_transaction_history(cls, cursor, mysql, data):
