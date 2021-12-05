@@ -299,7 +299,7 @@ def transaction_history():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         bitcoin_transactions, transfer_transactions = Database.get_user_transaction_history(cursor, mysql, data)
         history = {
-            "bitcoin_transactions": bitcoin_transactions
+            "bitcoin_transactions": bitcoin_transactions,
             "transfer_transactions": transfer_transactions
         }
         cursor.close()
