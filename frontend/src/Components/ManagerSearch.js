@@ -8,6 +8,7 @@ import Picker from 'react-month-picker';
 function ManagerSearch(props) {
 
     let [dateRange, setDateRange] = useState("Daily");
+    let [transactionHistory, setTransactionHistory] = useState(null);
   function handleSearch(e) {
     let searchData = new FormData(e.target);
 
@@ -15,6 +16,7 @@ function ManagerSearch(props) {
       .post("http://localhost:8080/profile/manager/history", searchData)
       .then((response) => {
         if (response.data.msg === "Successfully received transaction history.") {
+            transactionHistory(response.data.transaction_history);
           e.target.clear();
         } else {
         }
