@@ -287,7 +287,7 @@ def traders():
 def transaction_history():
     # This method shows clients and trader their transaction histories
     # daily, weekly, or monthly
-    if request.method == 'POST' and 'time_period' in request.form:
+    if request.method == 'POST':
         userid = session['userid']
         user_type = session['user_type']
         
