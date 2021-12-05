@@ -29,3 +29,6 @@ class Macros:
         'silver': 1.,
         'gold': 0.5
     }
+
+    # threshold amount of fiat currency for deciding client's level
+    fiat_threshold = 100000

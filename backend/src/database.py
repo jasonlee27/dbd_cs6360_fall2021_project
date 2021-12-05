@@ -232,8 +232,8 @@ class Database:
         # time_period: one out of [daily, weekly, monthly]
         # in case of manager, it shows every transaction history over all
         # client and trader
-        cursor.execute('SELECT * FROM Transaction WHERE transfer_trid = (SELECT ttrid FROM TransferTransaction WHERE ttrid = %s) AND TransferTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
-        cursor.execute('SELECT * FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE ptrid = %s) AND PurchaseTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
+        #cursor.execute('SELECT * FROM Transaction WHERE transfer_trid = (SELECT ttrid FROM TransferTransaction WHERE ttrid = %s) AND TransferTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
+        #cursor.execute('SELECT * FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE ptrid = %s) AND PurchaseTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
 
         pass
 
@@ -264,34 +264,59 @@ class Database:
     def buysell_bitcoin(cls, cursor, mysql, data):
         user_type, userid = data[0], data[1]
         # TODO
-        # please let me know more about "level' in user table
+        # 
         if user_type == "client":
             bitcoin_val, purchase_type = data[2], data[3]
 
             # TODO: buy/sell bitcoin by clients themselves
-            if purchase_type == 'buy':
+            if level == "gold":
+                if purchase_type == 'buy':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
-            elif purchase_type == 'sell':
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
+                elif purchase_type == 'sell':
                 # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
-                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
-
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+            elif level == "silver":
+                if purchase_type == 'buy':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
+                elif purchase_type == 'sell':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
             # end if
         elif user_type == "trader":
             request_id = data[1]
             # TODO: find the request given request_id and purchse the requested bitcoin buy/sell
-            if purchase_type == 'buy':
-                cursor.execute('UPDATE Trader SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
-            elif purchase_type == 'sell':
-                cursor.execute('UPDATE Trader SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction)', (bitcoin_val, ))
-                cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
-                cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+            if level == "gold":
+                if purchase_type == 'buy':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
+                elif purchase_type == 'sell':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
+            elif level == "silver":
+                if purchase_type == 'buy':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin + %s', (bitcoin_val, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue ))
+                elif purchase_type == 'sell':
+                # cursor.execute('UPDATE Client SET bitcoin = bitcoin - %s', (bitcoin_val, ))
+                cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s) * (1 - (SELECT commission_rate FROM PurchaseTransaction WHERE userid = (SELECT userid FROM USER userid = %s))', (bitcoin_val, userid, ))
+                #cursor.execute('INSERT INTO Transaction VALUES (%s, %s, %s)', (trid, transfer_trid, purchase_trid, ))
+                #cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
         # end if
         mysql.connection.commit()
         pass
@@ -300,7 +325,6 @@ class Database:
     def transfer_money(cls, cursor, mysql, data):
         trader = None
         user_type, userid, usd_val, transaction_date = data[0], data[1], data[2], data[3]
-        # from my previous experience, you dont need to find the client id to update as long as you are logged in, i.e use the "session"
         if user_type=="client":
             # find the client's trader
             cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [userid])
@@ -373,15 +397,35 @@ class Database:
         return
 
     @classmethod
-    def update_level(cls, cursor, mysql, prev_month):
-        """SELECT clientid 
-           FROM Client C 
-           WHERE %s < (
-              SELECT SUM(bitcoin_value) 
-              FROM Client C2, PurchaseTransaction Ptr 
-              WHERE (C.userid = C2.clientid) AND (Ptr.date BETWEEN %s AND %s)
-           )"""
-        pass
+    def update_level(cls, cursor, mysql, prev_month, cur_month, cur_year):
+        fiat_threshold = Macros.fiat_threshold
+        date_from = f"{cur_year}-{prev_month}-01"
+        date_to = f"{cur_year}-{cur_month}-01"
+        # update client's level from silver to gold for whom their fiat_value purchase amount is more than 100k
+        cursor.execute("""UPDATE Client C SET level = gold
+           WHERE C.clientid IN (
+              SELECT clientid 
+              FROM Client C1
+              WHERE %s <= (
+                 SELECT SUM(fiat_value)
+                 FROM Client C2, PurchaseTransaction Ptr 
+                 WHERE (C1.clientid = C2.clientid) AND (C1.clientid = Ptr.userid) AND (Ptr.date BETWEEN %s AND %s)
+              )
+           )""", [fiat_threshold, date_from, date_to])
+
+        # update client's level from silver to gold for whom their bitcoin purchase amount is more than 100k
+        cursor.execute("""UPDATE Client C SET level = silver
+           WHERE C.clientid IN (
+              SELECT clientid 
+              FROM Client C1
+              WHERE %s > (
+                 SELECT SUM(fiat_value) 
+                 FROM Client C2, PurchaseTransaction Ptr 
+                 WHERE (C1.clientid = C2.clientid) AND (C1.clientid = Ptr.userid) AND (Ptr.date BETWEEN %s AND %s)
+              )
+           )""", [fiat_threshold, date_from, date_to])
+        mysql.connection.commit()
+        return
 
     @classmethod
     def get_all_transaction_history(cls, cursor, mysql, data):
