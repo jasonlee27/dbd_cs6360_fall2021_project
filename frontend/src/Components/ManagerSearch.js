@@ -1,3 +1,5 @@
+
+
 import React, { useEffect } from "react";
 import useState from "react-usestateref";
 import axios from "axios";
@@ -50,7 +52,7 @@ function ManagerSearch(props) {
   }, []);
 
   return (
-    <div className="Manager-Search mt-5">
+    <div className="Manager-Search m-3">
       <Button onClick={props.logout}>Logout</Button>
       <Card className="mx-auto" style={{ width: "20rem" }}>
         <Card.Header>Transactions Search</Card.Header>
