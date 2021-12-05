@@ -241,6 +241,7 @@ class Database:
         user_type, userid = data[0], data[1]
         # TODO: given bitcoin value
         # TODO: append log for this transaction
+        # please let me know more about "level' in user table
         if user_type == "client":
             bitcoin_val, purchase_type = data[2], data[3]
 
@@ -276,6 +277,7 @@ class Database:
     def transfer_money(cls, cursor, mysql, data):
         user_type, usd_val = data[0], data[1]
         # TODO: transfer USD to clients's trader and append log for it
+        # from my previous experience, you dont need to find the client id to update as long as you are logged in, i.e use the "session"
         cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s)', (usd_val, ))
         cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)', (usd_val, ))
         cursor.execute('INSERT INTO Log VALUES (%s, %s, %s)', (logid, oldvalue, newvalue, ))
