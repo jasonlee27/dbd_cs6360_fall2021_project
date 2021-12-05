@@ -207,7 +207,8 @@ class Database:
         # in case of manager, it shows every transaction history over all
         # client and trader
         # TODO: do not access to transfertransaction and purchagetransaction directly, but access them via where clause from transaction table, but why?
-        cursor.execute('SELECT * FROM Transaction t, TransferTransaction t1, PurchaseTransaction t3 WHERE t.transfer_trid = t1.ttrid AND t.purchase_trid = t2.ptrid AND date between date_sub(now(),INTERVAL 1 %s) AND now()', (time_period,))
+        cursor.execute('SELECT * FROM Transaction WHERE transfer_trid = (SELECT ttrid FROM TransferTransaction WHERE ttrid = %s) AND TransferTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
+        cursor.execute('SELECT * FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE ptrid = %s) AND PurchaseTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
 
         pass
 
@@ -216,7 +217,7 @@ class Database:
         clientid, bitcoin_val, purchase_type = data[0], data[1], data[2]
         # TODO: find traderid given clients's id
         # TODO: get the request info as output for show cleint the request
-        cursor.execute('INSERT INTO Request (clientid, traderid, bitcoin_value, purchase_type) VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
+        cursor.execute('INSERT INTO Request VALUES (%s, %s, %s, %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
         cursor.execute('SELECT * FROM Request',)
         mysql.connection.commit()
         pass
