@@ -226,17 +226,30 @@ class Database:
             
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):
-        # TODO
-        user_type, userid, time_period = data[0], data[1], data[2]
-        # user_type: one out of [client, trader, manager]
-        # time_period: one out of [daily, weekly, monthly]
-        # in case of manager, it shows every transaction history over all
-        # client and trader
-        #cursor.execute('SELECT * FROM Transaction WHERE transfer_trid = (SELECT ttrid FROM TransferTransaction WHERE ttrid = %s) AND TransferTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
-        #cursor.execute('SELECT * FROM Transaction WHERE purchase_trid = (SELECT ptrid FROM PurchaseTransaction WHERE ptrid = %s) AND PurchaseTransaction.date between date_sub(now(),INTERVAL 1 %s) AND now()', (ttrid, time_period,))
+        bitcoin_transactions, transfer_transactions = None, None
+        user_type, userid = data[0], data[1]
 
-        pass
+        if user_type == "client":
 
+            # get bitcoin transactions
+            cursor.execute('SELECT * FROM PurchaseTransaction WHERE userid = %s', [userid])
+            bitcoin_transactions = cursor.fetchall()
+
+            # get transfer transactions
+            cursor.execute('SELECT * FROM TransferTransaction WHERE clientid = %s', [userid])
+            transfer_transactions = cursor.fetchall()
+
+        elif user_type == "trader":
+            clientid = data[2]
+            # get bitcoin transactions
+            cursor.execute('SELECT * FROM PurchaseTransaction WHERE userid = %s', [clientid])
+            bitcoin_transactions = cursor.fetchall()
+            # get transfer transactions
+            cursor.execute('SELECT * FROM TransferTransaction WHERE clientid = %s AND traderid = %s', [clientid, userid])
+            transfer_transactions = cursor.fetchall()
+        # end if
+        return bitcoin_transactions, transfer_transactions
+        
     @classmethod
     def set_bitcoin_request(cls, cursor, mysql, data):
         # TODO

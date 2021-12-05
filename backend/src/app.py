@@ -297,7 +297,11 @@ def transaction_history():
             data = [user_type, userid, clientid]
         # end if
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        transaction_histories = Database.get_user_transaction_history(cursor, mysql, data)
+        bitcoin_transactions, transfer_transactions = Database.get_user_transaction_history(cursor, mysql, data)
+        history = {
+            "bitcoin_transactions": bitcoin_transactions
+            "transfer_transactions": transfer_transactions
+        }
         cursor.close()
         return jsonify(
             msg=msg,
