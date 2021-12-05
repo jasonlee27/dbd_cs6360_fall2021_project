@@ -35,11 +35,11 @@ function ManagerSearch(props) {
         <Form onSubmit={handleSearch}>
         <Row className="mb-3">
         <Form.Group className="mb-3" controlId="dateRange">
-              <Form.Label htmlFor="dateRange">Date Range</Form.Label>
+              <Form.Label htmlFor="time_period">Date Range</Form.Label>
               <br></br>
               <Form.Check
                 inline
-                name="dateRange"
+                name="time_period"
                 label="Daily"
                 type="radio"
                 value="Daily"
@@ -48,7 +48,7 @@ function ManagerSearch(props) {
               />
               <Form.Check
                 inline
-                name="dateRange"
+                name="time_period"
                 label="Weekly"
                 type="radio"
                 value="Weekly"
@@ -56,7 +56,7 @@ function ManagerSearch(props) {
               />
                 <Form.Check
                 inline
-                name="dateRange"
+                name="time_period"
                 label="Monthly"
                 type="radio"
                 value="Monthly"
@@ -66,23 +66,23 @@ function ManagerSearch(props) {
             </Row>
           <Row className="mb-3">
 
-          <Form.Label htmlFor="startDate">Start Date</Form.Label>
+          <Form.Label htmlFor="start_date">Start Date</Form.Label>
             <Form.Group as={Col}>
               <Form.Control
                 required
                 type="date"
-                name="startDate"
-                maxDate={moment().format("YYYY-MM-DD")}
+                name="start_date"
+                max={moment().format("YYYY-MM-DD")}
                 showClearButton
               />
             </Form.Group>
-            <Form.Label htmlFor="endDate">End Date</Form.Label>
+            <Form.Label htmlFor="end_date">End Date</Form.Label>
             <Form.Group as={Col}>
               <Form.Control
                 required
                 type="date"
-                name="endDate"
-                maxDate={moment().format("YYYY-MM-DD")}
+                name="end_date"
+                max={moment().format("YYYY-MM-DD")}
                 showClearButton
               />
             </Form.Group>
