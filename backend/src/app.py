@@ -212,7 +212,7 @@ def trader_assigned():
     return jsonify(msg=msg)
 
 @app.route('/profile/clients_assigned', methods=['GET', 'POST'])
-def trader_assigned():
+def clients_assigned():
     msg = ''
     if request.method == 'POST':
         userid = session['userid']
