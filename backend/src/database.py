@@ -261,8 +261,8 @@ class Database:
     @classmethod
     def set_bitcoin_request(cls, cursor, mysql, data):
         # TODO
-        clientid, bitcoin_val, purchase_type = data[0], data[1], data[2]
-        cursor.execute('INSERT INTO Request VALUES (%s, (SELECT clientid FROM CLient WHERE clientid = %s), (SELECT traderid FROM Trader WHERE traderid = %s), %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
+        clientid, bitcoin_val, purchase_type = data[0], data[1], data[2], hash_username
+        cursor.execute('INSERT INTO Request VALUES ((SELECT clientid FROM Client WHERE clientid = %s), (SELECT traderid FROM Trader WHERE traderid = %s), %s, %s)', (clientid, hash_username, bitcoin_val, purchase_type))
         cursor.execute('SELECT * FROM Request',)
         mysql.connection.commit()
         pass
@@ -273,10 +273,10 @@ class Database:
         userid, user_type = data[0], data[1]
         histories = None
         if user_type == 'client':
-            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (clientid))
+            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (userid, ))
             histories = cursor.fetchall()
         elif user_type == 'trader':
-            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (traderid,))
+            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (userid, ))
             histories = cursor.fetchall()
         # end if
         return histories
