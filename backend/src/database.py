@@ -320,7 +320,7 @@ class Database:
                 # add log for the transfer transaction
                 cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND usd_value = %s AND clientid = %s AND traderid = %s', (transaction_date, usd_val, userid, traderid))
                 ttrid = cursor.fetchone()
-                cursor.execute('INSERT INTO Log(log_type, trid) VALUES ('update_transfertransaction', %s)', [ttrid])
+                cursor.execute("INSERT INTO Log(log_type, trid) VALUES (update_transfertransaction, %s)", [ttrid])
                 mysql.connection.commit()
             # end if
         # end if
@@ -365,11 +365,12 @@ class Database:
         # end if
         return
 
-    @classmethod
-    def update_level(cls, cursor, mysql, data):
-        # TODO
+    # @classmethod
+    # def update_level(cls, cursor, mysql, prev_month):
+    #     SELECT clientid FROM Client C, (SELECT SUM(bitcoin_value) FROM PurchaseTransaction WHERE userid = %s date BETWEEN %s AND %s) AS T WHERE
         
-        pass
+        
+    #     pass
 
     @classmethod
     def get_all_transaction_history(cls, cursor, mysql, data):
