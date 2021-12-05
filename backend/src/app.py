@@ -242,6 +242,31 @@ def request_history(userid):
         request_histories=request_histories
     )
 
+@app.route('/profile/manager/history', methods=['GET', 'POST'])
+def manager_transaction_history():
+    # This method shows clients and trader their transaction histories
+    # daily, weekly, or monthly
+    msg = ''
+    if request.method == 'POST' and 'time_period' in request.form:
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type=="manager":
+            time_period = request.form['time_period']
+            start_date = request.form[""]
+        
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        transaction_histories = Database.get_user_transaction_history(
+            cursor, mysql,
+            [user_type, userid, time_period]
+        )
+        cursor.close()
+        msg = "Successfully received transaction history."
+    # end if
+    return jsonify(
+        msg=msg,
+        transaction_histories=transaction_histories
+    )
+
 @app.route('/profile/transfer_from_bank', methods=['GET', 'POST'])
 def tansfer_from_bank(userid):
     pass

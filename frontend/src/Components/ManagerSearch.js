@@ -12,9 +12,9 @@ function ManagerSearch(props) {
     let searchData = new FormData(e.target);
 
     axios
-      .post("http://localhost:8080/profile/buysell", searchData)
+      .post("http://localhost:8080/profile/manager/history", searchData)
       .then((response) => {
-        if (response.data.msg === "Successfully purchased.") {
+        if (response.data.msg === "Successfully received transaction history.") {
           e.target.clear();
         } else {
         }
