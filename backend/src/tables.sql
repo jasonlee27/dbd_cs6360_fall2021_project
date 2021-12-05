@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS TransferTransaction(
     ttrid INT AUTO_INCREMENT not null,
     date VARCHAR(50),
     usd_value FLOAT(8,3),
-    clientid VARCHAR(50),
-    traderid VARCHAR(50),
+    -- clientid VARCHAR(50),
+    -- traderid VARCHAR(50),
     PRIMARY KEY(ttrid),
     CONSTRAINT transfer_usdvalue_constraint CHECK (usd_value>=0.0)
 );
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS PurchaseTransaction(
     bitcoin_value FLOAT(8,3),
     fiat_value FLOAT(8,3),
     purchase_type VARCHAR(4), -- buy or sell bitcoin
-    userid VARCHAR(50),
+    -- userid VARCHAR(50),
     PRIMARY KEY(ptrid),
     CONSTRAINT purchase_bitcoinvalue_constraint CHECK (bitcoin_value>=0.0)
 );
@@ -131,23 +131,34 @@ CREATE TABLE IF NOT EXISTS Request(
     FOREIGN KEY (traderid) REFERENCES Trader(traderid)
 );
 
---CREATE TABLE IF NOT EXISTS Transfer(
---    tid INT AUTO_INCREMENT not null,
---    clientid VARCHAR(50),
---    transactionid INT not null,
---    PRIMARY KEY (tid),
---    FOREIGN KEY (clientid) REFERENCES Client(clientid),
---    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
---);
+CREATE TABLE IF NOT EXISTS Transfer(
+    tfid INT AUTO_INCREMENT not null,
+    ttrid INT,
+    clientid VARCHAR(50),
+    traderid VARCHAR(50),
+    PRIMARY KEY (tfid),
+    FOREIGN KEY (ttrid) REFERENCES TransferTransaction(ttrid),
+    FOREIGN KEY (clientid) REFERENCES Client(clientid),
+    FOREIGN KEY (traderid) REFERENCES Trader(traderid)
+);
 
---CREATE TABLE IF NOT EXISTS Buysell(
---    bsid INT AUTO_INCREMENT not null,
---    userid VARCHAR(50),
---    transactionid INT not null,
---    PRIMARY KEY (bsid),
---    FOREIGN KEY (userid) REFERENCES Client(clientid),
---    FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
---);
+CREATE TABLE IF NOT EXISTS Client_buysell(
+   bsid INT AUTO_INCREMENT not null,
+   userid VARCHAR(50),
+   ptrid INT,
+   PRIMARY KEY (bsid),
+   FOREIGN KEY (userid) REFERENCES Client(clientid),
+   FOREIGN KEY (ptrid) REFERENCES PurchaseTransaction(ptrid)
+);
+
+CREATE TABLE IF NOT EXISTS Trader_buysell(
+   bsid INT AUTO_INCREMENT not null,
+   userid VARCHAR(50),
+   ptrid INT,
+   PRIMARY KEY (bsid),
+   FOREIGN KEY (userid) REFERENCES Trader(traderid),
+   FOREIGN KEY (ptrid) REFERENCES PurchaseTransaction(ptrid)
+);
 
 -- CREATE TABLE IF NOT EXISTS Cancel(
 --     cid INT AUTO_INCREMENT not null,
@@ -155,14 +166,5 @@ CREATE TABLE IF NOT EXISTS Request(
 --     transactionid INT not null,
 --     PRIMARY KEY(cid),
 --     FOREIGN KEY (traderid) REFERENCES Trader(traderid),
---     FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
--- );
-
--- CREATE TABLE IF NOT EXISTS Have(
---     hid INT AUTO_INCREMENT not null,
---     logid INT not null,
---     transactionid INT not null,
---     PRIMARY KEY(hid),
---     FOREIGN KEY (logid) REFERENCES Log(logid),
 --     FOREIGN KEY (transactionid) REFERENCES Transaction(trid)
 -- );
