@@ -445,10 +445,11 @@ def transfer_money():
         user_type = session['user_type']
         if user_type == 'client':
             usd_val = request.form['usd_val']
+            transaction_date = Utils.get_cur_time()
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             Database.transfer_money(
                 cursor, mysql,
-                [user_type, userid, usd_val]
+                [user_type, userid, usd_val, transaction_date]
             )
             msg = "Successfully purchased."
             cursor.close()

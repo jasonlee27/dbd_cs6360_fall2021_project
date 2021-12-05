@@ -216,8 +216,7 @@ class Database:
         cursor.execute('INSERT INTO Assign(clientid, traderid) VALUES (%s, %s)', (hash_username, traderid))
         mysql.connection.commit()
         return
-    
-                
+            
     @classmethod
     def get_user_transaction_history(cls, cursor, mysql, data):
         # TODO
@@ -293,15 +292,15 @@ class Database:
     @classmethod
     def transfer_money(cls, cursor, mysql, data):
         trader = None
-        user_type, userid, usd_val = data[0], data[1], data[2]
+        user_type, userid, usd_val, transaction_date = data[0], data[1], data[2], data[3]
         # from my previous experience, you dont need to find the client id to update as long as you are logged in, i.e use the "session"
         if user_type=="client":
             # find the client's trader
-            cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', (userid))
+            cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [userid])
             traderid = cursor.fetchone()
             if traderid:
                 # get the old usd value
-                cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (userid))
+                cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', [userid])
                 old_value = cursor.fetchone()
                 
                 # remove the amount of money from client
@@ -312,12 +311,16 @@ class Database:
                 mysql.connection.commit()
 
                 # get the new usd value
-                cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (userid))
+                cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', [userid])
                 new_value = cursor.fetchone()
 
+                # add the transaction to the transaction table
+                cursor.execute("INSERT INTO TransferTransaction(date, usd_value, clientid, traderid) VALUES (%s, %s, %s, %s)", (transaction_date, usd_val, userid, traderid))
+                
                 # add log for the transfer transaction
-                cursor.execute("INSERT INTO Log(log_type, oldvalue, newvalue) VALUES ('update_transfertransaction', %s, %s)", (old_value, new_value))
-            
+                cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND usd_value = %s AND clientid = %s AND traderid = %s', (transaction_date, usd_val, userid, traderid))
+                ttrid = cursor.fetchone()
+                cursor.execute('INSERT INTO Log(log_type, trid) VALUES ('update_transfertransaction', %s)', [ttrid])
                 mysql.connection.commit()
             # end if
         # end if
@@ -365,9 +368,9 @@ class Database:
     @classmethod
     def update_level(cls, cursor, mysql, data):
         # TODO
+        
         pass
 
-                
     @classmethod
     def get_all_transaction_history(cls, cursor, mysql, data):
         user_type, userid, date_range, start_date, end_date = data[0], data[1], data[2], data[3], data[4]
