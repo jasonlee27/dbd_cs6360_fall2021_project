@@ -41,3 +41,7 @@ class Utils:
         now = datetime.now()
         dt_str = now.strftime("%d/%m/%Y_%H:%M:%S")
         return dt_str
+
+    @classmethod
+    def exchange_bitcoin_fiat(cls, bitcoin_val=None, fiat_val=None):
+        pass

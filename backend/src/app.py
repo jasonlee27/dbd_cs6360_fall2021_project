@@ -191,6 +191,27 @@ def register():
     print(msg)
     return jsonify(msg=msg)
 
+@app.route('/profile/trader_assigned', methods=['GET', 'POST'])
+def trader_assigned():
+    msg = ''
+    if request.method == 'POST':
+        userid = session['userid']
+        user_type = session['user_type']
+        if user_type == "client":
+            trader = Database.get_assgned_trader_in_db(
+                cursor, mysql, userid
+            )
+            cursor.close()
+            msg = "Successfully captured"
+            return jsonify(
+                msg=msg,
+                trader=trader
+            )
+        # end if
+    # end if
+    return jsonify(msg=msg)
+        
+
 @app.route('/profile', methods=['GET', 'POST'])
 def transaction_history():
     # This method shows clients and trader their transaction histories
