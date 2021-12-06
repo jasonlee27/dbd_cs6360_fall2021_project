@@ -466,6 +466,7 @@ class Database:
 
     @classmethod
     def transfer_money(cls, cursor, mysql, data):
+        msg = ""
         trader = None
         user_type, userid, usd_val, transaction_date, transaction_time = data[0], data[1], data[2], data[3], data[4]
         if user_type=="client":
@@ -473,26 +474,35 @@ class Database:
             cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [userid])
             traderid = cursor.fetchone()["traderid"]
             if traderid:
-                # remove the amount of money from client
-                cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s) WHERE clientid = %s', (usd_val, userid))
 
-                # add the amount of money from client
-                cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)  WHERE traderid = %s', (usd_val, traderid))
-                # mysql.connection.commit()
+                cursor.execute('SELECT flatcurrency FROM Assign WHERE clientid = %s', [userid])
+                fiat_val = cursor.fetchone()["flatcurrency"]
 
-                # add the transaction to the transaction table
-                cursor.execute('INSERT INTO TransferTransaction(date, time, usd_value) VALUES (%s, %s, %s)', (transaction_date, transaction_time, usd_val))
+                if fiat_val >= usd_val:
                 
-                # add log for the transfer transaction
-                cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND time = %s AND usd_value = %s', (transaction_date, transaction_time, usd_val))
-                ttrid = cursor.fetchone()["ttrid"]
+                    # remove the amount of money from client
+                    cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s) WHERE clientid = %s', (usd_val, userid))
+                    
+                    # add the amount of money from client
+                    cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)  WHERE traderid = %s', (usd_val, traderid))
 
-                cursor.execute('INSERT INTO Transfer(ttrid, clientid, traderid) VALUES (%s, %s, %s)', (ttrid, userid, traderid))
-                cursor.execute('INSERT INTO Log(log_type, trid) VALUES (%s, %s)', ["update_transfertransaction", ttrid])
-                mysql.connection.commit()
+                    # add the transaction to the transaction table
+                    cursor.execute('INSERT INTO TransferTransaction(date, time, usd_value) VALUES (%s, %s, %s)', (transaction_date, transaction_time, usd_val))
+                
+                    # add log for the transfer transaction
+                    cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND time = %s AND usd_value = %s', (transaction_date, transaction_time, usd_val))
+                    ttrid = cursor.fetchone()["ttrid"]
+                    
+                    cursor.execute('INSERT INTO Transfer(ttrid, clientid, traderid) VALUES (%s, %s, %s)', (ttrid, userid, traderid))
+                    cursor.execute('INSERT INTO Log(log_type, trid) VALUES (%s, %s)', ["update_transfertransaction", ttrid])
+                    mysql.connection.commit()
+                    msg = "Succeed"
+                else:
+                    msg = "Not enough money"
+                # end if
             # end if
         # end if
-        return
+        return msg
 
     @classmethod
     def cancel_transaction(cls, cursor, mysql, data):
