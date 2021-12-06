@@ -165,6 +165,10 @@ function TraderPage(props) {
               <Card.Body>
                 <Form onSubmit={handleTransaction}>
                   <Form.Group>
+                    Current Fiat Balance:
+                    Current Bitcoin Balance:
+                  </Form.Group>
+                  <Form.Group>
                     {/* <div class="dropdown" className="mb-2">
                       <Dropdown>
                         <DropdownButton
