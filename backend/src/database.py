@@ -301,16 +301,16 @@ class Database:
             if commission_type == "bitcoin":
                 commission_fee = bitcoin_val*commission_rate
                 if purchase_type == "buy":
-                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s - %s), flatcurrency = (flatcurrency - %s) WHERE traderid = %s', (bitcoin_val, commission_fee, fiat_val, userid))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s - %s), flatcurrency = (flatcurrency - %s) WHERE clientid = %s', (bitcoin_val, commission_fee, fiat_val, userid))
                 elif purchase_type == "sell":
-                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s - %s), flatcurrency = (flatcurrency + %s) WHERE traderid = %s', (bitcoin_val, commission_fee, fiat_val, userid))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s - %s), flatcurrency = (flatcurrency + %s) WHERE clientid = %s', (bitcoin_val, commission_fee, fiat_val, userid))
                 # end if
             elif commission_type == "fiat":
                 commission_fee = fiat_val*commission_rate
                 if purchase_type == "buy":
-                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s), flatcurrency = (flatcurrency - %s - %s) WHERE traderid = %s', (bitcoin_val, fiat_val, commission_fee, userid))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s), flatcurrency = (flatcurrency - %s - %s) WHERE clientid = %s', (bitcoin_val, fiat_val, commission_fee, userid))
                 elif purchase_type == "sell":
-                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s), flatcurrency = (flatcurrency + %s - %s) WHERE traderid = %s', (bitcoin_val, fiat_val, commission_fee, userid))
+                    cursor.execute('UPDATE Client SET bitcoin = (bitcoin - %s), flatcurrency = (flatcurrency + %s - %s) WHERE clientid = %s', (bitcoin_val, fiat_val, commission_fee, userid))
                 # end if
             # end if
 

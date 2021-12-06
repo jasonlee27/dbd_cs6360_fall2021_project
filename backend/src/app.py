@@ -82,7 +82,6 @@ def login():
             session['loggedin'] = True
             session['userid'] = hash_userid
             session['user_type'] = account_info["user_type"]
-            print(session)
             msg = "Successfully logged in!"
         else:
             msg = 'Incorrect username/password!'

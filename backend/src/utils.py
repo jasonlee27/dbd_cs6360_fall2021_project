@@ -46,11 +46,14 @@ class Utils:
     @classmethod
     def exchange_bitcoin_fiat(cls, bitcoin_val=None, fiat_val=None):
         # it assumes that 1 bitcoin = $100 fiat currency
-        static_rate = 100
-        mu, sigma = 0, 0.1
+        static_rate = 100.
+        mu, sigma = 0., 0.1
+        bitcoin_val = float(bitcoin_val)
         if bitcoin_val and not fiat_val:
-            return bitcoin_val*static_rate*(1+random.gauss(mu, sigma))
+            temp = round(static_rate*(1+random.gauss(mu, sigma)),3)
+            return bitcoin_val*static_rate*temp
         elif not bitcoin_val and fiat_val:
-            return (bitcoin_val/static_rate)*(1+random.gauss(mu, sigma))
+            temp = round(1+random.gauss(mu, sigma),3)
+            return (bitcoin_val/static_rate)*temp
         # end if
         
