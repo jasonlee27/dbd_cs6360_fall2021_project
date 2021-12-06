@@ -399,16 +399,17 @@ def request_bitcoin(userid):
        'purchase_type' in request.form:
         
         # Create variables for easy access
-        clientid = session['userid']
+        userid = session['userid']
         user_type = session['user_type']
         if user_type == 'client':
             bitcoin_val = request.form['bitcoin_val']
             purchase_type = request.form['purchase_type']
+            commission_type = request.form['commission_type']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             # not yet finished
             new_request = Database.set_bitcoin_request(
                 cursor, mysql,
-                [cliendid, bitcoin_val, purchase_type]
+                [user_type, userid, bitcoin_val, purchase_type, commission_type]
             )
             # new_request: [rid, traderid, bitcoin_value, purchase_type]
             msg = "Successfully requested"

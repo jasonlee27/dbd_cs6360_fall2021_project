@@ -261,11 +261,15 @@ class Database:
     @classmethod
     def set_bitcoin_request(cls, cursor, mysql, data):
         # TODO
-        clientid, bitcoin_val, purchase_type = data[0], data[1], data[2]
-        cursor.execute('INSERT INTO Request VALUES (%s, (SELECT clientid FROM CLient WHERE clientid = %s), (SELECT traderid FROM Trader WHERE traderid = %s), %s, %s)', (rid, clientid, traderid, bitcoin_val, purchase_type))
-        cursor.execute('SELECT * FROM Request',)
+        user_type, userid, bitcoin_val, purchase_type, commission_type = data[0], data[1], data[2], data[3], data[4]
+        
+        # find client's trader
+        cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [userid])
+        traderid = cursor.fetchone()
+        
+        cursor.execute('INSERT INTO Request(clientid, traderid, bitcoin_value, commission_type, purchase_type) VALUES (%s, %s, %s, %s, %s)', (userid, traderid, bitcoin_val, commission_type, purchase_type))
         mysql.connection.commit()
-        pass
+        return
 
     @classmethod
     def get_bitcoin_requests(cls, cursor, mysql, data):
@@ -273,10 +277,10 @@ class Database:
         userid, user_type = data[0], data[1]
         histories = None
         if user_type == 'client':
-            cursor.execute('SELECT R.rid, R.traderid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.clientid = %s', (clientid))
+            cursor.execute('SELECT clientid, traderid, bitcoin_value, commission_type, purchase_type FROM Request WHERE clientid = %s', [userid])
             histories = cursor.fetchall()
         elif user_type == 'trader':
-            cursor.execute('SELECT R.rid, R.clientid, R.bitcoin_value, R.purchase_type FROM Request R WHERE R.traderid = %s', (traderid,))
+            cursor.execute('SELECT clientid, traderid, bitcoin_value, commission_type, purchase_type FROM Request WHERE traderid = %s', [userid])
             histories = cursor.fetchall()
         # end if
         return histories
