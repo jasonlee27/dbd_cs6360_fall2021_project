@@ -36,7 +36,7 @@ function Transaction(props) {
         });
     } else if (purchaseType === "add") {
       axios
-      .post("http://localhost:8080/profile/add", transaction)
+      .post("http://localhost:8080/profile/add_money", transaction)
       .then((response) => {
         if (response.data.msg === "Successfully added fiat.") {
         // e.target.clear();
