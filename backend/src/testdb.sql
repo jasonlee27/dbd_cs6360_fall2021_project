@@ -71,34 +71,6 @@ LOCK TABLES `Assign` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Buysell`
---
-
-DROP TABLE IF EXISTS `Buysell`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Buysell` (
-  `bsid` int NOT NULL AUTO_INCREMENT,
-  `userid` varchar(50) DEFAULT NULL,
-  `transactionid` int NOT NULL,
-  PRIMARY KEY (`bsid`),
-  KEY `userid` (`userid`),
-  KEY `transactionid` (`transactionid`),
-  CONSTRAINT `buysell_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `Client` (`clientid`),
-  CONSTRAINT `buysell_ibfk_2` FOREIGN KEY (`transactionid`) REFERENCES `Transaction` (`trid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Buysell`
---
-
-LOCK TABLES `Buysell` WRITE;
-/*!40000 ALTER TABLE `Buysell` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Buysell` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Client`
 --
 
@@ -144,6 +116,34 @@ INSERT INTO `Client` VALUES ('210b093ccbc29f51ec1f53bcc8229dbb','6a201185e0e1b74
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Client_buysell`
+--
+
+DROP TABLE IF EXISTS `Client_buysell`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Client_buysell` (
+  `bsid` int NOT NULL AUTO_INCREMENT,
+  `userid` varchar(50) DEFAULT NULL,
+  `ptrid` int DEFAULT NULL,
+  PRIMARY KEY (`bsid`),
+  KEY `userid` (`userid`),
+  KEY `ptrid` (`ptrid`),
+  CONSTRAINT `client_buysell_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `Client` (`clientid`),
+  CONSTRAINT `client_buysell_ibfk_2` FOREIGN KEY (`ptrid`) REFERENCES `PurchaseTransaction` (`ptrid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Client_buysell`
+--
+
+LOCK TABLES `Client_buysell` WRITE;
+/*!40000 ALTER TABLE `Client_buysell` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Client_buysell` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Log`
 --
 
@@ -152,7 +152,7 @@ DROP TABLE IF EXISTS `Log`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Log` (
   `logid` int NOT NULL AUTO_INCREMENT,
-  `log_type` varchar(10) DEFAULT NULL,
+  `log_type` varchar(50) DEFAULT NULL,
   `trid` int DEFAULT NULL,
   PRIMARY KEY (`logid`),
   UNIQUE KEY `log_type` (`log_type`,`trid`)
@@ -227,7 +227,8 @@ DROP TABLE IF EXISTS `PurchaseTransaction`;
 CREATE TABLE `PurchaseTransaction` (
   `ptrid` int NOT NULL AUTO_INCREMENT,
   `date` varchar(50) DEFAULT NULL,
-  `commision_type` varchar(50) DEFAULT NULL,
+  `time` varchar(50) DEFAULT NULL,
+  `commission_type` varchar(50) DEFAULT NULL,
   `commission_rate` float(3,3) DEFAULT NULL,
   `bitcoin_value` float(8,3) DEFAULT NULL,
   `fiat_value` float(8,3) DEFAULT NULL,
@@ -259,10 +260,11 @@ CREATE TABLE `Request` (
   `clientid` varchar(50) NOT NULL,
   `traderid` varchar(50) NOT NULL,
   `bitcoin_value` float(8,3) NOT NULL,
+  `commision_type` varchar(50) DEFAULT NULL,
   `purchase_type` varchar(5) NOT NULL,
   PRIMARY KEY (`rid`),
-  KEY `clientid` (`clientid`),
-  KEY `traderid` (`traderid`),
+  KEY `request_ibfk_1` (`clientid`),
+  KEY `request_ibfk_2` (`traderid`),
   CONSTRAINT `request_ibfk_1` FOREIGN KEY (`clientid`) REFERENCES `Client` (`clientid`),
   CONSTRAINT `request_ibfk_2` FOREIGN KEY (`traderid`) REFERENCES `Trader` (`traderid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -312,31 +314,31 @@ INSERT INTO `Trader` VALUES ('1f97495b9afabdb61c273ba698428369','6a201185e0e1b74
 UNLOCK TABLES;
 
 --
--- Table structure for table `Transaction`
+-- Table structure for table `Trader_buysell`
 --
 
-DROP TABLE IF EXISTS `Transaction`;
+DROP TABLE IF EXISTS `Trader_buysell`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Transaction` (
-  `trid` int NOT NULL AUTO_INCREMENT,
-  `transfer_trid` int DEFAULT NULL,
-  `purchase_trid` int DEFAULT NULL,
-  PRIMARY KEY (`trid`),
-  KEY `transfer_trid` (`transfer_trid`),
-  KEY `purchase_trid` (`purchase_trid`),
-  CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`transfer_trid`) REFERENCES `TransferTransaction` (`ttrid`),
-  CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`purchase_trid`) REFERENCES `PurchaseTransaction` (`ptrid`)
+CREATE TABLE `Trader_buysell` (
+  `bsid` int NOT NULL AUTO_INCREMENT,
+  `userid` varchar(50) DEFAULT NULL,
+  `ptrid` int DEFAULT NULL,
+  PRIMARY KEY (`bsid`),
+  KEY `userid` (`userid`),
+  KEY `ptrid` (`ptrid`),
+  CONSTRAINT `trader_buysell_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `Trader` (`traderid`),
+  CONSTRAINT `trader_buysell_ibfk_2` FOREIGN KEY (`ptrid`) REFERENCES `PurchaseTransaction` (`ptrid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Transaction`
+-- Dumping data for table `Trader_buysell`
 --
 
-LOCK TABLES `Transaction` WRITE;
-/*!40000 ALTER TABLE `Transaction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Transaction` ENABLE KEYS */;
+LOCK TABLES `Trader_buysell` WRITE;
+/*!40000 ALTER TABLE `Trader_buysell` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Trader_buysell` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -347,14 +349,17 @@ DROP TABLE IF EXISTS `Transfer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Transfer` (
-  `tid` int NOT NULL AUTO_INCREMENT,
+  `tfid` int NOT NULL AUTO_INCREMENT,
+  `ttrid` int DEFAULT NULL,
   `clientid` varchar(50) DEFAULT NULL,
-  `transactionid` int NOT NULL,
-  PRIMARY KEY (`tid`),
-  KEY `clientid` (`clientid`),
-  KEY `transactionid` (`transactionid`),
-  CONSTRAINT `transfer_ibfk_1` FOREIGN KEY (`clientid`) REFERENCES `Client` (`clientid`),
-  CONSTRAINT `transfer_ibfk_2` FOREIGN KEY (`transactionid`) REFERENCES `Transaction` (`trid`)
+  `traderid` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`tfid`),
+  KEY `transfer_ibfk_1` (`ttrid`),
+  KEY `transfer_ibfk_2` (`clientid`),
+  KEY `transfer_ibfk_3` (`traderid`),
+  CONSTRAINT `transfer_ibfk_1` FOREIGN KEY (`ttrid`) REFERENCES `TransferTransaction` (`ttrid`),
+  CONSTRAINT `transfer_ibfk_2` FOREIGN KEY (`clientid`) REFERENCES `Client` (`clientid`),
+  CONSTRAINT `transfer_ibfk_3` FOREIGN KEY (`traderid`) REFERENCES `Trader` (`traderid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -377,9 +382,8 @@ DROP TABLE IF EXISTS `TransferTransaction`;
 CREATE TABLE `TransferTransaction` (
   `ttrid` int NOT NULL AUTO_INCREMENT,
   `date` varchar(50) DEFAULT NULL,
+  `time` varchar(50) DEFAULT NULL,
   `usd_value` float(8,3) DEFAULT NULL,
-  `clientid` varchar(50) DEFAULT NULL,
-  `traderid` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`ttrid`),
   CONSTRAINT `transfer_usdvalue_constraint` CHECK ((`usd_value` >= 0.0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -417,10 +421,6 @@ LOCK TABLES `User` WRITE;
 INSERT INTO `User` VALUES ('1f97495b9afabdb61c273ba698428369','6a201185e0e1b7409973c8519ca56914'),('210b093ccbc29f51ec1f53bcc8229dbb','6a201185e0e1b7409973c8519ca56914'),('37024c43717c26ef73740bbb49c7d201','6a201185e0e1b7409973c8519ca56914'),('3882ad191059fcabcdc2e77931965657','6a201185e0e1b7409973c8519ca56914'),('47ea35a30fc66924cf8662185b62f63b','6a201185e0e1b7409973c8519ca56914'),('4b4226e7f52d16351ce8c5a13b7d4a18','30fd57c60df172ced919ae6fd460abad'),('c3634bbe395bb171d92259827aa41032','6a201185e0e1b7409973c8519ca56914'),('c3aa8559e20a699fb91eab3887105eb5','6a201185e0e1b7409973c8519ca56914'),('f1e7c6edbfc5bfe10b38ada554c8fe25','6a201185e0e1b7409973c8519ca56914'),('f2c323964f4751058196d6ad6859239b','6a201185e0e1b7409973c8519ca56914'),('f3a95a7279d65d1ba379978e09ca461f','6a201185e0e1b7409973c8519ca56914');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'bts_db'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -431,4 +431,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-05 13:47:23
+-- Dump completed on 2021-12-05 20:34:40

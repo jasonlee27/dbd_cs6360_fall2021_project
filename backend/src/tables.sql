@@ -95,18 +95,9 @@ CREATE TABLE IF NOT EXISTS PurchaseTransaction(
     CONSTRAINT purchase_bitcoinvalue_constraint CHECK (bitcoin_value>=0.0)
 );
 
-CREATE TABLE IF NOT EXISTS Transaction(
-    trid INT AUTO_INCREMENT not null,
-    transfer_trid INT,
-    purchase_trid INT,
-    PRIMARY KEY(trid),
-    FOREIGN KEY (transfer_trid) REFERENCES TransferTransaction(ttrid),
-    FOREIGN KEY (purchase_trid) REFERENCES PurchaseTransaction(ptrid)
-);
-
 CREATE TABLE IF NOT EXISTS Log(
     logid INT AUTO_INCREMENT not null,
-    log_type VARCHAR(10),
+    log_type VARCHAR(50),
     trid INT DEFAULT NULL,
     UNIQUE(log_type, trid),
     PRIMARY KEY(logid)

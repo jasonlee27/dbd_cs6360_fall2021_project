@@ -202,6 +202,9 @@ class Database:
         # hash_username: client id
         cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [hash_username])
         trader = cursor.fetchone()
+        if trader:
+            return trader["traderid"]
+        # end if
         return trader
 
     @classmethod
@@ -230,7 +233,6 @@ class Database:
     def get_user_transaction_history(cls, cursor, mysql, data):
         bitcoin_transactions, transfer_transactions = None, None
         user_type, userid = data[0], data[1]
-
         if user_type == "client":
 
             # get bitcoin transactions
@@ -293,12 +295,11 @@ class Database:
         if user_type == "client":
             bitcoin_val, purchase_type, commission_type, transaction_date, transaction_time = data[2], data[3], data[4], data[5], data[6]
             cursor.execute('SELECT level FROM Client WHERE clientid = %s', [userid])
-            client_level = cursor.fetchone()
+            client_level = cursor.fetchone()["level"]
             commission_rate = Macros.COMMISSION_RATE['silver']
             if client_level == "gold":
                 commission_rate = Macros.COMMISSION_RATE['gold']
             # end if
-            
             fiat_val = Utils.exchange_bitcoin_fiat(bitcoin_val=bitcoin_val)
             if commission_type == "bitcoin":
                 commission_fee = bitcoin_val*commission_rate
@@ -325,12 +326,11 @@ class Database:
                               FROM PurchaseTransaction 
                               WHERE date = %s AND time = %s AND commission_type = %s AND commission_rate = %s AND bitcoin_value = %s AND fiat_value = %s AND purchase_type = %s""",
                            (transaction_date, transaction_time, commission_type, commission_rate, bitcoin_val, fiat_val, purchase_type))
-            ptrid = cursor.fetchone()
+            ptrid = cursor.fetchone()["ptrid"]
 
             # add the transaction transaction table and log
-            cursor.execute("INSERT INTO Transaction(transfer_trid, purchase_trid) VALUES (%s, NULL)", [ptrid])
             cursor.execute("INSERT INTO Client_buysell(ptrid, userid) VALUES (%s, %s)", (ptrid, userid))
-            cursor.execute("INSERT INTO Log(log_type, trid) VALUES (update_purchasetransaction, %s)", [ptrid])
+            cursor.execute("INSERT INTO Log(log_type, trid) VALUES (%s, %s)", ["update_purchasetransaction", ptrid])
             mysql.connection.commit()
         elif user_type == "trader":
             request_id = data[2]
@@ -372,10 +372,9 @@ class Database:
                               FROM PurchaseTransaction 
                               WHERE date = %s AND time = %s AND commission_type = %s AND commission_rate = %s AND bitcoin_value = %s AND fiat_value = %s AND purchase_type = %s""",
                            (transaction_date, transaction_time, commission_type, commission_rate, bitcoin_val, fiat_val, purchase_type))
-            ptrid = cursor.fetchone()
+            ptrid = cursor.fetchone()["ptrid"]
             
             # add the transaction transaction table and log
-            cursor.execute("INSERT INTO Transaction(transfer_trid, purchase_trid) VALUES (%s, NULL)", [ptrid])
             cursor.execute("INSERT INTO Trader_buysell(ptrid, userid) VALUES (%s, %s)", (ptrid, userid))
             cursor.execute("INSERT INTO Log(log_type, trid) VALUES (update_purchasetransaction, %s)", [ptrid])
             mysql.connection.commit()
@@ -488,7 +487,6 @@ class Database:
                 cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND time = %s AND usd_value = %s', (transaction_date, transaction_time, usd_val))
                 ttrid = cursor.fetchone()
 
-                cursor.execute("INSERT INTO Transaction(transfer_trid, purchase_trid) VALUES (%s, NULL)", [ttrid])
                 cursor.execute("INSERT INTO Transfer(ttrid, clientid, traderid) VALUES (%s, %s, %s)", (ttrid, userid, traderid))
                 cursor.execute("INSERT INTO Log(log_type, trid) VALUES (update_transfertransaction, %s)", [ttrid])
                 mysql.connection.commit()

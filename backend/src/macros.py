@@ -26,8 +26,8 @@ class Macros:
 
     # commission rate in percentage
     COMMISSION_RATE = {
-        'silver': 1.,
-        'gold': 0.5
+        'silver': 0.01,
+        'gold': 0.005
     }
 
     # threshold amount of fiat currency for deciding client's level

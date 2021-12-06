@@ -51,7 +51,7 @@ class Utils:
         bitcoin_val = float(bitcoin_val)
         if bitcoin_val and not fiat_val:
             temp = round(static_rate*(1+random.gauss(mu, sigma)),3)
-            return bitcoin_val*static_rate*temp
+            return bitcoin_val*temp
         elif not bitcoin_val and fiat_val:
             temp = round(1+random.gauss(mu, sigma),3)
             return (bitcoin_val/static_rate)*temp
