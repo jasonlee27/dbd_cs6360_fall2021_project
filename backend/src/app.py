@@ -473,11 +473,15 @@ def transfer_money():
             transaction_date = Utils.get_cur_time()
             transaction_date, transaction_time = transaction_date.split('_')[0], transaction_date.split('_')[1]
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            Database.transfer_money(
+            db_msg = Database.transfer_money(
                 cursor, mysql,
                 [user_type, userid, usd_val, transaction_date, transaction_time]
             )
-            msg = "Successfully purchased."
+            if db_msg=="Succeed":
+                msg = "Successfully purchased."
+            else:
+                msg = db_msg
+            # end if
             cursor.close()
         # end if
     # end if
