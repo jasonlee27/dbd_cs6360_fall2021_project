@@ -290,6 +290,7 @@ def traders():
 def transaction_history():
     # This method shows clients and trader their transaction histories
     # daily, weekly, or monthly
+    msg=''
     if request.method == 'POST':
         userid = session['userid']
         user_type = session['user_type']
@@ -306,6 +307,7 @@ def transaction_history():
             "transfer_transactions": transfer_transactions
         }
         cursor.close()
+        print("history", history)
         return jsonify(
             msg=msg,
             history=history

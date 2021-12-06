@@ -233,6 +233,7 @@ class Database:
     def get_user_transaction_history(cls, cursor, mysql, data):
         bitcoin_transactions, transfer_transactions = None, None
         user_type, userid = data[0], data[1]
+        print("uid:",userid)
         if user_type == "client":
 
             # get bitcoin transactions
@@ -252,7 +253,7 @@ class Database:
             # get bitcoin transactions
             cursor.execute("""SELECT Pt.date, Pt.commission_rate, Pt.commission_type, Pt.fiat_value, Pt.bitcoin_value, Tb.userid
                               FROM PurchaseTransaction Pt, Trader_buysell Tb 
-                              WHERE Tb.ptrid = Pt.ptrid AND Tb.userid = %s""", [userid])
+                              WHERE Tb.ptrid = Pt.ptrid AND Tb.userid = %s""", [clientid])
             bitcoin_transactions = cursor.fetchall()
             # get transfer transactions
             cursor.execute("""SELECT Tt.date, Tt.usd_value, Tr.clientid, Tr.traderid

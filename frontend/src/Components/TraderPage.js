@@ -61,10 +61,10 @@ function TraderPage(props) {
     let searchData = new FormData(e.target);
 
     axios
-      .post("http://localhost:8080/transaction_history", searchData)
+      .post("http://localhost:8080/profile", searchData)
       .then((response) => {
         if (response.data.msg === "Successfully clients captured") {
-          setTransactionHistory(response.data.clients);
+          setTransactionHistory(response.data.history);
         } else {
         }
       })
@@ -166,6 +166,7 @@ function TraderPage(props) {
                 <Form onSubmit={handleTransaction}>
                   <Form.Group>
                     Current Fiat Balance:
+                    <br></br>
                     Current Bitcoin Balance:
                   </Form.Group>
                   <Form.Group>
@@ -275,16 +276,14 @@ function TraderPage(props) {
                 </thead>
                 {!isLoading && clientRequestsRef.current !== "" && (
                   <tbody>
-                      {clientRequestsRef.current.map(
-                        (request) =>
-                        <tr>
+                    {clientRequestsRef.current.map((request) => (
+                      <tr>
                         <td>{request.rid}</td>
-                          <td>{request.bitcoin_value}</td>
-                          <td>{request.bitcoin_value}</td>
-                          <td>{request.commission_type}</td>
-                          </tr>
-                          
-                      )}
+                        <td>{request.bitcoin_value}</td>
+                        <td>{request.purchase_value}</td>
+                        <td>{request.commission_type}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 )}
               </Table>
@@ -298,11 +297,11 @@ function TraderPage(props) {
               <Form onSubmit={handleSearch}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label htmlFor="userid">Client ID</Form.Label>
+                    <Form.Label htmlFor="clientid">Client ID</Form.Label>
                     <Form.Control
                       required
                       type="text"
-                      name="userid"
+                      name="clientid"
                       PlaceHolder="Client ID"
                     />
                   </Form.Group>
@@ -334,20 +333,30 @@ function TraderPage(props) {
                     <thead>
                       <tr>
                         <th>Date</th>
-                        <th>Transactions</th>
+                        <th>Time</th>
+                        <th>Commission Type</th>
+                        <th>Commission Rate</th>
+                        <th>Bitcoin Value</th>
+                        <th>Fiat Value</th>
+                        <th>Purchase Type</th>
                       </tr>
                     </thead>
 
                     {!isLoading && transactionHistoryRef.current !== "" && (
                       <tbody>
-                        <tr>
-                          <td>{"hi"}</td>
-                          {transactionHistoryRef.current.purchase_transaction.map(
-                            (transaction) => (
-                              <td>{transaction}</td>
-                            )
-                          )}
-                        </tr>
+                        {transactionHistoryRef.current.bitcoin_transactions.map(
+                          (transaction) => (
+                            <tr>
+                              <td>{transaction.date}</td>
+                              <td>{transaction.time}</td>
+                              <td>{transaction.commission_type}</td>
+                              <td>{transaction.commission_rate}</td>
+                              <td>{transaction.bitcoin_value}</td>
+                              <td>{transaction.fiat_value}</td>
+                              <td>{transaction.purchase_type}</td>
+                            </tr>
+                          )
+                        )}
                       </tbody>
                     )}
                   </Table>
