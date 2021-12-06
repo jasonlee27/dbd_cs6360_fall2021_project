@@ -30,7 +30,7 @@ function main_linux() {
 function main_macos() {
         mysql.server start
         mysql -u root < ${DB_TABLE_FILE}
-        mysql -u root bts_db < ${DB_INIT_FILE}
+        # mysql -u root bts_db < ${DB_INIT_FILE}
         (cd ${SRC_DIR}
          python app.py
         )

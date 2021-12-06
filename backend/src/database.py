@@ -471,24 +471,24 @@ class Database:
         if user_type=="client":
             # find the client's trader
             cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [userid])
-            traderid = cursor.fetchone()
+            traderid = cursor.fetchone()["traderid"]
             if traderid:
                 # remove the amount of money from client
                 cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s) WHERE clientid = %s', (usd_val, userid))
 
                 # add the amount of money from client
-                cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)  WHERE clientid = %s', (usd_val, traderid))
+                cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency + %s)  WHERE traderid = %s', (usd_val, traderid))
                 # mysql.connection.commit()
 
                 # add the transaction to the transaction table
-                cursor.execute("INSERT INTO TransferTransaction(date, time, usd_value) VALUES (%s, %s)", (transaction_date, transaction_time, usd_val))
+                cursor.execute('INSERT INTO TransferTransaction(date, time, usd_value) VALUES (%s, %s, %s)', (transaction_date, transaction_time, usd_val))
                 
                 # add log for the transfer transaction
                 cursor.execute('SELECT ttrid FROM TransferTransaction WHERE date = %s AND time = %s AND usd_value = %s', (transaction_date, transaction_time, usd_val))
-                ttrid = cursor.fetchone()
+                ttrid = cursor.fetchone()["ttrid"]
 
-                cursor.execute("INSERT INTO Transfer(ttrid, clientid, traderid) VALUES (%s, %s, %s)", (ttrid, userid, traderid))
-                cursor.execute("INSERT INTO Log(log_type, trid) VALUES (update_transfertransaction, %s)", [ttrid])
+                cursor.execute('INSERT INTO Transfer(ttrid, clientid, traderid) VALUES (%s, %s, %s)', (ttrid, userid, traderid))
+                cursor.execute('INSERT INTO Log(log_type, trid) VALUES (%s, %s)', ["update_transfertransaction", ttrid])
                 mysql.connection.commit()
             # end if
         # end if

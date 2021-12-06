@@ -481,6 +481,7 @@ def transfer_money():
             cursor.close()
         # end if
     # end if
+    print(msg)
     return jsonify(
         msg=msg
     )
