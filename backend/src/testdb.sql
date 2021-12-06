@@ -38,7 +38,7 @@ CREATE TABLE `Address` (
 
 LOCK TABLES `Address` WRITE;
 /*!40000 ALTER TABLE `Address` DISABLE KEYS */;
-INSERT INTO `Address` VALUES ('123 example st','apt 123','dallas','12345','tx');
+INSERT INTO `Address` VALUES ('123 example st','apt 123','dallas','12345','tx'),('123 example st','apt 1234','dallas','12345','tx');
 /*!40000 ALTER TABLE `Address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +58,7 @@ CREATE TABLE `Assign` (
   KEY `traderid` (`traderid`),
   CONSTRAINT `assign_ibfk_1` FOREIGN KEY (`clientid`) REFERENCES `Client` (`clientid`),
   CONSTRAINT `assign_ibfk_2` FOREIGN KEY (`traderid`) REFERENCES `Trader` (`traderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `Assign` (
 
 LOCK TABLES `Assign` WRITE;
 /*!40000 ALTER TABLE `Assign` DISABLE KEYS */;
-INSERT INTO `Assign` VALUES (3,'34d701b29bdc6a03bc5c3a95ad8a1aa9','1f97495b9afabdb61c273ba698428369'),(2,'37024c43717c26ef73740bbb49c7d201','c3634bbe395bb171d92259827aa41032'),(4,'3d9197e3b26aae747880c16ad3c7d39b','047e562392f027c9fc4c0761749df8dc'),(1,'f1e7c6edbfc5bfe10b38ada554c8fe25','047e562392f027c9fc4c0761749df8dc'),(5,'f2c323964f4751058196d6ad6859239b','c3634bbe395bb171d92259827aa41032');
+INSERT INTO `Assign` VALUES (3,'34d701b29bdc6a03bc5c3a95ad8a1aa9','1f97495b9afabdb61c273ba698428369'),(2,'37024c43717c26ef73740bbb49c7d201','c3634bbe395bb171d92259827aa41032'),(4,'3d9197e3b26aae747880c16ad3c7d39b','047e562392f027c9fc4c0761749df8dc'),(7,'468d05de932d6ebdd46692bb7572c774','047e562392f027c9fc4c0761749df8dc'),(6,'8750185290ff8573c28eb4104ace1bd8','1f97495b9afabdb61c273ba698428369'),(1,'f1e7c6edbfc5bfe10b38ada554c8fe25','047e562392f027c9fc4c0761749df8dc'),(5,'f2c323964f4751058196d6ad6859239b','c3634bbe395bb171d92259827aa41032');
 /*!40000 ALTER TABLE `Assign` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +112,7 @@ CREATE TABLE `Client` (
 
 LOCK TABLES `Client` WRITE;
 /*!40000 ALTER TABLE `Client` DISABLE KEYS */;
-INSERT INTO `Client` VALUES ('34d701b29bdc6a03bc5c3a95ad8a1aa9','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:43:08','yibo','li','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','yibo123@example.com','silver',0.000,600.000),('37024c43717c26ef73740bbb49c7d201','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:42:01','jane','doe','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','janedoe123@example.com','silver',0.000,600.000),('3d9197e3b26aae747880c16ad3c7d39b','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:44:09','megan','tran','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','megan123@example.com','silver',0.000,600.000),('f1e7c6edbfc5bfe10b38ada554c8fe25','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:41:13','jason','lee','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','jasonlee123@example.com','silver',0.000,600.000),('f2c323964f4751058196d6ad6859239b','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:45:16','murat','kant','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','murat123@example.com','silver',0.000,600.000);
+INSERT INTO `Client` VALUES ('34d701b29bdc6a03bc5c3a95ad8a1aa9','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:43:08','yibo','li','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','yibo123@example.com','silver',0.000,600.000),('37024c43717c26ef73740bbb49c7d201','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:42:01','jane','doe','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','janedoe123@example.com','silver',0.000,600.000),('3d9197e3b26aae747880c16ad3c7d39b','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:44:09','megan','tran','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','megan123@example.com','silver',0.000,600.000),('468d05de932d6ebdd46692bb7572c774','6a201185e0e1b7409973c8519ca56914','2021-12-05_23:41:37','brian','Ng','123 example st','apt 123','dallas','12345','tx','1234567890','1234567890','brian123@example.com','silver',0.000,1500.000),('8750185290ff8573c28eb4104ace1bd8','6a201185e0e1b7409973c8519ca56914','2021-12-05_23:39:30','messi','lionel','123 example st','apt 1234','dallas','12345','tx','0123456789','0123456789','messi123@example.com','silver',0.000,18000.000),('f1e7c6edbfc5bfe10b38ada554c8fe25','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:41:13','jason','lee','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','jasonlee123@example.com','silver',0.000,600.000),('f2c323964f4751058196d6ad6859239b','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:45:16','murat','kant','123 example st','apt 123','dallas','12345','tx','0123456789','0123456789','murat123@example.com','silver',0.000,600.000);
 /*!40000 ALTER TABLE `Client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,7 @@ CREATE TABLE `Log` (
   `trid` int DEFAULT NULL,
   PRIMARY KEY (`logid`),
   UNIQUE KEY `log_type` (`log_type`,`trid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +166,7 @@ CREATE TABLE `Log` (
 
 LOCK TABLES `Log` WRITE;
 /*!40000 ALTER TABLE `Log` DISABLE KEYS */;
-INSERT INTO `Log` VALUES (1,'update_transfertransaction',1),(2,'update_transfertransaction',2),(3,'update_transfertransaction',3),(4,'update_transfertransaction',4),(5,'update_transfertransaction',5);
+INSERT INTO `Log` VALUES (1,'update_transfertransaction',1),(2,'update_transfertransaction',2),(3,'update_transfertransaction',3),(4,'update_transfertransaction',4),(5,'update_transfertransaction',5),(6,'update_transfertransaction',6),(7,'update_transfertransaction',7);
 /*!40000 ALTER TABLE `Log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +215,7 @@ CREATE TABLE `Name` (
 
 LOCK TABLES `Name` WRITE;
 /*!40000 ALTER TABLE `Name` DISABLE KEYS */;
-INSERT INTO `Name` VALUES ('james','lee'),('jane','doe'),('jason','lee'),('megan','tran'),('murat','kant'),('sam','kim'),('yibo','li');
+INSERT INTO `Name` VALUES ('brian','Ng'),('james','lee'),('jane','doe'),('jason','lee'),('megan','tran'),('messi','lionel'),('murat','kant'),('sam','kim'),('yibo','li');
 /*!40000 ALTER TABLE `Name` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -310,7 +310,7 @@ CREATE TABLE `Trader` (
 
 LOCK TABLES `Trader` WRITE;
 /*!40000 ALTER TABLE `Trader` DISABLE KEYS */;
-INSERT INTO `Trader` VALUES ('047e562392f027c9fc4c0761749df8dc','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:38:48','jason','lee',0.000,800.000),('1f97495b9afabdb61c273ba698428369','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:39:30','sam','kim',0.000,400.000),('c3634bbe395bb171d92259827aa41032','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:39:11','james','lee',0.000,800.000);
+INSERT INTO `Trader` VALUES ('047e562392f027c9fc4c0761749df8dc','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:38:48','jason','lee',0.000,1300.000),('1f97495b9afabdb61c273ba698428369','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:39:30','sam','kim',0.000,2400.000),('c3634bbe395bb171d92259827aa41032','6a201185e0e1b7409973c8519ca56914','2021-12-05_22:39:11','james','lee',0.000,800.000);
 /*!40000 ALTER TABLE `Trader` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -361,7 +361,7 @@ CREATE TABLE `Transfer` (
   CONSTRAINT `transfer_ibfk_1` FOREIGN KEY (`ttrid`) REFERENCES `TransferTransaction` (`ttrid`),
   CONSTRAINT `transfer_ibfk_2` FOREIGN KEY (`clientid`) REFERENCES `Client` (`clientid`),
   CONSTRAINT `transfer_ibfk_3` FOREIGN KEY (`traderid`) REFERENCES `Trader` (`traderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -370,7 +370,7 @@ CREATE TABLE `Transfer` (
 
 LOCK TABLES `Transfer` WRITE;
 /*!40000 ALTER TABLE `Transfer` DISABLE KEYS */;
-INSERT INTO `Transfer` VALUES (1,1,'f1e7c6edbfc5bfe10b38ada554c8fe25','047e562392f027c9fc4c0761749df8dc'),(2,2,'37024c43717c26ef73740bbb49c7d201','c3634bbe395bb171d92259827aa41032'),(3,3,'34d701b29bdc6a03bc5c3a95ad8a1aa9','1f97495b9afabdb61c273ba698428369'),(4,4,'3d9197e3b26aae747880c16ad3c7d39b','047e562392f027c9fc4c0761749df8dc'),(5,5,'f2c323964f4751058196d6ad6859239b','c3634bbe395bb171d92259827aa41032');
+INSERT INTO `Transfer` VALUES (1,1,'f1e7c6edbfc5bfe10b38ada554c8fe25','047e562392f027c9fc4c0761749df8dc'),(2,2,'37024c43717c26ef73740bbb49c7d201','c3634bbe395bb171d92259827aa41032'),(3,3,'34d701b29bdc6a03bc5c3a95ad8a1aa9','1f97495b9afabdb61c273ba698428369'),(4,4,'3d9197e3b26aae747880c16ad3c7d39b','047e562392f027c9fc4c0761749df8dc'),(5,5,'f2c323964f4751058196d6ad6859239b','c3634bbe395bb171d92259827aa41032'),(6,6,'468d05de932d6ebdd46692bb7572c774','047e562392f027c9fc4c0761749df8dc'),(7,7,'8750185290ff8573c28eb4104ace1bd8','1f97495b9afabdb61c273ba698428369');
 /*!40000 ALTER TABLE `Transfer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -388,7 +388,7 @@ CREATE TABLE `TransferTransaction` (
   `usd_value` float(8,3) DEFAULT NULL,
   PRIMARY KEY (`ttrid`),
   CONSTRAINT `transfer_usdvalue_constraint` CHECK ((`usd_value` >= 0.0))
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -397,7 +397,7 @@ CREATE TABLE `TransferTransaction` (
 
 LOCK TABLES `TransferTransaction` WRITE;
 /*!40000 ALTER TABLE `TransferTransaction` DISABLE KEYS */;
-INSERT INTO `TransferTransaction` VALUES (1,'2021-12-05','22:52:28',400.000),(2,'2021-12-05','22:52:50',400.000),(3,'2021-12-05','22:53:04',400.000),(4,'2021-12-05','22:53:22',400.000),(5,'2021-12-05','22:53:39',400.000);
+INSERT INTO `TransferTransaction` VALUES (1,'2021-12-05','22:52:28',400.000),(2,'2021-12-05','22:52:50',400.000),(3,'2021-12-05','22:53:04',400.000),(4,'2021-12-05','22:53:22',400.000),(5,'2021-12-05','22:53:39',400.000),(6,'2021-12-05','23:42:09',500.000),(7,'2021-12-05','23:42:33',2000.000);
 /*!40000 ALTER TABLE `TransferTransaction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,7 +421,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES ('047e562392f027c9fc4c0761749df8dc','6a201185e0e1b7409973c8519ca56914'),('127c1a6429a7767aae1b8bcb2c5f242e','6a201185e0e1b7409973c8519ca56914'),('1f97495b9afabdb61c273ba698428369','6a201185e0e1b7409973c8519ca56914'),('34d701b29bdc6a03bc5c3a95ad8a1aa9','6a201185e0e1b7409973c8519ca56914'),('37024c43717c26ef73740bbb49c7d201','6a201185e0e1b7409973c8519ca56914'),('3d9197e3b26aae747880c16ad3c7d39b','6a201185e0e1b7409973c8519ca56914'),('c3634bbe395bb171d92259827aa41032','6a201185e0e1b7409973c8519ca56914'),('f1e7c6edbfc5bfe10b38ada554c8fe25','6a201185e0e1b7409973c8519ca56914'),('f2c323964f4751058196d6ad6859239b','6a201185e0e1b7409973c8519ca56914');
+INSERT INTO `User` VALUES ('047e562392f027c9fc4c0761749df8dc','6a201185e0e1b7409973c8519ca56914'),('127c1a6429a7767aae1b8bcb2c5f242e','6a201185e0e1b7409973c8519ca56914'),('1f97495b9afabdb61c273ba698428369','6a201185e0e1b7409973c8519ca56914'),('34d701b29bdc6a03bc5c3a95ad8a1aa9','6a201185e0e1b7409973c8519ca56914'),('37024c43717c26ef73740bbb49c7d201','6a201185e0e1b7409973c8519ca56914'),('3d9197e3b26aae747880c16ad3c7d39b','6a201185e0e1b7409973c8519ca56914'),('468d05de932d6ebdd46692bb7572c774','6a201185e0e1b7409973c8519ca56914'),('8750185290ff8573c28eb4104ace1bd8','6a201185e0e1b7409973c8519ca56914'),('c3634bbe395bb171d92259827aa41032','6a201185e0e1b7409973c8519ca56914'),('f1e7c6edbfc5bfe10b38ada554c8fe25','6a201185e0e1b7409973c8519ca56914'),('f2c323964f4751058196d6ad6859239b','6a201185e0e1b7409973c8519ca56914');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -434,4 +434,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-05 22:53:50
+-- Dump completed on 2021-12-05 23:42:43
