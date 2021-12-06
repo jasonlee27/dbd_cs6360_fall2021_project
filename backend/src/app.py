@@ -399,7 +399,7 @@ def add_money():
     return jsonify(msg=msg)
 
 @app.route('/api/profile/request', methods=['GET', 'POST'])
-def request_bitcoin(userid):
+def request_bitcoin():
     # This method is for clients to request buy/sell bitcoin to trader
     msg = ''
     if request.method == 'POST' and \
