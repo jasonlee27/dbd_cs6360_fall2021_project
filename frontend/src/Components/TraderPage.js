@@ -75,18 +75,18 @@ function TraderPage(props) {
   function handleTransaction(e) {
     e.preventDefault();
     let transaction = new FormData(e.target);
-      axios
-        .post("http://localhost:8080/profile/buysell", transaction)
-        .then((response) => {
-          if (response.data.msg === "Successfully purchased.") {
-            // e.target.clear();
-            console.log(response.data);
-          } else {
-          }
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+    axios
+      .post("http://localhost:8080/profile/buysell", transaction)
+      .then((response) => {
+        if (response.data.msg === "Successfully purchased.") {
+          // e.target.clear();
+          console.log(response.data);
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   }
 
   useEffect(() => {
@@ -150,7 +150,7 @@ function TraderPage(props) {
           <Form.Check
             inline
             name="page_type"
-            label="search"
+            label="Search Transactions"
             type="radio"
             value="search"
             onChange={(e) => setPageStatus("search")}
@@ -159,109 +159,134 @@ function TraderPage(props) {
       </div>
       <div class="row">
         {pageStatus === "transaction" && (
-          <Card className="mx-auto" style={{ width: "18rem" }}>
-            <Card.Header>Bitcoin Transaction</Card.Header>
-            <Card.Body>
-              <Form onSubmit={handleTransaction}>
-                <Form.Group>
-                  <div class="dropdown" className="mb-2">
-                    <Dropdown>
-                      <DropdownButton
-                        title="Choose Trader"
-                        id="dropdown-menu-align-right"
-                      >
-                        {!isLoading &&
-                          clientRequestsRef.current !== "" &&
-                          clientRequestsRef.current.map((request, index) => (
-                            <Dropdown.Item
-                              eventKey={request.rid}
-                              value={request.rid}
-                            >
-                              {request.rid}
-                            </Dropdown.Item>
-                          ))}
-                      </DropdownButton>
-                    </Dropdown>
-                  </div>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="purchase_type">
-                    Transaction Type
-                  </Form.Label>
-                  <br></br>
-                  <Form.Check
-                    inline
-                    name="purchase_type"
-                    label="Buy"
-                    type="radio"
-                    value="buy"
-                    defaultChecked
-                    onChange={(e) => setPurchaseType("buy")}
-                  />
-                  <Form.Check
-                    inline
-                    name="purchase_type"
-                    label="Sell"
-                    type="radio"
-                    value="sell"
-                    onChange={(e) => setPurchaseType("sell")}
-                  />
-                </Form.Group>
-                {(purchaseType === "buy" || purchaseType === "sell") && (
-                  <div>
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="bitcoin_val">
-                        Bitcoin Amount
-                      </Form.Label>
-                      <Form.Control
-                        type="number"
-                        placeholder="BTC Amount"
-                        name="bitcoin_val"
-                      />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="commission_type">
-                        Commission Payment
-                      </Form.Label>
-                      <br></br>
-                      <Form.Check
-                        inline
-                        name="commission_type"
-                        label="Bitcoin"
-                        type="radio"
-                        value="bitcoin"
-                      />
-                      <Form.Check
-                        inline
-                        name="commission_type"
-                        label="Fiat"
-                        type="radio"
-                        value="fiat"
-                      />
-                    </Form.Group>
-                  </div>
-                )}
-                {purchaseType === "transfer" && (
+          <div>
+            <Card className="mx-auto" style={{ width: "18rem" }}>
+              <Card.Header>Bitcoin Transaction</Card.Header>
+              <Card.Body>
+                <Form onSubmit={handleTransaction}>
+                  <Form.Group>
+                    {/* <div class="dropdown" className="mb-2">
+                      <Dropdown>
+                        <DropdownButton
+                          title="Choose Trader"
+                          id="dropdown-menu-align-right"
+                        >
+                          {!isLoading &&
+                            clientRequestsRef.current !== "" &&
+                            clientRequestsRef.current.map((request, index) => (
+                              <Dropdown.Item
+                                eventKey={request.rid}
+                                value={request.rid}
+                              >
+                                {request.rid}
+                              </Dropdown.Item>
+                            ))}
+                        </DropdownButton>
+                      </Dropdown>
+                    </div> */}
+                  </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="usd_val">Fiat Amount</Form.Label>
-                    <Form.Control
-                      type="number"
-                      placeholder="USD Amount"
-                      name="usd_val"
+                    <Form.Label htmlFor="purchase_type">
+                      Transaction Type
+                    </Form.Label>
+                    <br></br>
+                    <Form.Check
+                      inline
+                      name="purchase_type"
+                      label="Buy"
+                      type="radio"
+                      value="buy"
+                      defaultChecked
+                      onChange={(e) => setPurchaseType("buy")}
+                    />
+                    <Form.Check
+                      inline
+                      name="purchase_type"
+                      label="Sell"
+                      type="radio"
+                      value="sell"
+                      onChange={(e) => setPurchaseType("sell")}
                     />
                   </Form.Group>
+                  {(purchaseType === "buy" || purchaseType === "sell") && (
+                    <div>
+                      <Form.Group className="mb-3">
+                        <Form.Label htmlFor="bitcoin_val">
+                          Bitcoin Amount
+                        </Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="BTC Amount"
+                          name="bitcoin_val"
+                        />
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label htmlFor="commission_type">
+                          Commission Payment
+                        </Form.Label>
+                        <br></br>
+                        <Form.Check
+                          inline
+                          name="commission_type"
+                          label="Bitcoin"
+                          type="radio"
+                          value="bitcoin"
+                        />
+                        <Form.Check
+                          inline
+                          name="commission_type"
+                          label="Fiat"
+                          type="radio"
+                          value="fiat"
+                        />
+                      </Form.Group>
+                    </div>
+                  )}
+                  {purchaseType === "transfer" && (
+                    <Form.Group className="mb-3">
+                      <Form.Label htmlFor="usd_val">Fiat Amount</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="USD Amount"
+                        name="usd_val"
+                      />
+                    </Form.Group>
+                  )}
+                  <Button variant="success" type="submit">
+                    Submit
+                  </Button>
+                </Form>
+              </Card.Body>
+            </Card>
+            {!isLoading && transactionHistoryRef.current !== "" && (
+              <Table striped bordered hover variant="dark">
+                <thead>
+                  <tr>
+                    <th>RID</th>
+                    <th>Purchase Type</th>
+                    <th>BTC Amount</th>
+                    <th>Commission Payment</th>
+                  </tr>
+                </thead>
+                {!isLoading && clientRequestsRef.current !== "" && (
+                  <tbody>
+                      {clientRequestsRef.current.map(
+                        (request) =>
+                        <tr>
+                        <td>{request.rid}</td>
+                          <td>{request.bitcoin_value}</td>
+                          <td>{request.bitcoin_value}</td>
+                          <td>{request.commission_type}</td>
+                          </tr>
+                          
+                      )}
+                  </tbody>
                 )}
-                <Button variant="success" type="submit">
-                  Submit
-                </Button>
-                <Button variant="success" onClick={cancelTransaction}>
-                  Cancel
-                </Button>
-              </Form>
-            </Card.Body>
-          </Card>
-        )}{" "}
+              </Table>
+            )}
+          </div>
+        )}
         {pageStatus === "search" && (
           <Card className="mx-auto" style={{ width: "20rem" }}>
             <Card.Header>Client Search</Card.Header>

@@ -57,7 +57,13 @@ function App() {
     .then((response) => {
       console.log("trader info: ", response.data);
       if (response.data.msg === "Successfully captured trader") {
+        if(response.data.trader !== "" || response.data.trader != null){
         setTrader(response.data.trader);
+        console.log("trader: ",response.data.trader)
+        }
+      }
+      else {
+        console.log("No trader");
       }
     }).catch((error) => {
       console.log("error", error);
@@ -81,7 +87,8 @@ function App() {
       navigate('/transaction');
     getClientTrader(userId).then((response) => {
       console.log("trade data", trader);
-        if(traderRef.current ==="") {
+      console.log("trade trade ref", traderRef.current);
+        if(traderRef.current == null || traderRef.current === "") {
           console.log("null trader");
           navigate('/assign/trader');
         }

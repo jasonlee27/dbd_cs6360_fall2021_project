@@ -215,7 +215,11 @@ def trader_assigned():
                 cursor, mysql, userid
             )
             cursor.close()
-            msg = "Successfully captured trader"
+            if trader is not None:
+                msg = "Successfully captured trader"
+            else:
+                msg = "No traders"
+                
             return jsonify(
                 msg=msg,
                 trader=trader
