@@ -56,12 +56,12 @@ function App() {
     .post("http://localhost:8080/profile/trader_assigned")
     .then((response) => {
       console.log("trader info: ", response.data);
-      if (response.data.msg === "Successfully captured trader") {
-        if(response.data.trader !== "" || response.data.trader != null){
-        setTrader(response.data.trader);
-        console.log("trader: ",response.data.trader)
-        }
+      if (response.data.msg === "No traders") {
+        setTrader("");
       }
+        else if(response.data.msg === "Successfully captured trader") {
+          setTrader(response.data.trader);
+        }
       else {
         console.log("No trader");
       }
