@@ -302,7 +302,7 @@ class Database:
             # end if
             fiat_val = Utils.exchange_bitcoin_fiat(bitcoin_val=bitcoin_val)
             if commission_type == "bitcoin":
-                commission_fee = bitcoin_val*commission_rate
+                commission_fee = float(bitcoin_val)*commission_rate
                 if purchase_type == "buy":
                     cursor.execute('UPDATE Client SET bitcoin = (bitcoin + %s - %s), flatcurrency = (flatcurrency - %s) WHERE clientid = %s', (bitcoin_val, commission_fee, fiat_val, userid))
                 elif purchase_type == "sell":
