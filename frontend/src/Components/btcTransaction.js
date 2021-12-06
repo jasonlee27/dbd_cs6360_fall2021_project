@@ -5,6 +5,8 @@ import AssignTrader from "./AssignTrader";
 
 function Transaction(props) {
   let [purchaseType, setPurchaseType] = useState("buy");
+  let [bitcoinVal, setBitcoinVal] = useState("");
+  let [commissionType, setCommissionType] = useState("");
 
   function handleTransaction(e) {
     e.preventDefault();
@@ -49,7 +51,23 @@ function Transaction(props) {
     }
   
   }
-
+function requestTrader() {
+  let transaction = new FormData();
+  transaction.append("bitcoin_val", bitcoinVal);
+  transaction.append("purchase_type", purchaseType);
+  transaction.append("commission_type", commissionType);
+  axios
+  .post("http://localhost:8080/api/profile/request", transaction)
+  .then((response) => {
+    if (response.data.msg === "Successfully requested") {
+      
+    } else {
+    }
+  })
+  .catch((error) => {
+    console.log("error", error);
+  });
+}
   return (
     <div className="BTCTransation m-3">
       <Button onClick={props.logout}>Logout</Button>
@@ -102,6 +120,7 @@ function Transaction(props) {
                     type="number"
                     placeholder="BTC Amount"
                     name="bitcoin_val"
+                    onChange={(e)=>{setBitcoinVal(e.target.value)}}
                   />
                 </Form.Group>
           
@@ -117,6 +136,7 @@ function Transaction(props) {
                     label="Bitcoin"
                     type="radio"
                     value="bitcoin"
+                    onChange ={(e)=>{setCommissionType("bitcoin")}}
                   />
                   <Form.Check
                     inline
@@ -124,6 +144,7 @@ function Transaction(props) {
                     label="Fiat"
                     type="radio"
                     value="fiat"
+                    onChange ={(e)=>setCommissionType("fiat")}
                   />
                 </Form.Group>
               </div>
@@ -153,6 +174,11 @@ function Transaction(props) {
             <Button variant="success" type="submit">
               Submit
             </Button>
+            {(purchaseType === "buy" || purchaseType === "sell" ) && 
+            <Button onClick={requestTrader}>
+              Request Trader
+            </Button>
+}
           </Form>
         </Card.Body>
       </Card>
