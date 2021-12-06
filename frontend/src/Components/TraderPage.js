@@ -122,7 +122,7 @@ function TraderPage(props) {
     formData.append("user_type", "trader");
     formData.append("userId", props.userId);
     axios
-      .post("http://localhost:8080/profile/request", formData)
+      .post("http://localhost:8080/profile/requests", formData)
       .then((response) => {
         setClientRequests(response.data.request_histories);
       })
