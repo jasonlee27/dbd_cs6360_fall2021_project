@@ -164,7 +164,7 @@ function TraderPage(props) {
               <Card.Header>Bitcoin Transaction</Card.Header>
               <Card.Body>
                 <Form onSubmit={handleTransaction}>
-                  <Form.Group>
+                  <Form.Group className="mb-2">
                     Current Fiat Balance:
                     <br></br>
                     Current Bitcoin Balance:
