@@ -1,5 +1,6 @@
 import hashlib
 import re, os
+import random
 
 from macros import Macros
 from datetime import datetime
@@ -44,4 +45,12 @@ class Utils:
 
     @classmethod
     def exchange_bitcoin_fiat(cls, bitcoin_val=None, fiat_val=None):
-        pass
+        # it assumes that 1 bitcoin = $100 fiat currency
+        static_rate = 100
+        mu, sigma = 0, 0.1
+        if bitcoin_val and not fiat_val:
+            return bitcoin_val*static_rate*(1+random.gauss(mu, sigma))
+        elif not bitcoin_val and fiat_val:
+            return (bitcoin_val/static_rate)*(1+random.gauss(mu, sigma))
+        # end if
+        

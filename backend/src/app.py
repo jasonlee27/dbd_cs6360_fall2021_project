@@ -310,7 +310,7 @@ def transaction_history():
     # end if
     return jsonify(msg=msg)
     
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/profile/requests', methods=['GET', 'POST'])
 def request_history(userid):
     # This method shows trader their requests received from clients
     if request.method == 'POST':
@@ -429,12 +429,16 @@ def buysell_bitcoin():
         userid = session['userid']
         user_type = session['user_type']
         if user_type == 'client':
+            transaction_date = Utils.get_cur_time()
+            transaction_date, transaction_time = transaction_date.split('_')[0], transaction_date.split('_')[1]
             bitcoin_val = request.form['bitcoin_val']
             purchase_type = request.form['purchase_type'].lower()
+            commission_type = request.form['commission_type'].lower()
+            
             # not yet finished
             Database.buysell_bitcoin(
                 cursor, mysql,
-                [user_type, userid, bitcoin_val, purchase_type]
+                [user_type, userid, bitcoin_val, purchase_type, commission_type, transaction_date, transaction_time]
             )
             msg = "Successfully purchased."
             cursor.close()
@@ -443,7 +447,7 @@ def buysell_bitcoin():
             # not yet finished
             Database.buysell_bitcoin(
                 cursor, mysql,
-                [user_type, request_id]
+                [user_type, userid, request_id]
             )
         # end if
     # end if
@@ -463,10 +467,11 @@ def transfer_money():
         if user_type == 'client':
             usd_val = request.form['usd_val']
             transaction_date = Utils.get_cur_time()
+            transaction_date, transaction_time = transaction_date.split('_')[0], transaction_date.split('_')[1]
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             Database.transfer_money(
                 cursor, mysql,
-                [user_type, userid, usd_val, transaction_date]
+                [user_type, userid, usd_val, transaction_date, transaction_time]
             )
             msg = "Successfully purchased."
             cursor.close()

@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS PurchaseTransaction(
     time VARCHAR(50),
     commission_type VARCHAR(50),
     commission_rate FLOAT(3,3),
-    -- commission_fee FLOAT(8,3),
+    -- commision_fee FLOAT(8,3),
     bitcoin_value FLOAT(8,3),
     fiat_value FLOAT(8,3),
     purchase_type VARCHAR(4), -- buy or sell bitcoin
@@ -127,7 +127,6 @@ CREATE TABLE IF NOT EXISTS Request(
     clientid VARCHAR(50) not null,
     traderid VARCHAR(50) not null,
     bitcoin_value FLOAT(8,3) not null,
-    commission_type VARCHAR(50),
     purchase_type VARCHAR(5) not null,
     PRIMARY KEY (rid),
     FOREIGN KEY (clientid) REFERENCES Client(clientid),
