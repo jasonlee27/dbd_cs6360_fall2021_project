@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Client(
     FOREIGN KEY (clientid) REFERENCES User(userid) ON DELETE CASCADE,
     FOREIGN KEY (firstname, lastname) REFERENCES Name(firstname, lastname) ON UPDATE NO ACTION,
     FOREIGN KEY (address1, address2, city, zipcode, state) REFERENCES Address(address1, address2, city, zipcode, state) ON UPDATE NO ACTION,
-    CONSTRAINT client_bitcoin_constraint CHECK (bitcoin>=0.0),
+9M    CONSTRAINT client_bitcoin_constraint CHECK (bitcoin>=0.0),
     CONSTRAINT clientflatcurrency_constraint CHECK (flatcurrency>=0.0)
 );
 
