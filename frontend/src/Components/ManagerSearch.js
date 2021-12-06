@@ -1,5 +1,3 @@
-
-
 import React, { useEffect } from "react";
 import useState from "react-usestateref";
 import axios from "axios";
@@ -125,19 +123,30 @@ function ManagerSearch(props) {
           <thead>
             <tr>
               <th>Date</th>
-              <th>Transactions</th>
+              <th>Time</th>
+              <th>Commission Type</th>
+              <th>Commission Rate</th>
+              <th>Bitcoin Value</th>
+              <th>Fiat Value</th>
+              <th>Purchase Type</th>
             </tr>
           </thead>
 
           {!isLoading && transactionHistoryRef.current !== "" && (
             <tbody>
-              <tr>
-                <td>{"hi"}</td>
-                {transactionHistoryRef.current.purchase_transaction.map((transaction) => 
-                (
-                  <td>{transaction}</td>
-                ))}
-              </tr>
+              {transactionHistoryRef.current.purchase_transaction.map(
+                (transaction) => (
+                  <tr>
+                    <td>{transaction.date}</td>
+                    <td>{transaction.time}</td>
+                    <td>{transaction.commission_type}</td>
+                    <td>{transaction.commission_rate}</td>
+                    <td>{transaction.bitcoin_value}</td>
+                    <td>{transaction.fiat_value}</td>
+                    <td>{transaction.purchase_type}</td>
+                  </tr>
+                )
+              )}
             </tbody>
           )}
         </Table>
