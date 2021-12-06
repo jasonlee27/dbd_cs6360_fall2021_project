@@ -38,7 +38,7 @@ function Transaction(props) {
       axios
       .post("http://localhost:8080/profile/add_money", transaction)
       .then((response) => {
-        if (response.data.msg === "Successfully added fiat.") {
+        if (response.data.msg === "Successfully added money.") {
         e.target.clear();
         } else {
         }
