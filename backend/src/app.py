@@ -314,7 +314,8 @@ def transaction_history():
     return jsonify(msg=msg)
     
 @app.route('/profile/requests', methods=['GET', 'POST'])
-def request_history(userid):
+def request_history():
+    msg = ''
     # This method shows trader their requests received from clients
     if request.method == 'POST':
         userid = session['userid']
@@ -329,6 +330,8 @@ def request_history(userid):
             [userid, user_type]
         )
         cursor.close()
+        msg = "Request history successfully scanned"
+        print(msg)
         return jsonify(
             msg=msg,
             request_histories=request_histories
@@ -493,7 +496,7 @@ def transfer_money():
     )
 
 @app.route('/profile/cancel', methods=['GET', 'POST'])
-def cancel_tansaction(userid):
+def cancel_tansaction():
     # This method is for trader to cancel his/her transactions
     msg = ''
     if request.method == 'POST' and \
