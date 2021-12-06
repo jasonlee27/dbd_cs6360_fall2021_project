@@ -39,7 +39,7 @@ function Transaction(props) {
       .post("http://localhost:8080/profile/add_money", transaction)
       .then((response) => {
         if (response.data.msg === "Successfully added fiat.") {
-        // e.target.clear();
+        e.target.clear();
         } else {
         }
       })
@@ -149,11 +149,11 @@ function Transaction(props) {
             {purchaseType === "add" && (
            
            <Form.Group className="mb-3">
-             <Form.Label htmlFor="usd_val">Fiat Amount</Form.Label>
+             <Form.Label htmlFor="flatcurrency">Fiat Amount</Form.Label>
              <Form.Control
                type="number"
                placeholder="USD Amount"
-               name="usd_val"
+               name="flatcurrency"
              />
            </Form.Group>
        )}
