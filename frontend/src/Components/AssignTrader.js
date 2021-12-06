@@ -68,8 +68,8 @@ function handleSelect(e) {
 }
   return (
     <div className="Assign-Trader mt-5">
-            <Button onClick={props.logout}>Logout</Button>
       <Card className="mx-auto" style={{ width: "18rem" }}>
+        <Button onClick={props.logout}>Logout</Button>
         <Card.Header>AssignTrader</Card.Header>
         <Card.Body>
             <Form onSubmit={assignTrader}>

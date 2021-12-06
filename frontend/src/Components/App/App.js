@@ -17,6 +17,7 @@ import AssignTrader from "../AssignTrader";
 
 function App() {
   const [state, setState] = useState('login');
+  const [userId, setUserID, userIdRef] = useState('');
   const [userType, setUserType, userTypeRef] = useState('');
   const [trader, setTrader, traderRef] = useState('');
   let navigate = useNavigate();
@@ -73,10 +74,11 @@ function App() {
   };
   let handleLogin  = async (userId) => {
     setState('loggedIn');
-    console.log("logging in...");
+    setUserID(userId);
   await getUserInfo(userId).then((response)=> {
     console.log(userTypeRef.current);
     if(userTypeRef.current==="client"){
+      navigate('/transaction');
     getClientTrader(userId).then((response) => {
       console.log("trade data", trader);
         if(traderRef.current ==="") {
@@ -129,7 +131,7 @@ function handleClientSelected() {
     />
    <Route 
         path="/trader"
-        element={state==='loggedIn' && userType === 'trader' ? <TraderPage logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
+        element={state==='loggedIn' && userType === 'trader' ? <TraderPage userId={userIdRef.current} logout={handleLogoutEvent} /> :  <Navigate to="/login" />}
 />
         <Route 
         path="/transactions/search"

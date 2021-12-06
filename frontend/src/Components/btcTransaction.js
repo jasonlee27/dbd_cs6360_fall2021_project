@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
+import AssignTrader from "./AssignTrader";
 
 function Transaction(props) {
   let [purchaseType, setPurchaseType] = useState("buy");
@@ -13,8 +14,8 @@ function Transaction(props) {
         .post("http://localhost:8080/profile/buysell", transaction)
         .then((response) => {
           if (response.data.msg === "Successfully purchased.") {
-           // e.target.clear();
-           console.log(response.data)
+            // e.target.clear();
+            console.log(response.data);
           } else {
           }
         })
@@ -23,23 +24,24 @@ function Transaction(props) {
         });
     } else if (purchaseType === "transfer") {
       axios
-      .post("http://localhost:8080/profile/transfer", transaction)
-      .then((response) => {
-        if (response.data.msg === "Successfully purchased.") {
-          e.target.clear();
-        } else {
-        }
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+        .post("http://localhost:8080/profile/transfer", transaction)
+        .then((response) => {
+          if (response.data.msg === "Successfully purchased.") {
+            e.target.clear();
+          } else {
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     }
+  
   }
 
   return (
     <div className="BTCTransation m-3">
       <Button onClick={props.logout}>Logout</Button>
-      <Card className="mx-auto" style={{ width: "18rem" }}>
+      <Card className="mx-auto" style={{ width: "25rem" }}>
         <Card.Header>Bitcoin Transaction</Card.Header>
         <Card.Body>
           <Form onSubmit={handleTransaction}>
@@ -71,6 +73,14 @@ function Transaction(props) {
                 value="transfer"
                 onChange={(e) => setPurchaseType("transfer")}
               />
+              <Form.Check
+                inline
+                name="purchase_type"
+                label="Add Fiat"
+                type="radio"
+                value="add"
+                onChange={(e) => setPurchaseType("add")}
+              />
             </Form.Group>
             {(purchaseType === "buy" || purchaseType === "sell") && (
               <div>
@@ -80,6 +90,14 @@ function Transaction(props) {
                     type="number"
                     placeholder="BTC Amount"
                     name="bitcoin_val"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="fiat_val">Fiat Amount</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Fiat Amount"
+                    name="fiat_val"
                   />
                 </Form.Group>
 
@@ -106,14 +124,15 @@ function Transaction(props) {
               </div>
             )}
             {purchaseType === "transfer" && (
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="usd_val">Fiat Amount</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="USD Amount"
-                  name="usd_val"
-                />
-              </Form.Group>
+           
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="usd_val">Fiat Amount</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="USD Amount"
+                    name="usd_val"
+                  />
+                </Form.Group>
             )}
             <Button variant="success" type="submit">
               Submit
