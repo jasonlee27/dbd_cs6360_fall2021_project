@@ -1,16 +1,14 @@
 # clients
-jasonlee123 password
-janedoe123 password
-yiboli123 password
-megantran123 password
-gabgold123 password
-murat123 password
-firat123 password
+jasonlee123 password jason
+janedoe123 password james
+yibo123 password sam
+megan123 password jason
+murat123 password james
 
 # traders
 james456 password
-maria456 password
+jason456 password
 sam456 password
 
 # manager
-robert789 password
+manager789 password
