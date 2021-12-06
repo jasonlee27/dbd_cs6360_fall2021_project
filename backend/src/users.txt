@@ -4,10 +4,12 @@ janedoe123 password james
 yibo123 password sam
 megan123 password jason
 murat123 password james
+messi123 password sam
+brian123 password jason
 
 # traders
 james456 password
-jason456 password
+jasonlee456 password
 sam456 password
 
 # manager

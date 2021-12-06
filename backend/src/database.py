@@ -520,7 +520,7 @@ class Database:
                               FROM PurchaseTransaction Pt, Trader_buysell Tb
                               WHERE Pt.ptrid = Tb.ptrid AND Tb.userid = %s""", [transactionid])
             trans_info = cursor.fetchone()
-            purchase_type, bitcoin_value, fiat_value, commission_rate, commission_type = trans_info[0], trans_info[1], trans_info[2], trans_info[3], trans_info[4]
+            purchase_type, bitcoin_value, fiat_value, commission_rate, commission_type = trans_info["Pt.purchase_type"], trans_info["Pt.bitcoin_value"], trans_info["Pt.fiat_value"], trans_info["Pt.commission_rate"], trans_info["Pt.commission_type"]
             if purchase_type=="buy":
                 if commission_type == "bitcoin":
                     cursor.execute('UPDATE Trader SET bitcoin = (bitcoin - %s*(1-%s)), flatcurrency = (flatcurrency + %s) WHERE traderid = %s', (bitcoin_value, commission_rate, fiat_value, userid))
@@ -541,7 +541,7 @@ class Database:
             # delete the tranaction from transaction table
             cursor.execute('DELETE FROM PurchaseTransaction WHERE trid = %s', [transactionid])
             cursor.execute('DELETE FROM Trader_buysell WHERE trid = %s AND userid = %s', (transactionid, userid))
-            cursor.execute("INSERT INTO Log(log_type, trid) VALUES (cancel_purchasetransaction, DEFAULT)")
+            cursor.execute("INSERT INTO Log(log_type, trid) VALUES (%s, DEFAULT)", ["cancel_purchasetransaction"])
             mysql.connection.commit()
             
         elif transactiontype=="transfer":
@@ -549,7 +549,7 @@ class Database:
                               FROM TransferTransaction Tt, Tranfer Tr 
                               WHERE Tt.ttrid = Tr.ttrid AND Tr.ttrid = %s AND Tr.traderid = %s""", (transactionid, userid))
             trans_info = cursor.fetchone()
-            usd_value, clientid = trans_info[0], trans_info[1]
+            usd_value, clientid = trans_info["Tt.usd_value"], trans_info["Tr.clientid"]
 
             # get the fiat value back to trader
             cursor.execute('UPDATE Trader SET flatcurrency = (flatcurrency - %s) WHERE traderid = %s', (usd_value, userid))
@@ -558,7 +558,7 @@ class Database:
             # delete the tranaction from transaction table
             cursor.execute('DELETE FROM TransferTransaction WHERE ttrid = %s', [transactionid])
             cursor.execute('DELETE FROM Transfer WHERE ttrid = %s AND traderid = %s AND clientid = %s', (transactionid, userid, clientid))
-            cursor.execute('INSERT INTO Log(log_type, trid) VALUES (cancel_transfertransaction, %s)', [transactionid])
+            cursor.execute('INSERT INTO Log(log_type, trid) VALUES (%s, %s)', ["cancel_transfertransaction", transactionid])
             mysql.connection.commit()
         # end if
         return
@@ -578,7 +578,7 @@ class Database:
                  FROM PurchaseTransaction Ptr, Client_buysell Cb
                  WHERE (C1.clientid = Cb.userid) AND (Ptr.ptrid = Cb.ptrid) AND (Ptr.date BETWEEN %s AND %s)
               )
-           )""", [fiat_threshold, date_from, date_to])
+           )""", [str(fiat_threshold), date_from, date_to])
 
         # update client's level from silver to gold for whom their bitcoin purchase amount is more than 100k
         cursor.execute("""UPDATE Client C SET level = silver
@@ -590,7 +590,7 @@ class Database:
                  FROM PurchaseTransaction Ptr, Client_buysell Cb
                  WHERE (C1.clientid = Cb.userid) AND (Ptr.ptrid = Cb.ptrid) AND (Ptr.date BETWEEN %s AND %s)
               )
-           )""", [fiat_threshold, date_from, date_to])
+           )""", [str(fiat_threshold), date_from, date_to])
         mysql.connection.commit()
         return
 
