@@ -475,10 +475,10 @@ class Database:
             traderid = cursor.fetchone()["traderid"]
             if traderid:
 
-                cursor.execute('SELECT flatcurrency FROM Assign WHERE clientid = %s', [userid])
+                cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', [userid])
                 fiat_val = cursor.fetchone()["flatcurrency"]
 
-                if fiat_val >= usd_val:
+                if float(fiat_val) >= float(usd_val):
                 
                     # remove the amount of money from client
                     cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency - %s) WHERE clientid = %s', (usd_val, userid))
