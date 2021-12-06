@@ -270,7 +270,9 @@ class Database:
         
         # find client's trader
         cursor.execute('SELECT traderid FROM Assign WHERE clientid = %s', [userid])
-        traderid = cursor.fetchone()
+        traderid = cursor.fetchone()["traderid"]
+        print(traderid)
+        print(userid)
         
         cursor.execute('INSERT INTO Request(clientid, traderid, bitcoin_value, commission_type, purchase_type) VALUES (%s, %s, %s, %s, %s)', (userid, traderid, bitcoin_val, commission_type, purchase_type))
         mysql.connection.commit()
