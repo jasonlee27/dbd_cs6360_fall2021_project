@@ -336,7 +336,7 @@ class Database:
             request_info = cursor.fetchone()
             clientid, bitcoin_val, commission_type, purchase_type = request_info[0], request_info[1], request_info[2], request_info[3]
             
-            cursor.execute('SELECT level FROM Client WHERE clientid = %s', [userid]) == "gold":
+            cursor.execute('SELECT level FROM Client WHERE clientid = %s', [userid])
             client_level = cursor.fetchone()
             commission_rate = Macros.COMMISSION_RATE['silver']
             if client_level == "gold":
