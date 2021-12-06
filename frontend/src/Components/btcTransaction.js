@@ -39,7 +39,7 @@ function Transaction(props) {
       .post("http://localhost:8080/profile/add_money", transaction)
       .then((response) => {
         if (response.data.msg === "Successfully added money.") {
-        e.target.clear();
+       // e.target.clear();
         } else {
         }
       })
@@ -104,14 +104,7 @@ function Transaction(props) {
                     name="bitcoin_val"
                   />
                 </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label htmlFor="fiat_val">Fiat Amount</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Fiat Amount"
-                    name="fiat_val"
-                  />
-                </Form.Group>
+          
 
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="commission_type">
