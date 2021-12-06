@@ -134,7 +134,6 @@ function ManagerSearch(props) {
               <tr>
                 <td>{"hi"}</td>
                 {transactionHistoryRef.current.purchase_transaction.map((transaction) => 
-                console.log(transaction)
                 (
                   <td>{transaction}</td>
                 ))}
