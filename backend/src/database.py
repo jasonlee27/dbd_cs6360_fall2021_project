@@ -186,13 +186,15 @@ class Database:
 
     @classmethod
     def add_client_money(cls, cursor, mysql, data):
-        user_type, hash_username, flatcurrency = data[0], data[1], data[2]
-        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', (hash_username))
+        user_type, userid, flatcurrency = data[0], data[1], data[2]
+        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', [userid])
         old_flatcurrency = cursor.fetchone()
-        cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency + %s) WHERE clientid = %s', (flatcurrency))
+        old_flatcurrency = old_flatcurrency["flatcurrency"]
+        cursor.execute('UPDATE Client SET flatcurrency = (flatcurrency + %s) WHERE clientid = %s', [flatcurrency, userid])
         mysql.connection.commit()
-        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', [hash_username])
+        cursor.execute('SELECT flatcurrency FROM Client WHERE clientid = %s', [userid])
         new_flatcurrency = cursor.fetchone()
+        new_flatcurrency = new_flatcurrency["flatcurrency"]
         return old_flatcurrency, new_flatcurrency
         
     @classmethod
