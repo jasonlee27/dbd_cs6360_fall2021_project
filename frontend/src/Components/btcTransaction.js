@@ -27,13 +27,25 @@ function Transaction(props) {
         .post("http://localhost:8080/profile/transfer", transaction)
         .then((response) => {
           if (response.data.msg === "Successfully purchased.") {
-            e.target.clear();
+           // e.target.clear();
           } else {
           }
         })
         .catch((error) => {
           console.log("error", error);
         });
+    } else if (purchaseType === "add") {
+      axios
+      .post("http://localhost:8080/profile/add", transaction)
+      .then((response) => {
+        if (response.data.msg === "Successfully added fiat.") {
+        // e.target.clear();
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
     }
   
   }
@@ -134,6 +146,17 @@ function Transaction(props) {
                   />
                 </Form.Group>
             )}
+            {purchaseType === "add" && (
+           
+           <Form.Group className="mb-3">
+             <Form.Label htmlFor="usd_val">Fiat Amount</Form.Label>
+             <Form.Control
+               type="number"
+               placeholder="USD Amount"
+               name="usd_val"
+             />
+           </Form.Group>
+       )}
             <Button variant="success" type="submit">
               Submit
             </Button>
