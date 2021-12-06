@@ -250,15 +250,17 @@ class Database:
 
         elif user_type == "trader":
             clientid = data[2]
+            
             # get bitcoin transactions
-            cursor.execute("""SELECT Pt.date, Pt.commission_rate, Pt.commission_type, Pt.fiat_value, Pt.bitcoin_value, Tb.userid
-                              FROM PurchaseTransaction Pt, Trader_buysell Tb 
+            print("clientid",clientid)
+            cursor.execute("""SELECT *
+                              FROM PurchaseTransaction Pt, Client_buysell Tb 
                               WHERE Tb.ptrid = Pt.ptrid AND Tb.userid = %s""", [clientid])
             bitcoin_transactions = cursor.fetchall()
             # get transfer transactions
             cursor.execute("""SELECT Tt.date, Tt.usd_value, Tr.clientid, Tr.traderid
                               FROM TransferTransaction Tt, Transfer Tr
-                              WHERE Tr.ttrid = Tt.ttrid AND Tr.traderid = %s""", [userid])
+                              WHERE Tr.ttrid = Tt.ttrid AND Tr.traderid = %s""", [clientid])
             transfer_transactions = cursor.fetchall()
         # end if
         return bitcoin_transactions, transfer_transactions
@@ -632,3 +634,7 @@ class Database:
             transfer_trans_history = cursor.fetchall()
         # end if
         return purchase_trans_history, transfer_trans_history
+
+    @classmethod
+    def getBitcoinBalance():
+        return 

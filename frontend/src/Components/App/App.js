@@ -1,3 +1,8 @@
+//Gabriel Goldstein gjg180000
+//megan tran mjt170002
+//jaeseonglee, jxl115330
+//Yibp Li
+
 import "./App.css";
 import Login from "../Login/Login.js";
 import Signup from "../Signup/Signup.js";

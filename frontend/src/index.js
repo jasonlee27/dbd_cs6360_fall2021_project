@@ -1,3 +1,7 @@
+//Gabriel Goldstein gjg180000
+//megan tran mjt170002
+//jaeseonglee, jxl115330
+//Yibp Li
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";

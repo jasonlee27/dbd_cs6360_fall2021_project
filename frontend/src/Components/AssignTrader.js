@@ -1,3 +1,7 @@
+//Gabriel Goldstein gjg180000
+//megan tran mjt170002
+//jaeseonglee, jxl115330
+//Yibp Li
 import React, {useEffect} from "react";
 import { Button, Form, Card, Dropdown, DropdownButton } from "react-bootstrap";
 import axios from "axios";

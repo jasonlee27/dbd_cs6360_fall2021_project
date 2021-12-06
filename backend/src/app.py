@@ -294,10 +294,12 @@ def transaction_history():
     if request.method == 'POST':
         userid = session['userid']
         user_type = session['user_type']
+        print("client:",request.form['clientid'])
         if user_type == "client":
             data = [user_type, userid]
         elif user_type == "trader":
             clientid = request.form['clientid']
+            clientid = Utils.hashing(clientid);
             data = [user_type, userid, clientid]
         # end if
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

@@ -1,3 +1,9 @@
+//Gabriel Goldstein gjg180000
+//megan tran mjt170002
+//jaeseonglee, jxl115330
+//Yibp Li
+
+
 import React, { useEffect } from "react";
 import useState from "react-usestateref";
 import axios from "axios";
@@ -18,7 +24,11 @@ function TraderPage(props) {
   let [purchaseType, setPurchaseType] = useState("buy");
   let [pageStatus, setPageStatus] = useState("transaction");
   let [clientRequests, setClientRequests, clientRequestsRef] = useState("");
-
+  let [clientID, setClientID, clientIDRef] = useState("");
+  let [clientID2, setClientID2, clientIDRef2] = useState("");
+  let [clientPT, setClientPT, clientPTRef] = useState("");
+  let [clientCT, setClientCT, clientCTRef] = useState("");
+  let [clientBT, setClientBT, clientBTRef] = useState("");
   function handleTransaction(e) {
     e.preventDefault();
     let transaction = new FormData(e.target);
@@ -59,14 +69,14 @@ function TraderPage(props) {
   function handleSearch(e) {
     e.preventDefault();
     let searchData = new FormData(e.target);
-
+    setClientID(searchData.get("clientid"))
     axios
       .post("http://localhost:8080/profile", searchData)
       .then((response) => {
-        if (response.data.msg === "Successfully clients captured") {
+   
           setTransactionHistory(response.data.history);
-        } else {
-        }
+          console.log(response.data.history);
+    
       })
       .catch((error) => {
         console.log("error", error);
@@ -99,7 +109,7 @@ function TraderPage(props) {
           console.log("error", error);
         }
         setIsLoading(false);
-        console.log("trklsijwdj", transactionHistoryRef.current);
+       // console.log("trklsijwdj", transactionHistoryRef.current);
       }
       fetchData();
     } else if (pageStatus === "transaction") {
@@ -110,7 +120,7 @@ function TraderPage(props) {
         } catch (error) {
           console.log("error", error);
           setIsLoading(false);
-          console.log("trklsijwdj", transactionHistoryRef.current);
+         // console.log("trklsijwdj", transactionHistoryRef.current);
         }
       }
       fetchData();
@@ -191,6 +201,17 @@ function TraderPage(props) {
                     </div> */}
                   </Form.Group>
                   <Form.Group className="mb-3">
+                    <Form.Label htmlFor="clientid">
+                    Client ID
+                    </Form.Label>
+                    <Form.Control
+                          type="test"
+                          placeholder="Clientid"
+                          name="clientid"
+                          value={clientIDRef2.current}
+                        />
+                    </Form.Group> 
+                  <Form.Group className="mb-3">
                     <Form.Label htmlFor="purchase_type">
                       Transaction Type
                     </Form.Label>
@@ -201,8 +222,8 @@ function TraderPage(props) {
                       label="Buy"
                       type="radio"
                       value="buy"
-                      defaultChecked
-                      onChange={(e) => setPurchaseType("buy")}
+                      defaultChecked={clientPT==="buy" || clientPT===""}
+                      onChange={(e) => {setPurchaseType("buy");setClientPT("buy")}}
                     />
                     <Form.Check
                       inline
@@ -210,7 +231,8 @@ function TraderPage(props) {
                       label="Sell"
                       type="radio"
                       value="sell"
-                      onChange={(e) => setPurchaseType("sell")}
+                      onChange={(e) => {setPurchaseType("sell");setClientPT("sell")}}
+                      defaultChecked={clientPT==="sell" }
                     />
                   </Form.Group>
                   {(purchaseType === "buy" || purchaseType === "sell") && (
@@ -223,6 +245,8 @@ function TraderPage(props) {
                           type="number"
                           placeholder="BTC Amount"
                           name="bitcoin_val"
+                          onChange={(e)=>{setClientBT(e.target.value)}}
+                          value={clientBTRef.current}
                         />
                       </Form.Group>
 
@@ -237,6 +261,8 @@ function TraderPage(props) {
                           label="Bitcoin"
                           type="radio"
                           value="bitcoin"
+                          defaultChecked={(e)=>clientCT==="bitcoin"}
+                          onChange={(e)=>setClientCT("bitcoin")}
                         />
                         <Form.Check
                           inline
@@ -244,6 +270,8 @@ function TraderPage(props) {
                           label="Fiat"
                           type="radio"
                           value="fiat"
+                          defaultChecked={(e)=>clientCT==="fiat"}
+                          onChange={(e)=>setClientCT("fiat")}
                         />
                       </Form.Group>
                     </div>
@@ -255,6 +283,7 @@ function TraderPage(props) {
                         type="number"
                         placeholder="USD Amount"
                         name="usd_val"
+
                       />
                     </Form.Group>
                   )}
@@ -328,17 +357,30 @@ function TraderPage(props) {
                   </Form.Group>
                 </Row>
 
-                {!isLoading && transactionHistoryRef.current !== "" && (
+                
+
+                <Button variant="success" type="submit">
+                  Search
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        )}
+      </div>
+      {!isLoading && transactionHistoryRef.current !== "" && (
                   <Table striped bordered hover variant="dark">
                     <thead>
                       <tr>
+                      <th>Index</th>
+                 
                         <th>Date</th>
-                        <th>Time</th>
+                             <th>ClientID</th>
                         <th>Commission Type</th>
                         <th>Commission Rate</th>
                         <th>Bitcoin Value</th>
                         <th>Fiat Value</th>
                         <th>Purchase Type</th>
+                        
                       </tr>
                     </thead>
 
@@ -347,8 +389,18 @@ function TraderPage(props) {
                         {transactionHistoryRef.current.bitcoin_transactions.map(
                           (transaction) => (
                             <tr>
+                               <td ><button onClick={(e)=>{setPageStatus("transaction");
+                                setClientID2(transaction.clientid);
+                                setClientPT(transaction.purchase_type);
+                                setClientCT(transaction.commission_type);
+                                setClientBT(transaction.bitcoin_value);
+                               }
+                          }>{transaction.ptrid}
+                               
+                               </button></td>
+                              
                               <td>{transaction.date}</td>
-                              <td>{transaction.time}</td>
+                              <td>{clientIDRef.current}</td>
                               <td>{transaction.commission_type}</td>
                               <td>{transaction.commission_rate}</td>
                               <td>{transaction.bitcoin_value}</td>
@@ -361,15 +413,6 @@ function TraderPage(props) {
                     )}
                   </Table>
                 )}
-
-                <Button variant="success" type="submit">
-                  Search
-                </Button>
-              </Form>
-            </Card.Body>
-          </Card>
-        )}
-      </div>
     </div>
   );
 }
